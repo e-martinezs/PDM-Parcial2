@@ -36,7 +36,6 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         login();
-        //getNews();
     }
 
     private void login(){
@@ -50,15 +49,18 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<String> call, Response<String> response) {
                 token = response.body();
+                System.out.println("TOKEN "+token);
+                getNews();
             }
 
             @Override
             public void onFailure(Call<String> call, Throwable t) {
+                t.printStackTrace();
             }
         });
     }
 
-    /*private void getNews(){
+    private void getNews(){
         OkHttpClient client = new OkHttpClient.Builder().addInterceptor(new Interceptor() {
             @Override
             public okhttp3.Response intercept(Chain chain) throws IOException {
@@ -71,12 +73,13 @@ public class MainActivity extends AppCompatActivity {
         Retrofit retrofit = builder.build();
         GameNewsAPI gameNewsAPI = retrofit.create(GameNewsAPI.class);
 
+        System.out.println("BEFORE CALL");
         Call<List<New>> getNews = gameNewsAPI.getAllNews();
         getNews.enqueue(new Callback<List<New>>() {
             @Override
             public void onResponse(Call<List<New>> call, Response<List<New>> response) {
                 List<New> news = response.body();
-                System.out.println("NEWS "+response.body());
+                System.out.println("NEWS: "+response.body());
                 NewsListFragment fragment = new NewsListFragment();
                 fragment.setNewsList(news);
 
@@ -88,8 +91,8 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<List<New>> call, Throwable t) {
-
+                t.printStackTrace();
             }
         });
-    }*/
+    }
 }
