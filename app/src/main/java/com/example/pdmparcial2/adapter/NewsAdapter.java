@@ -11,6 +11,7 @@ import android.widget.TextView;
 
 import com.example.pdmparcial2.R;
 import com.example.pdmparcial2.model.New;
+import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
@@ -37,6 +38,10 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.NewsViewHolder
         New mNew = news.get(position);
         holder.newsTitleTextView.setText(mNew.getTitle());
         holder.newsDescriptionTetView.setText(mNew.getDescription());
+
+        if (mNew.getCoverImage() != null && mNew.getCoverImage() != "") {
+            Picasso.get().load(mNew.getCoverImage()).onlyScaleDown().into(holder.newsImageView);
+        }
     }
 
     @Override
