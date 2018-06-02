@@ -6,6 +6,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.pdmparcial2.R;
@@ -35,6 +36,7 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.NewsViewHolder
     public void onBindViewHolder(@NonNull NewsViewHolder holder, int position) {
         New mNew = news.get(position);
         holder.newsTitleTextView.setText(mNew.getTitle());
+        holder.newsDescriptionTetView.setText(mNew.getDescription());
     }
 
     @Override
@@ -44,11 +46,15 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.NewsViewHolder
 
     public class NewsViewHolder extends RecyclerView.ViewHolder{
 
+        private ImageView newsImageView;
         private TextView newsTitleTextView;
+        private TextView newsDescriptionTetView;
 
         public NewsViewHolder(View view){
             super(view);
+            newsImageView = view.findViewById(R.id.newsImageView);
             newsTitleTextView = view.findViewById(R.id.newsTitleTextView);
+            newsDescriptionTetView = view.findViewById(R.id.newsDescriptionTextView);
         }
     }
 }
