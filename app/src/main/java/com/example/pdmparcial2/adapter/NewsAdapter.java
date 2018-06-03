@@ -13,6 +13,7 @@ import com.example.pdmparcial2.R;
 import com.example.pdmparcial2.model.New;
 import com.squareup.picasso.Picasso;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.NewsViewHolder>{
@@ -20,9 +21,14 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.NewsViewHolder
     private List<New> news;
     private Context context;
 
-    public NewsAdapter(Context context, List<New> news){
+    public NewsAdapter(Context context){
         this.context = context;
+        news = new ArrayList<>();
+    }
+
+    public void setNews(List<New> news){
         this.news = news;
+        notifyDataSetChanged();
     }
 
     @NonNull
@@ -39,8 +45,10 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.NewsViewHolder
         holder.newsTitleTextView.setText(mNew.getTitle());
         holder.newsDescriptionTetView.setText(mNew.getDescription());
 
-        if (mNew.getCoverImage() != null && mNew.getCoverImage() != "") {
+        try{
             Picasso.get().load(mNew.getCoverImage()).into(holder.newsImageView);
+        }catch (Exception e){
+            e.printStackTrace();
         }
     }
 

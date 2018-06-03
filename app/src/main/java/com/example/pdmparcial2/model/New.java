@@ -2,12 +2,15 @@ package com.example.pdmparcial2.model;
 
 import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.Ignore;
 import android.arch.persistence.room.PrimaryKey;
+import android.support.annotation.NonNull;
 
 @Entity(tableName = "news_table")
 public class New {
 
-    @PrimaryKey(autoGenerate = true)
+    @PrimaryKey
+    @NonNull
     @ColumnInfo(name = "id")
     private String id;
 
@@ -33,6 +36,7 @@ public class New {
 
     }
 
+    @Ignore
     public New(String id, String title, String coverImage, String create_date, String description, String body, String game) {
         this.id = id;
         this.title = title;

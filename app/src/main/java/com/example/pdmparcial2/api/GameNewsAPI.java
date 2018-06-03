@@ -13,6 +13,7 @@ import retrofit2.http.Headers;
 import retrofit2.http.POST;
 
 public interface GameNewsAPI {
+    String BASE_URL = "http://gamenewsuca.herokuapp.com";
 
     @GET("/news")
     Call<List<New>> getAllNews();

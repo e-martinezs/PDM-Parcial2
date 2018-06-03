@@ -18,6 +18,7 @@ import java.util.List;
 public class NewsListFragment extends Fragment{
 
     private List<New> news;
+    private NewsAdapter newsAdapter;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
@@ -39,7 +40,7 @@ public class NewsListFragment extends Fragment{
         });
 
         recyclerView.setLayoutManager(gridLayoutManager);
-        NewsAdapter newsAdapter = new NewsAdapter(container.getContext(), news);
+        newsAdapter = new NewsAdapter(container.getContext());
         recyclerView.setAdapter(newsAdapter);
         recyclerView.setHasFixedSize(true);
 
@@ -48,5 +49,8 @@ public class NewsListFragment extends Fragment{
 
     public void setNewsList(List<New> news){
         this.news = news;
+        if (newsAdapter != null) {
+            newsAdapter.setNews(news);
+        }
     }
 }

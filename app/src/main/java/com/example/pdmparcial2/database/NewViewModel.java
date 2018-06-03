@@ -16,7 +16,7 @@ public class NewViewModel extends AndroidViewModel{
     public NewViewModel(Application application){
         super(application);
         repository = new NewsRepository(application);
-        news = repository.getAllNews();
+        this.news = repository.getAllNews();
     }
 
     public LiveData<List<New>> getAllNews(){
