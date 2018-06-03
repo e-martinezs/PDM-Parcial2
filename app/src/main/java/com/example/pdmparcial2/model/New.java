@@ -1,13 +1,32 @@
 package com.example.pdmparcial2.model;
 
+import android.arch.persistence.room.ColumnInfo;
+import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.PrimaryKey;
+
+@Entity(tableName = "news_table")
 public class New {
 
+    @PrimaryKey(autoGenerate = true)
+    @ColumnInfo(name = "id")
     private String id;
+
+    @ColumnInfo(name = "title")
     private String title;
+
+    @ColumnInfo(name = "coverImage")
     private String coverImage;
+
+    @ColumnInfo(name = "create_date")
     private String create_date;
+
+    @ColumnInfo(name = "description")
     private String description;
+
+    @ColumnInfo(name = "body")
     private String body;
+
+    @ColumnInfo(name = "game")
     private String game;
 
     public New(){
