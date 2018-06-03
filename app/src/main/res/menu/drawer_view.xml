@@ -11,6 +11,7 @@
             android:checkable="false"
             android:title="Games">
             <menu>
+                <group android:checkableBehavior="single">
                 <item
                     android:id="@+id/drawerLOL"
                     android:title="League of Legends" />
@@ -20,6 +21,7 @@
                 <item
                     android:id="@+id/drawerOverwatch"
                     android:title="Overwatch" />
+                </group>
             </menu>
         </item>
     </group>
@@ -27,11 +29,11 @@
         android:id="@+id/drawerBottomMenu"
         android:checkableBehavior="single">
         <item
-            android:id="@+id/drawerSettings"
-            android:title="Settings" />
-        <item
             android:id="@+id/drawerFavorites"
             android:title="Favorites" />
+        <item
+            android:id="@+id/drawerSettings"
+            android:title="Settings" />
     </group>
 
 </menu>
