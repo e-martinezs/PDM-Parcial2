@@ -87,6 +87,7 @@ public class MainActivity extends AppCompatActivity {
                 drawerLayout.openDrawer(GravityCompat.START);
                 return true;
             case R.id.refreshButton:
+                newViewModel.refresh();
                 return true;
         }
         return false;

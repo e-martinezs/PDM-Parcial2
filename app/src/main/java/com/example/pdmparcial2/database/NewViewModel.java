@@ -26,4 +26,8 @@ public class NewViewModel extends AndroidViewModel{
     public void insertNew(New mNew){
         repository.insertNew(mNew);
     }
+
+    public void refresh(){
+        repository.refresh();
+    }
 }

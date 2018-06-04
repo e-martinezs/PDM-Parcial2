@@ -50,6 +50,14 @@ public class NewsRepository {
         }
     }
 
+    public void refresh(){
+        if (token == null){
+            login();
+        }else{
+            getNews();
+        }
+    }
+
     private static class insertAsyncTask extends AsyncTask<New, Void, Void>{
 
         private NewDao newDao;
@@ -104,7 +112,9 @@ public class NewsRepository {
             @Override
             public void onResponse(Call<List<New>> call, Response<List<New>> response) {
                 List<New> news = response.body();
-                insertAllNews(news);
+                if (news != null) {
+                    insertAllNews(news);
+                }
             }
 
             @Override
