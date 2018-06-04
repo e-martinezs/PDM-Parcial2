@@ -46,7 +46,11 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.NewsViewHolder
         holder.newsDescriptionTetView.setText(mNew.getDescription());
 
         try{
-            Picasso.get().load(mNew.getCoverImage()).into(holder.newsImageView);
+            if (!mNew.getCoverImage().isEmpty()) {
+                Picasso.get().load(mNew.getCoverImage()).into(holder.newsImageView);
+            }else{
+                Picasso.get().load(R.mipmap.ic_launcher).into(holder.newsImageView);
+            }
         }catch (Exception e){
             e.printStackTrace();
         }
