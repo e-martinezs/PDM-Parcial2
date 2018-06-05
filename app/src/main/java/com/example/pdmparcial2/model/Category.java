@@ -8,13 +8,25 @@ import android.support.annotation.NonNull;
 @Entity(tableName = "category_table")
 public class Category {
 
-    @PrimaryKey
+    @PrimaryKey(autoGenerate = true)
     @NonNull
+    @ColumnInfo(name = "id")
+    private int id;
+
     @ColumnInfo(name = "name")
     private String name;
 
     public Category(){
 
+    }
+
+    @NonNull
+    public int getId() {
+        return id;
+    }
+
+    public void setId(@NonNull int id) {
+        this.id = id;
     }
 
     public String getName() {

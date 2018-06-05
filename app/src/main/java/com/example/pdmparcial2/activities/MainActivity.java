@@ -31,6 +31,7 @@ public class MainActivity extends AppCompatActivity {
     private NewViewModel newViewModel;
     private NewsListFragment newsListFragment;
     private List<New> newsList;
+    private String selectedCategory = "all";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,6 +54,21 @@ public class MainActivity extends AppCompatActivity {
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 item.setChecked(true);
                 drawerLayout.closeDrawers();
+                switch (item.getItemId()){
+                    case R.id.drawerNews:
+                        selectedCategory = "all";
+                        break;
+                    case R.id.drawerLOL:
+                        selectedCategory = "lol";
+                        break;
+                    case R.id.drawerCSGO:
+                        selectedCategory = "csgo";
+                        break;
+                    case R.id.drawerOverwatch:
+                        selectedCategory = "overwatch";
+                        break;
+                }
+                newViewModel.refresh();
                 return true;
             }
         });
@@ -69,7 +85,7 @@ public class MainActivity extends AppCompatActivity {
             public void onChanged(@Nullable List<New> news) {
                 if (newsListFragment != null) {
                     newsList = news;
-                    newsListFragment.setNewsList(news);
+                    newsListFragment.setNewsList(news, selectedCategory);
                 }
             }
         });

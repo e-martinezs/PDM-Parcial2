@@ -13,27 +13,28 @@ import com.example.pdmparcial2.R;
 import com.example.pdmparcial2.adapter.NewsAdapter;
 import com.example.pdmparcial2.model.New;
 
+import java.util.ArrayList;
 import java.util.List;
 
-public class NewsListFragment extends Fragment{
+public class NewsListFragment extends Fragment {
 
     private List<New> news;
     private NewsAdapter newsAdapter;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_news_list, container, false);
 
         RecyclerView recyclerView = view.findViewById(R.id.newsListRecyclerView);
         GridLayoutManager gridLayoutManager = new GridLayoutManager(container.getContext(), 4);
 
-        gridLayoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup(){
+        gridLayoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
 
             @Override
             public int getSpanSize(int position) {
-                if (position % 3 == 0){
+                if (position % 3 == 0) {
                     return 4;
-                }else{
+                } else {
                     return 2;
                 }
             }
@@ -47,10 +48,21 @@ public class NewsListFragment extends Fragment{
         return view;
     }
 
-    public void setNewsList(List<New> news){
-        this.news = news;
+    public void setNewsList(List<New> news, String filter) {
+        List<New> filteredNews = new ArrayList<>();
+        if (!filter.matches("all")) {
+            for (New n : news) {
+                if (n.getGame().matches(filter)) {
+                    filteredNews.add(n);
+                }
+            }
+        } else {
+            filteredNews = news;
+        }
+
+        this.news = filteredNews;
         if (newsAdapter != null) {
-            newsAdapter.setNews(news);
+            newsAdapter.setNews(filteredNews);
         }
     }
 }
