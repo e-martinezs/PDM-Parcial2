@@ -6,8 +6,12 @@ import android.arch.persistence.room.Ignore;
 import android.arch.persistence.room.PrimaryKey;
 import android.support.annotation.NonNull;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
+
 @Entity(tableName = "news_table")
-public class New {
+public class New implements Comparable<New> {
 
     @PrimaryKey
     @NonNull
@@ -23,6 +27,9 @@ public class New {
     @ColumnInfo(name = "create_date")
     private String create_date;
 
+    @Ignore
+    private Date date;
+
     @ColumnInfo(name = "description")
     private String description;
 
@@ -32,7 +39,7 @@ public class New {
     @ColumnInfo(name = "game")
     private String game;
 
-    public New(){
+    public New() {
 
     }
 
@@ -101,5 +108,25 @@ public class New {
 
     public void setGame(String game) {
         this.game = game;
+    }
+
+    public Date getDate() {
+        return date;
+    }
+
+    public void setDate(Date date) {
+        this.date = date;
+    }
+
+    @Override
+    public int compareTo(@NonNull New aNew) {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.getDefault());
+        try {
+            setDate(dateFormat.parse(getCreate_date()));
+            aNew.setDate(dateFormat.parse(aNew.getCreate_date()));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return getDate().compareTo(aNew.getDate());
     }
 }

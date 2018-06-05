@@ -8,8 +8,9 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 
 import java.lang.reflect.Type;
+import java.util.Date;
 
-public class NewsDeserializer implements JsonDeserializer<New>{
+public class NewsDeserializer implements JsonDeserializer<New> {
 
     @Override
     public New deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
@@ -20,21 +21,21 @@ public class NewsDeserializer implements JsonDeserializer<New>{
         mNew.setTitle(newJsonObject.get("title").getAsString());
         mNew.setBody(newJsonObject.get("body").getAsString());
 
-        if (newJsonObject.get("coverImage") != null){
+        if (newJsonObject.get("coverImage") != null) {
             mNew.setCoverImage(newJsonObject.get("coverImage").getAsString());
-        }else{
+        } else {
             mNew.setCoverImage("");
         }
 
-        if (newJsonObject.get("create_date") != null){
-            mNew.setCreate_date(newJsonObject.get("create_date").getAsString());
-        }else{
+        if (newJsonObject.get("created_date") != null) {
+            mNew.setCreate_date(newJsonObject.get("created_date").getAsString());
+        } else {
             mNew.setCreate_date("");
         }
 
-        if (newJsonObject.get("description") != null){
+        if (newJsonObject.get("description") != null) {
             mNew.setDescription(newJsonObject.get("description").getAsString());
-        }else{
+        } else {
             mNew.setDescription("");
         }
 

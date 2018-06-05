@@ -121,7 +121,7 @@ public class NewsRepository {
 
     private void login() {
         loading.setValue(true);
-        Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd'T'HH:mm:ssZ").registerTypeAdapter(String.class, new TokenDeserializer()).create();
+        Gson gson = new GsonBuilder().registerTypeAdapter(String.class, new TokenDeserializer()).create();
         Retrofit.Builder builder = new Retrofit.Builder().baseUrl(GameNewsAPI.BASE_URL).addConverterFactory(GsonConverterFactory.create(gson));
         Retrofit retrofit = builder.build();
         GameNewsAPI gameNewsAPI = retrofit.create(GameNewsAPI.class);
@@ -152,7 +152,7 @@ public class NewsRepository {
                 return chain.proceed(newRequest);
             }
         }).build();
-        Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd'T'HH:mm:ssZ").registerTypeAdapter(New.class, new NewsDeserializer()).create();
+        Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'").registerTypeAdapter(New.class, new NewsDeserializer()).create();
         Retrofit.Builder builder = new Retrofit.Builder().baseUrl(GameNewsAPI.BASE_URL).client(client).addConverterFactory(GsonConverterFactory.create(gson));
         Retrofit retrofit = builder.build();
         GameNewsAPI gameNewsAPI = retrofit.create(GameNewsAPI.class);

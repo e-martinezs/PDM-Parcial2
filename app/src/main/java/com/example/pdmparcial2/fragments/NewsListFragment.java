@@ -14,6 +14,8 @@ import com.example.pdmparcial2.adapter.NewsAdapter;
 import com.example.pdmparcial2.model.New;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 public class NewsListFragment extends Fragment {
@@ -60,6 +62,8 @@ public class NewsListFragment extends Fragment {
             filteredNews = news;
         }
 
+        Collections.sort(filteredNews);
+        Collections.reverse(filteredNews);
         this.news = filteredNews;
         if (newsAdapter != null) {
             newsAdapter.setNews(filteredNews);
