@@ -20,6 +20,7 @@ import android.view.MenuItem;
 import com.example.pdmparcial2.R;
 import com.example.pdmparcial2.database.NewViewModel;
 import com.example.pdmparcial2.fragments.NewsListFragment;
+import com.example.pdmparcial2.model.Category;
 import com.example.pdmparcial2.model.New;
 
 import java.util.List;
@@ -44,6 +45,7 @@ public class MainActivity extends AppCompatActivity {
 
         drawerLayout = findViewById(R.id.drawerLayout);
         NavigationView navigationView = findViewById(R.id.navigationView);
+        final Menu menu = navigationView.getMenu();
         navigationView.getMenu().getItem(0).setChecked(true);
         navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener(){
 
@@ -55,6 +57,12 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        newsListFragment = new NewsListFragment();
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.replace(R.id.contentView, newsListFragment);
+        fragmentTransaction.commit();
+
         newViewModel = ViewModelProviders.of(this).get(NewViewModel.class);
         newViewModel.getAllNews().observe(this, new Observer<List<New>>() {
             @Override
@@ -65,12 +73,14 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
-
-        newsListFragment = new NewsListFragment();
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.replace(R.id.contentView, newsListFragment);
-        fragmentTransaction.commit();
+        newViewModel.getAllCategories().observe(this, new Observer<List<Category>>() {
+            @Override
+            public void onChanged(@Nullable List<Category> categories) {
+                for (Category c:categories){
+                    //menu.add(c.getName());
+                }
+            }
+        });
     }
 
     @Override

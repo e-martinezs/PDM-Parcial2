@@ -11,7 +11,9 @@
             android:checkable="false"
             android:title="Games">
             <menu>
-                <group android:checkableBehavior="single">
+                <group
+                    android:id="@+id/drawerGameMenu"
+                    android:checkableBehavior="single">
                 <item
                     android:id="@+id/drawerLOL"
                     android:title="League of Legends" />

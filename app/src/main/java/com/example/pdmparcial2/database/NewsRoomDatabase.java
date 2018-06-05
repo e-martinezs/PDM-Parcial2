@@ -5,12 +5,14 @@ import android.arch.persistence.room.Room;
 import android.arch.persistence.room.RoomDatabase;
 import android.content.Context;
 
+import com.example.pdmparcial2.model.Category;
 import com.example.pdmparcial2.model.New;
 
-@Database(entities = {New.class}, version=1)
+@Database(entities = {New.class, Category.class}, version=1)
 public abstract class NewsRoomDatabase extends RoomDatabase {
 
     public abstract NewDao newsDao();
+    public abstract CategoryDao categoryDao();
     private static NewsRoomDatabase INSTANCE;
 
     public static NewsRoomDatabase getDatabase(final Context context){
