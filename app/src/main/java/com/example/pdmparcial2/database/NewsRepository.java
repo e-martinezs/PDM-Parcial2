@@ -2,6 +2,7 @@ package com.example.pdmparcial2.database;
 
 import android.app.Application;
 import android.arch.lifecycle.LiveData;
+import android.arch.lifecycle.MutableLiveData;
 import android.os.AsyncTask;
 
 import com.example.pdmparcial2.api.CategoryDeserializer;
@@ -32,82 +33,99 @@ public class NewsRepository {
     private CategoryDao categoryDao;
     private LiveData<List<New>> news;
     private LiveData<List<Category>> categories;
+    private MutableLiveData<Boolean> loading = new MutableLiveData<>();
 
-    public NewsRepository(Application application){
+    public NewsRepository(Application application) {
         NewsRoomDatabase db = NewsRoomDatabase.getDatabase(application);
         newDao = db.newsDao();
         categoryDao = db.categoryDao();
+        loading.setValue(false);
         login();
         news = newDao.getAllNews();
         categories = categoryDao.getAllCategories();
     }
 
-    public LiveData<List<New>> getAllNews(){
+    public LiveData<List<New>> getAllNews() {
         return news;
     }
 
-    public LiveData<List<Category>> getAllCategories(){
+    public LiveData<List<Category>> getAllCategories() {
         return categories;
     }
 
-    public void insertAllNews(List<New> news){
+    public MutableLiveData<Boolean> getLoading() {
+        return loading;
+    }
+
+    public void insertAllNews(List<New> news) {
         new insertNewsAsyncTask(newDao).execute(news);
     }
 
-    public void insertAllCategories(List<Category> categories){
+    public void insertAllCategories(List<Category> categories) {
         new insertCategoriesAsyncTask(categoryDao).execute(categories);
     }
 
-    public void refresh(){
-        if (token == null){
+    public void refresh() {
+        if (token == null) {
             login();
-        }else{
+        } else {
             getNews();
             getCategories();
         }
     }
 
-    private static class insertNewsAsyncTask extends AsyncTask<List<New>, Void, Void>{
+    private class insertNewsAsyncTask extends AsyncTask<List<New>, Void, Void> {
 
         private NewDao newDao;
 
-        public insertNewsAsyncTask(NewDao newDao){
+        public insertNewsAsyncTask(NewDao newDao) {
             this.newDao = newDao;
         }
 
         @Override
         protected Void doInBackground(List<New>... news) {
-            for (New n:news[0]){
+            for (New n : news[0]) {
                 newDao.insertNew(n);
             }
             return null;
         }
+
+        @Override
+        protected void onPostExecute(Void voids) {
+            loading.setValue(false);
+        }
     }
 
-    private static class insertCategoriesAsyncTask extends AsyncTask<List<Category>, Void, Void>{
+    private class insertCategoriesAsyncTask extends AsyncTask<List<Category>, Void, Void> {
 
         private CategoryDao categoryDao;
 
-        public insertCategoriesAsyncTask(CategoryDao categoryDao){
+        public insertCategoriesAsyncTask(CategoryDao categoryDao) {
             this.categoryDao = categoryDao;
         }
 
         @Override
         protected Void doInBackground(List<Category>... categories) {
-            for (Category c:categories[0]){
+            for (Category c : categories[0]) {
                 categoryDao.insertCategory(c);
             }
             return null;
         }
+
+        @Override
+        protected void onPostExecute(Void voids) {
+            loading.setValue(false);
+        }
     }
 
-    private void login(){
+    private void login() {
+        loading.setValue(true);
         Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd'T'HH:mm:ssZ").registerTypeAdapter(String.class, new TokenDeserializer()).create();
         Retrofit.Builder builder = new Retrofit.Builder().baseUrl(GameNewsAPI.BASE_URL).addConverterFactory(GsonConverterFactory.create(gson));
         Retrofit retrofit = builder.build();
         GameNewsAPI gameNewsAPI = retrofit.create(GameNewsAPI.class);
 
-        Call<String> login = gameNewsAPI.login("00116316", "00116316");
+        final Call<String> login = gameNewsAPI.login("00116316", "00116316");
         login.enqueue(new Callback<String>() {
             @Override
             public void onResponse(Call<String> call, Response<String> response) {
@@ -118,16 +136,18 @@ public class NewsRepository {
 
             @Override
             public void onFailure(Call<String> call, Throwable t) {
+                loading.setValue(false);
                 t.printStackTrace();
             }
         });
     }
 
-    private void getNews(){
+    private void getNews() {
+        loading.setValue(true);
         OkHttpClient client = new OkHttpClient.Builder().addInterceptor(new Interceptor() {
             @Override
             public okhttp3.Response intercept(Chain chain) throws IOException {
-                Request newRequest = chain.request().newBuilder().addHeader("Authorization", "Bearer "+token).build();
+                Request newRequest = chain.request().newBuilder().addHeader("Authorization", "Bearer " + token).build();
                 return chain.proceed(newRequest);
             }
         }).build();
@@ -148,16 +168,18 @@ public class NewsRepository {
 
             @Override
             public void onFailure(Call<List<New>> call, Throwable t) {
+                loading.setValue(false);
                 t.printStackTrace();
             }
         });
     }
 
-    private void getCategories(){
+    private void getCategories() {
+        loading.setValue(true);
         OkHttpClient client = new OkHttpClient.Builder().addInterceptor(new Interceptor() {
             @Override
             public okhttp3.Response intercept(Chain chain) throws IOException {
-                Request newRequest = chain.request().newBuilder().addHeader("Authorization", "Bearer "+token).build();
+                Request newRequest = chain.request().newBuilder().addHeader("Authorization", "Bearer " + token).build();
                 return chain.proceed(newRequest);
             }
         }).build();
@@ -171,13 +193,14 @@ public class NewsRepository {
             @Override
             public void onResponse(Call<List<Category>> call, Response<List<Category>> response) {
                 List<Category> categories = response.body();
-                if (categories != null){
+                if (categories != null) {
                     insertAllCategories(categories);
                 }
             }
 
             @Override
             public void onFailure(Call<List<Category>> call, Throwable t) {
+                loading.setValue(false);
                 t.printStackTrace();
             }
         });

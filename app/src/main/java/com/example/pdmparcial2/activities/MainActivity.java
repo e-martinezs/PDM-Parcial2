@@ -16,6 +16,8 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.RelativeLayout;
 
 import com.example.pdmparcial2.R;
 import com.example.pdmparcial2.database.NewViewModel;
@@ -48,13 +50,13 @@ public class MainActivity extends AppCompatActivity {
         NavigationView navigationView = findViewById(R.id.navigationView);
         final Menu menu = navigationView.getMenu();
         navigationView.getMenu().getItem(0).setChecked(true);
-        navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener(){
+        navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
 
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 item.setChecked(true);
                 drawerLayout.closeDrawers();
-                switch (item.getItemId()){
+                switch (item.getItemId()) {
                     case R.id.drawerNews:
                         selectedCategory = "all";
                         break;
@@ -92,15 +94,26 @@ public class MainActivity extends AppCompatActivity {
         newViewModel.getAllCategories().observe(this, new Observer<List<Category>>() {
             @Override
             public void onChanged(@Nullable List<Category> categories) {
-                for (Category c:categories){
+                for (Category c : categories) {
                     //menu.add(c.getName());
+                }
+            }
+        });
+        newViewModel.getLoading().observe(this, new Observer<Boolean>() {
+            @Override
+            public void onChanged(@Nullable Boolean aBoolean) {
+                RelativeLayout loadingLayout = findViewById(R.id.loadingLayout);
+                if (aBoolean) {
+                    loadingLayout.setVisibility(View.VISIBLE);
+                } else {
+                    loadingLayout.setVisibility(View.INVISIBLE);
                 }
             }
         });
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu){
+    public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.action_menu, menu);
         return true;
