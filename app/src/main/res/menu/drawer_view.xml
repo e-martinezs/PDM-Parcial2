@@ -14,15 +14,15 @@
                 <group
                     android:id="@+id/drawerGameMenu"
                     android:checkableBehavior="single">
-                <item
-                    android:id="@+id/drawerLOL"
-                    android:title="League of Legends" />
-                <item
-                    android:id="@+id/drawerCSGO"
-                    android:title="CS GO" />
-                <item
-                    android:id="@+id/drawerOverwatch"
-                    android:title="Overwatch" />
+                    <item
+                        android:id="@+id/drawerLOL"
+                        android:title="League of Legends" />
+                    <item
+                        android:id="@+id/drawerCSGO"
+                        android:title="CS GO" />
+                    <item
+                        android:id="@+id/drawerOverwatch"
+                        android:title="Overwatch" />
                 </group>
             </menu>
         </item>

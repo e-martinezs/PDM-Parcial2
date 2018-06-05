@@ -106,6 +106,7 @@ public class NewsRepository {
 
         @Override
         protected Void doInBackground(List<Category>... categories) {
+            categoryDao.deleteAllCategories();
             for (Category c : categories[0]) {
                 categoryDao.insertCategory(c);
             }

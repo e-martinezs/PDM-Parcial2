@@ -16,6 +16,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.SubMenu;
 import android.view.View;
 import android.widget.RelativeLayout;
 
@@ -25,6 +26,7 @@ import com.example.pdmparcial2.fragments.NewsListFragment;
 import com.example.pdmparcial2.model.Category;
 import com.example.pdmparcial2.model.New;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
@@ -32,7 +34,6 @@ public class MainActivity extends AppCompatActivity {
     private DrawerLayout drawerLayout;
     private NewViewModel newViewModel;
     private NewsListFragment newsListFragment;
-    private List<New> newsList;
     private String selectedCategory = "all";
 
     @Override
@@ -49,28 +50,25 @@ public class MainActivity extends AppCompatActivity {
         drawerLayout = findViewById(R.id.drawerLayout);
         NavigationView navigationView = findViewById(R.id.navigationView);
         final Menu menu = navigationView.getMenu();
+        final SubMenu subMenu = menu.findItem(R.id.drawerGames).getSubMenu();
         navigationView.getMenu().getItem(0).setChecked(true);
         navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
 
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                item.setChecked(true);
-                drawerLayout.closeDrawers();
-                switch (item.getItemId()) {
+                switch (item.getItemId()){
                     case R.id.drawerNews:
                         selectedCategory = "all";
                         break;
-                    case R.id.drawerLOL:
-                        selectedCategory = "lol";
-                        break;
-                    case R.id.drawerCSGO:
-                        selectedCategory = "csgo";
-                        break;
-                    case R.id.drawerOverwatch:
-                        selectedCategory = "overwatch";
-                        break;
                 }
+                if (item.getGroupId() == R.id.drawerGameMenu) {
+                    subMenu.setGroupCheckable(R.id.drawerGameMenu, true, true);
+                    selectedCategory = item.getTitle().toString();
+                }
+                newsListFragment.setNewsList(new ArrayList<New>(),"all");
                 newViewModel.refresh();
+                item.setChecked(true);
+                drawerLayout.closeDrawers();
                 return true;
             }
         });
@@ -86,7 +84,6 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onChanged(@Nullable List<New> news) {
                 if (newsListFragment != null) {
-                    newsList = news;
                     newsListFragment.setNewsList(news, selectedCategory);
                 }
             }
@@ -94,8 +91,11 @@ public class MainActivity extends AppCompatActivity {
         newViewModel.getAllCategories().observe(this, new Observer<List<Category>>() {
             @Override
             public void onChanged(@Nullable List<Category> categories) {
+                subMenu.clear();
+                int i = 0;
                 for (Category c : categories) {
-                    //menu.add(c.getName());
+                    subMenu.add(R.id.drawerGameMenu, i, i, c.getName());
+                    i++;
                 }
             }
         });
