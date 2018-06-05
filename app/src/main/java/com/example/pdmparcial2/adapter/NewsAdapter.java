@@ -11,6 +11,7 @@ import android.widget.TextView;
 
 import com.example.pdmparcial2.R;
 import com.example.pdmparcial2.model.New;
+import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -47,9 +48,9 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.NewsViewHolder
 
         try{
             if (!mNew.getCoverImage().isEmpty()) {
-                Picasso.get().load(mNew.getCoverImage()).into(holder.newsImageView);
+                Picasso.get().load(mNew.getCoverImage()).error(R.drawable.ic_image).into(holder.newsImageView);
             }else{
-                Picasso.get().load(R.mipmap.ic_launcher).into(holder.newsImageView);
+                Picasso.get().load(R.drawable.ic_image).error(R.drawable.ic_image).into(holder.newsImageView);
             }
         }catch (Exception e){
             e.printStackTrace();
