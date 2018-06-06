@@ -29,6 +29,7 @@ import com.example.pdmparcial2.fragments.NewsListFragment;
 import com.example.pdmparcial2.fragments.PlayerListFragment;
 import com.example.pdmparcial2.model.Category;
 import com.example.pdmparcial2.model.New;
+import com.example.pdmparcial2.model.Player;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -64,10 +65,6 @@ public class MainActivity extends AppCompatActivity {
         viewPagerAdapter.addFragment(playerListFragment, "Top Players");
         tabLayout.setupWithViewPager(viewPager);
 
-        /*FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.replace(R.id.contentView, newsListFragment);
-        fragmentTransaction.commit();*/
-
         drawerLayout = findViewById(R.id.drawerLayout);
         NavigationView navigationView = findViewById(R.id.navigationView);
         final Menu menu = navigationView.getMenu();
@@ -79,6 +76,7 @@ public class MainActivity extends AppCompatActivity {
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 switch (item.getItemId()) {
                     case R.id.drawerNews:
+                        tabLayout.getTabAt(0).select();
                         selectedCategory = "all";
                         break;
                 }
@@ -90,6 +88,7 @@ public class MainActivity extends AppCompatActivity {
                     tabLayout.setVisibility(View.GONE);
                 }
                 newsListFragment.setNewsList(new ArrayList<New>(), "all");
+                playerListFragment.setPlayerList(new ArrayList<Player>(), "");
                 newViewModel.refresh();
                 item.setChecked(true);
                 drawerLayout.closeDrawers();
@@ -98,7 +97,7 @@ public class MainActivity extends AppCompatActivity {
         });
 
         newViewModel = ViewModelProviders.of(this).get(NewViewModel.class);
-        newViewModel.getAllNews().observe(this, new Observer<List<New>>() {
+        newViewModel.getNews().observe(this, new Observer<List<New>>() {
             @Override
             public void onChanged(@Nullable List<New> news) {
                 if (newsListFragment != null) {
@@ -106,7 +105,7 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
-        newViewModel.getAllCategories().observe(this, new Observer<List<Category>>() {
+        newViewModel.getCategories().observe(this, new Observer<List<Category>>() {
             @Override
             public void onChanged(@Nullable List<Category> categories) {
                 subMenu.clear();
@@ -114,6 +113,14 @@ public class MainActivity extends AppCompatActivity {
                 for (Category c : categories) {
                     subMenu.add(R.id.drawerGameMenu, i, i, c.getName());
                     i++;
+                }
+            }
+        });
+        newViewModel.getPlayers().observe(this, new Observer<List<Player>>() {
+            @Override
+            public void onChanged(@Nullable List<Player> players) {
+                if (playerListFragment != null){
+                    playerListFragment.setPlayerList(players, selectedCategory);
                 }
             }
         });

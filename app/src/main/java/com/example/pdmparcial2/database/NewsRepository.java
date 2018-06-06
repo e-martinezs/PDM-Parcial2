@@ -8,9 +8,11 @@ import android.os.AsyncTask;
 import com.example.pdmparcial2.api.CategoryDeserializer;
 import com.example.pdmparcial2.api.GameNewsAPI;
 import com.example.pdmparcial2.api.NewsDeserializer;
+import com.example.pdmparcial2.api.PlayerDeserializer;
 import com.example.pdmparcial2.api.TokenDeserializer;
 import com.example.pdmparcial2.model.Category;
 import com.example.pdmparcial2.model.New;
+import com.example.pdmparcial2.model.Player;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -31,18 +33,22 @@ public class NewsRepository {
     private String token;
     private NewDao newDao;
     private CategoryDao categoryDao;
+    private PlayerDao playerDao;
     private LiveData<List<New>> news;
     private LiveData<List<Category>> categories;
+    private LiveData<List<Player>> players;
     private MutableLiveData<Boolean> loading = new MutableLiveData<>();
 
     public NewsRepository(Application application) {
         NewsRoomDatabase db = NewsRoomDatabase.getDatabase(application);
         newDao = db.newsDao();
         categoryDao = db.categoryDao();
+        playerDao = db.playerDao();
         loading.setValue(false);
         login();
         news = newDao.getAllNews();
         categories = categoryDao.getAllCategories();
+        players = playerDao.getAllPlayers();
     }
 
     public LiveData<List<New>> getAllNews() {
@@ -51,6 +57,10 @@ public class NewsRepository {
 
     public LiveData<List<Category>> getAllCategories() {
         return categories;
+    }
+
+    public LiveData<List<Player>> getAllPlayers() {
+        return players;
     }
 
     public MutableLiveData<Boolean> getLoading() {
@@ -65,12 +75,17 @@ public class NewsRepository {
         new insertCategoriesAsyncTask(categoryDao).execute(categories);
     }
 
+    public void insertAllPlayers(List<Player> players){
+        new insertPlayersAyncTask(playerDao).execute(players);
+    }
+
     public void refresh() {
         if (token == null) {
             login();
         } else {
             getNews();
             getCategories();
+            getPlayers();
         }
     }
 
@@ -119,6 +134,28 @@ public class NewsRepository {
         }
     }
 
+    private class insertPlayersAyncTask extends AsyncTask<List<Player>, Void, Void>{
+
+        private PlayerDao playerDao;
+
+        public insertPlayersAyncTask(PlayerDao playerDao){
+            this.playerDao = playerDao;
+        }
+
+        @Override
+        protected Void doInBackground(List<Player>... players) {
+            for (Player p:players[0]){
+                playerDao.insertPlayer(p);
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void voids) {
+            loading.setValue(false);
+        }
+    }
+
     private void login() {
         loading.setValue(true);
         Gson gson = new GsonBuilder().registerTypeAdapter(String.class, new TokenDeserializer()).create();
@@ -133,6 +170,7 @@ public class NewsRepository {
                 token = response.body();
                 getNews();
                 getCategories();
+                getPlayers();
             }
 
             @Override
@@ -169,6 +207,7 @@ public class NewsRepository {
 
             @Override
             public void onFailure(Call<List<New>> call, Throwable t) {
+                news = newDao.getAllNews();
                 loading.setValue(false);
                 t.printStackTrace();
             }
@@ -201,6 +240,40 @@ public class NewsRepository {
 
             @Override
             public void onFailure(Call<List<Category>> call, Throwable t) {
+                categories = categoryDao.getAllCategories();
+                loading.setValue(false);
+                t.printStackTrace();
+            }
+        });
+    }
+
+    private void getPlayers() {
+        loading.setValue(true);
+        OkHttpClient client = new OkHttpClient.Builder().addInterceptor(new Interceptor() {
+            @Override
+            public okhttp3.Response intercept(Chain chain) throws IOException {
+                Request newRequest = chain.request().newBuilder().addHeader("Authorization", "Bearer " + token).build();
+                return chain.proceed(newRequest);
+            }
+        }).build();
+        Gson gson = new GsonBuilder().registerTypeAdapter(Player.class, new PlayerDeserializer()).create();
+        Retrofit.Builder builder = new Retrofit.Builder().baseUrl(GameNewsAPI.BASE_URL).client(client).addConverterFactory(GsonConverterFactory.create(gson));
+        Retrofit retrofit = builder.build();
+        GameNewsAPI gameNewsAPI = retrofit.create(GameNewsAPI.class);
+
+        Call<List<Player>> getPlayers = gameNewsAPI.getAllPlayers();
+        getPlayers.enqueue(new Callback<List<Player>>() {
+            @Override
+            public void onResponse(Call<List<Player>> call, Response<List<Player>> response) {
+                List<Player> players = response.body();
+                if (players != null) {
+                    insertAllPlayers(players);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<Player>> call, Throwable t) {
+                players = playerDao.getAllPlayers();
                 loading.setValue(false);
                 t.printStackTrace();
             }

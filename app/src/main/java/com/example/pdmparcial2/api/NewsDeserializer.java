@@ -15,11 +15,25 @@ public class NewsDeserializer implements JsonDeserializer<New> {
     @Override
     public New deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
         New mNew = new New();
-
         JsonObject newJsonObject = json.getAsJsonObject();
-        mNew.setId(newJsonObject.get("_id").getAsString());
-        mNew.setTitle(newJsonObject.get("title").getAsString());
-        mNew.setBody(newJsonObject.get("body").getAsString());
+
+        if (newJsonObject.get("_id") != null) {
+            mNew.setId(newJsonObject.get("_id").getAsString());
+        } else {
+            mNew.setId("");
+        }
+
+        if (newJsonObject.get("title") != null) {
+            mNew.setTitle(newJsonObject.get("title").getAsString());
+        } else {
+            mNew.setTitle("");
+        }
+
+        if (newJsonObject.get("body") != null) {
+            mNew.setBody(newJsonObject.get("body").getAsString());
+        } else {
+            mNew.setBody("");
+        }
 
         if (newJsonObject.get("coverImage") != null) {
             mNew.setCoverImage(newJsonObject.get("coverImage").getAsString());
@@ -39,7 +53,11 @@ public class NewsDeserializer implements JsonDeserializer<New> {
             mNew.setDescription("");
         }
 
-        mNew.setGame(newJsonObject.get("game").getAsString());
+        if (newJsonObject.get("game") != null) {
+            mNew.setGame(newJsonObject.get("game").getAsString());
+        } else {
+            mNew.setGame("");
+        }
 
         return mNew;
     }

@@ -2,6 +2,7 @@ package com.example.pdmparcial2.api;
 
 import com.example.pdmparcial2.model.Category;
 import com.example.pdmparcial2.model.New;
+import com.example.pdmparcial2.model.Player;
 
 import java.util.List;
 
@@ -21,6 +22,9 @@ public interface GameNewsAPI {
 
     @GET("/news/type/list")
     Call<List<Category>> getAllCategories();
+
+    @GET("/players")
+    Call<List<Player>> getAllPlayers();
 
     @FormUrlEncoded
     @POST("/login")

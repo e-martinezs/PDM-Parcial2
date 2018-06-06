@@ -15,6 +15,7 @@ public abstract class NewsRoomDatabase extends RoomDatabase {
 
     public abstract NewDao newsDao();
     public abstract CategoryDao categoryDao();
+    public abstract PlayerDao playerDao();
     private static NewsRoomDatabase INSTANCE;
 
     public static NewsRoomDatabase getDatabase(final Context context){

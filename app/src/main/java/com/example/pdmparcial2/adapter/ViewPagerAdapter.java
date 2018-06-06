@@ -9,7 +9,7 @@ import java.util.List;
 
 public class ViewPagerAdapter extends FragmentPagerAdapter {
 
-    private int COUNT = 1;
+    private int COUNT = 2;
     private List<String> tabTitles = new ArrayList<>();
     private List<Fragment> fragments = new ArrayList<>();
 
