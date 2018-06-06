@@ -5,9 +5,11 @@ import android.arch.lifecycle.ViewModelProviders;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.NavigationView;
+import android.support.design.widget.TabLayout;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
+import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -21,6 +23,7 @@ import android.view.View;
 import android.widget.RelativeLayout;
 
 import com.example.pdmparcial2.R;
+import com.example.pdmparcial2.adapter.ViewPagerAdapter;
 import com.example.pdmparcial2.database.NewViewModel;
 import com.example.pdmparcial2.fragments.NewsListFragment;
 import com.example.pdmparcial2.model.Category;
@@ -47,6 +50,20 @@ public class MainActivity extends AppCompatActivity {
         actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setHomeAsUpIndicator(R.drawable.ic_menu);
 
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        newsListFragment = new NewsListFragment();
+
+        final TabLayout tabLayout = findViewById(R.id.tabLayout);
+        ViewPager viewPager = findViewById(R.id.viewPager);
+        ViewPagerAdapter viewPagerAdapter = new ViewPagerAdapter(fragmentManager);
+        viewPager.setAdapter(viewPagerAdapter);
+        viewPagerAdapter.addFragment(newsListFragment, "News");
+        tabLayout.setupWithViewPager(viewPager);
+
+        /*FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.replace(R.id.contentView, newsListFragment);
+        fragmentTransaction.commit();*/
+
         drawerLayout = findViewById(R.id.drawerLayout);
         NavigationView navigationView = findViewById(R.id.navigationView);
         final Menu menu = navigationView.getMenu();
@@ -56,28 +73,25 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                switch (item.getItemId()){
+                switch (item.getItemId()) {
                     case R.id.drawerNews:
                         selectedCategory = "all";
                         break;
                 }
                 if (item.getGroupId() == R.id.drawerGameMenu) {
+                    tabLayout.setVisibility(View.VISIBLE);
                     subMenu.setGroupCheckable(R.id.drawerGameMenu, true, true);
                     selectedCategory = item.getTitle().toString();
+                } else {
+                    tabLayout.setVisibility(View.GONE);
                 }
-                newsListFragment.setNewsList(new ArrayList<New>(),"all");
+                newsListFragment.setNewsList(new ArrayList<New>(), "all");
                 newViewModel.refresh();
                 item.setChecked(true);
                 drawerLayout.closeDrawers();
                 return true;
             }
         });
-
-        newsListFragment = new NewsListFragment();
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.replace(R.id.contentView, newsListFragment);
-        fragmentTransaction.commit();
 
         newViewModel = ViewModelProviders.of(this).get(NewViewModel.class);
         newViewModel.getAllNews().observe(this, new Observer<List<New>>() {
