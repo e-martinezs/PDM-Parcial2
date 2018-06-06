@@ -8,8 +8,9 @@ import android.content.Context;
 
 import com.example.pdmparcial2.model.Category;
 import com.example.pdmparcial2.model.New;
+import com.example.pdmparcial2.model.Player;
 
-@Database(entities = {New.class, Category.class}, version=1)
+@Database(entities = {New.class, Category.class, Player.class}, version=1)
 public abstract class NewsRoomDatabase extends RoomDatabase {
 
     public abstract NewDao newsDao();

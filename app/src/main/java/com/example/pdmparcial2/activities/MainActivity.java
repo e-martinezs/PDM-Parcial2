@@ -26,6 +26,7 @@ import com.example.pdmparcial2.R;
 import com.example.pdmparcial2.adapter.ViewPagerAdapter;
 import com.example.pdmparcial2.database.NewViewModel;
 import com.example.pdmparcial2.fragments.NewsListFragment;
+import com.example.pdmparcial2.fragments.PlayerListFragment;
 import com.example.pdmparcial2.model.Category;
 import com.example.pdmparcial2.model.New;
 
@@ -37,6 +38,7 @@ public class MainActivity extends AppCompatActivity {
     private DrawerLayout drawerLayout;
     private NewViewModel newViewModel;
     private NewsListFragment newsListFragment;
+    private PlayerListFragment playerListFragment;
     private String selectedCategory = "all";
 
     @Override
@@ -52,12 +54,14 @@ public class MainActivity extends AppCompatActivity {
 
         FragmentManager fragmentManager = getSupportFragmentManager();
         newsListFragment = new NewsListFragment();
+        playerListFragment = new PlayerListFragment();
 
         final TabLayout tabLayout = findViewById(R.id.tabLayout);
         ViewPager viewPager = findViewById(R.id.viewPager);
         ViewPagerAdapter viewPagerAdapter = new ViewPagerAdapter(fragmentManager);
         viewPager.setAdapter(viewPagerAdapter);
         viewPagerAdapter.addFragment(newsListFragment, "News");
+        viewPagerAdapter.addFragment(playerListFragment, "Top Players");
         tabLayout.setupWithViewPager(viewPager);
 
         /*FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
