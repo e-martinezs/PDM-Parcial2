@@ -41,6 +41,8 @@ public class MainActivity extends AppCompatActivity {
     private NewsListFragment newsListFragment;
     private PlayerListFragment playerListFragment;
     private String selectedCategory = "all";
+    private List<New> allNews;
+    private List<Player> allPlayers;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,17 +80,19 @@ public class MainActivity extends AppCompatActivity {
                     case R.id.drawerNews:
                         tabLayout.getTabAt(0).select();
                         selectedCategory = "all";
+                        newsListFragment.setNewsList(allNews, selectedCategory);
                         break;
                 }
                 if (item.getGroupId() == R.id.drawerGameMenu) {
+                    System.out.println("NEWS: "+allNews.size());
                     tabLayout.setVisibility(View.VISIBLE);
                     subMenu.setGroupCheckable(R.id.drawerGameMenu, true, true);
                     selectedCategory = item.getTitle().toString();
+                    newsListFragment.setNewsList(allNews, selectedCategory);
+                    playerListFragment.setPlayerList(allPlayers, selectedCategory);
                 } else {
                     tabLayout.setVisibility(View.GONE);
                 }
-                newsListFragment.setNewsList(new ArrayList<New>(), "all");
-                playerListFragment.setPlayerList(new ArrayList<Player>(), "");
                 newViewModel.refresh();
                 item.setChecked(true);
                 drawerLayout.closeDrawers();
@@ -100,9 +104,8 @@ public class MainActivity extends AppCompatActivity {
         newViewModel.getNews().observe(this, new Observer<List<New>>() {
             @Override
             public void onChanged(@Nullable List<New> news) {
-                if (newsListFragment != null) {
-                    newsListFragment.setNewsList(news, selectedCategory);
-                }
+                newsListFragment.setNewsList(news, selectedCategory);
+                allNews = news;
             }
         });
         newViewModel.getCategories().observe(this, new Observer<List<Category>>() {
@@ -119,9 +122,8 @@ public class MainActivity extends AppCompatActivity {
         newViewModel.getPlayers().observe(this, new Observer<List<Player>>() {
             @Override
             public void onChanged(@Nullable List<Player> players) {
-                if (playerListFragment != null){
-                    playerListFragment.setPlayerList(players, selectedCategory);
-                }
+                playerListFragment.setPlayerList(players, selectedCategory);
+                allPlayers = players;
             }
         });
         newViewModel.getLoading().observe(this, new Observer<Boolean>() {

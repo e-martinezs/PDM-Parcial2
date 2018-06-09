@@ -17,8 +17,8 @@ public interface PlayerDao {
     void insertPlayer(Player player);
 
     @Query("DELETE FROM player_table")
-    void deleteAllPlayers();
+    void deletePlayers();
 
     @Query("SELECT * FROM player_table")
-    LiveData<List<Player>> getAllPlayers();
+    LiveData<List<Player>> getPlayers();
 }

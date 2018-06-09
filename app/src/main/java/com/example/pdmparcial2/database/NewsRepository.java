@@ -44,22 +44,22 @@ public class NewsRepository {
         newDao = db.newsDao();
         categoryDao = db.categoryDao();
         playerDao = db.playerDao();
+        news = newDao.getNews();
+        categories = categoryDao.getCategories();
+        players = playerDao.getPlayers();
         loading.setValue(false);
         login();
-        news = newDao.getAllNews();
-        categories = categoryDao.getAllCategories();
-        players = playerDao.getAllPlayers();
     }
 
-    public LiveData<List<New>> getAllNews() {
+    public LiveData<List<New>> getNews() {
         return news;
     }
 
-    public LiveData<List<Category>> getAllCategories() {
+    public LiveData<List<Category>> getCategories() {
         return categories;
     }
 
-    public LiveData<List<Player>> getAllPlayers() {
+    public LiveData<List<Player>> getPlayers() {
         return players;
     }
 
@@ -67,25 +67,25 @@ public class NewsRepository {
         return loading;
     }
 
-    public void insertAllNews(List<New> news) {
+    public void insertNews(List<New> news) {
         new insertNewsAsyncTask(newDao).execute(news);
     }
 
-    public void insertAllCategories(List<Category> categories) {
+    public void insertCategories(List<Category> categories) {
         new insertCategoriesAsyncTask(categoryDao).execute(categories);
     }
 
-    public void insertAllPlayers(List<Player> players){
-        new insertPlayersAyncTask(playerDao).execute(players);
+    public void insertPlayers(List<Player> players) {
+        new insertPlayersAsyncTask(playerDao).execute(players);
     }
 
     public void refresh() {
         if (token == null) {
             login();
         } else {
-            getNews();
-            getCategories();
-            getPlayers();
+            downloadNews();
+            downloadCategories();
+            downloadPlayers();
         }
     }
 
@@ -121,7 +121,7 @@ public class NewsRepository {
 
         @Override
         protected Void doInBackground(List<Category>... categories) {
-            categoryDao.deleteAllCategories();
+            categoryDao.deleteCategories();
             for (Category c : categories[0]) {
                 categoryDao.insertCategory(c);
             }
@@ -134,17 +134,17 @@ public class NewsRepository {
         }
     }
 
-    private class insertPlayersAyncTask extends AsyncTask<List<Player>, Void, Void>{
+    private class insertPlayersAsyncTask extends AsyncTask<List<Player>, Void, Void> {
 
         private PlayerDao playerDao;
 
-        public insertPlayersAyncTask(PlayerDao playerDao){
+        public insertPlayersAsyncTask(PlayerDao playerDao) {
             this.playerDao = playerDao;
         }
 
         @Override
         protected Void doInBackground(List<Player>... players) {
-            for (Player p:players[0]){
+            for (Player p : players[0]) {
                 playerDao.insertPlayer(p);
             }
             return null;
@@ -168,20 +168,19 @@ public class NewsRepository {
             @Override
             public void onResponse(Call<String> call, Response<String> response) {
                 token = response.body();
-                getNews();
-                getCategories();
-                getPlayers();
+                downloadNews();
+                downloadCategories();
+                downloadPlayers();
             }
 
             @Override
             public void onFailure(Call<String> call, Throwable t) {
                 loading.setValue(false);
-                t.printStackTrace();
             }
         });
     }
 
-    private void getNews() {
+    private void downloadNews() {
         loading.setValue(true);
         OkHttpClient client = new OkHttpClient.Builder().addInterceptor(new Interceptor() {
             @Override
@@ -201,20 +200,18 @@ public class NewsRepository {
             public void onResponse(Call<List<New>> call, Response<List<New>> response) {
                 List<New> news = response.body();
                 if (news != null) {
-                    insertAllNews(news);
+                    insertNews(news);
                 }
             }
 
             @Override
             public void onFailure(Call<List<New>> call, Throwable t) {
-                news = newDao.getAllNews();
                 loading.setValue(false);
-                t.printStackTrace();
             }
         });
     }
 
-    private void getCategories() {
+    private void downloadCategories() {
         loading.setValue(true);
         OkHttpClient client = new OkHttpClient.Builder().addInterceptor(new Interceptor() {
             @Override
@@ -234,20 +231,18 @@ public class NewsRepository {
             public void onResponse(Call<List<Category>> call, Response<List<Category>> response) {
                 List<Category> categories = response.body();
                 if (categories != null) {
-                    insertAllCategories(categories);
+                    insertCategories(categories);
                 }
             }
 
             @Override
             public void onFailure(Call<List<Category>> call, Throwable t) {
-                categories = categoryDao.getAllCategories();
                 loading.setValue(false);
-                t.printStackTrace();
             }
         });
     }
 
-    private void getPlayers() {
+    private void downloadPlayers() {
         loading.setValue(true);
         OkHttpClient client = new OkHttpClient.Builder().addInterceptor(new Interceptor() {
             @Override
@@ -267,15 +262,13 @@ public class NewsRepository {
             public void onResponse(Call<List<Player>> call, Response<List<Player>> response) {
                 List<Player> players = response.body();
                 if (players != null) {
-                    insertAllPlayers(players);
+                    insertPlayers(players);
                 }
             }
 
             @Override
             public void onFailure(Call<List<Player>> call, Throwable t) {
-                players = playerDao.getAllPlayers();
                 loading.setValue(false);
-                t.printStackTrace();
             }
         });
     }

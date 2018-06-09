@@ -22,9 +22,9 @@ public class NewViewModel extends AndroidViewModel{
     public NewViewModel(Application application){
         super(application);
         repository = new NewsRepository(application);
-        this.news = repository.getAllNews();
-        this.categories = repository.getAllCategories();
-        this.players = repository.getAllPlayers();
+        this.news = repository.getNews();
+        this.categories = repository.getCategories();
+        this.players = repository.getPlayers();
         this.loading = repository.getLoading();
     }
 

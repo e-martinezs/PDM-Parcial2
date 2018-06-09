@@ -17,8 +17,8 @@ public interface NewDao {
     void insertNew(New mNew);
 
     @Query("DELETE FROM news_table")
-    void deleteAllNews();
+    void deleteNews();
 
     @Query("SELECT * FROM news_table")
-    LiveData<List<New>> getAllNews();
+    LiveData<List<New>> getNews();
 }
