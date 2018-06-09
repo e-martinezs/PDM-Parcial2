@@ -10,9 +10,11 @@ import com.example.pdmparcial2.api.GameNewsAPI;
 import com.example.pdmparcial2.api.NewsDeserializer;
 import com.example.pdmparcial2.api.PlayerDeserializer;
 import com.example.pdmparcial2.api.TokenDeserializer;
+import com.example.pdmparcial2.api.UserDeserializer;
 import com.example.pdmparcial2.model.Category;
 import com.example.pdmparcial2.model.New;
 import com.example.pdmparcial2.model.Player;
+import com.example.pdmparcial2.model.User;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -30,7 +32,8 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class NewsRepository {
 
-    private String token;
+    private static String token;
+    private static String userId;
     private NewDao newDao;
     private CategoryDao categoryDao;
     private PlayerDao playerDao;
@@ -168,6 +171,7 @@ public class NewsRepository {
             @Override
             public void onResponse(Call<String> call, Response<String> response) {
                 token = response.body();
+                getUserData();
                 downloadNews();
                 downloadCategories();
                 downloadPlayers();
@@ -175,6 +179,34 @@ public class NewsRepository {
 
             @Override
             public void onFailure(Call<String> call, Throwable t) {
+                loading.setValue(false);
+            }
+        });
+    }
+
+    private void getUserData() {
+        loading.setValue(true);
+        OkHttpClient client = new OkHttpClient.Builder().addInterceptor(new Interceptor() {
+            @Override
+            public okhttp3.Response intercept(Chain chain) throws IOException {
+                Request newRequest = chain.request().newBuilder().addHeader("Authorization", "Bearer " + token).build();
+                return chain.proceed(newRequest);
+            }
+        }).build();
+        Gson gson = new GsonBuilder().registerTypeAdapter(User.class, new UserDeserializer()).create();
+        Retrofit.Builder builder = new Retrofit.Builder().baseUrl(GameNewsAPI.BASE_URL).client(client).addConverterFactory(GsonConverterFactory.create(gson));
+        Retrofit retrofit = builder.build();
+        GameNewsAPI gameNewsAPI = retrofit.create(GameNewsAPI.class);
+
+        Call<User> getUserData = gameNewsAPI.getUserData();
+        getUserData.enqueue(new Callback<User>() {
+            @Override
+            public void onResponse(Call<User> call, Response<User> response) {
+                userId = response.body().getId();
+            }
+
+            @Override
+            public void onFailure(Call<User> call, Throwable t) {
                 loading.setValue(false);
             }
         });
@@ -194,7 +226,7 @@ public class NewsRepository {
         Retrofit retrofit = builder.build();
         GameNewsAPI gameNewsAPI = retrofit.create(GameNewsAPI.class);
 
-        Call<List<New>> getNews = gameNewsAPI.getAllNews();
+        Call<List<New>> getNews = gameNewsAPI.getNews();
         getNews.enqueue(new Callback<List<New>>() {
             @Override
             public void onResponse(Call<List<New>> call, Response<List<New>> response) {
@@ -225,7 +257,7 @@ public class NewsRepository {
         Retrofit retrofit = builder.build();
         GameNewsAPI gameNewsAPI = retrofit.create(GameNewsAPI.class);
 
-        Call<List<Category>> getCategories = gameNewsAPI.getAllCategories();
+        Call<List<Category>> getCategories = gameNewsAPI.getCategories();
         getCategories.enqueue(new Callback<List<Category>>() {
             @Override
             public void onResponse(Call<List<Category>> call, Response<List<Category>> response) {
@@ -256,7 +288,7 @@ public class NewsRepository {
         Retrofit retrofit = builder.build();
         GameNewsAPI gameNewsAPI = retrofit.create(GameNewsAPI.class);
 
-        Call<List<Player>> getPlayers = gameNewsAPI.getAllPlayers();
+        Call<List<Player>> getPlayers = gameNewsAPI.getPlayers();
         getPlayers.enqueue(new Callback<List<Player>>() {
             @Override
             public void onResponse(Call<List<Player>> call, Response<List<Player>> response) {
@@ -269,6 +301,58 @@ public class NewsRepository {
             @Override
             public void onFailure(Call<List<Player>> call, Throwable t) {
                 loading.setValue(false);
+            }
+        });
+    }
+
+    public static void saveFavorite(String newId){
+        OkHttpClient client = new OkHttpClient.Builder().addInterceptor(new Interceptor() {
+            @Override
+            public okhttp3.Response intercept(Chain chain) throws IOException {
+                Request newRequest = chain.request().newBuilder().addHeader("Authorization", "Bearer " + token).build();
+                return chain.proceed(newRequest);
+            }
+        }).build();
+        Retrofit.Builder builder = new Retrofit.Builder().baseUrl(GameNewsAPI.BASE_URL).client(client);
+        Retrofit retrofit = builder.build();
+        GameNewsAPI gameNewsAPI = retrofit.create(GameNewsAPI.class);
+
+        Call<Void> saveFavorite = gameNewsAPI.saveFavorite(userId, newId);
+        saveFavorite.enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+
+            }
+        });
+    }
+
+    public static void deleteFavorite(String newId){
+        OkHttpClient client = new OkHttpClient.Builder().addInterceptor(new Interceptor() {
+            @Override
+            public okhttp3.Response intercept(Chain chain) throws IOException {
+                Request newRequest = chain.request().newBuilder().addHeader("Authorization", "Bearer " + token).build();
+                return chain.proceed(newRequest);
+            }
+        }).build();
+        Retrofit.Builder builder = new Retrofit.Builder().baseUrl(GameNewsAPI.BASE_URL).client(client);
+        Retrofit retrofit = builder.build();
+        GameNewsAPI gameNewsAPI = retrofit.create(GameNewsAPI.class);
+
+        Call<Void> deleteFavorite = gameNewsAPI.deleteFavorite(userId, newId);
+        deleteFavorite.enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+
             }
         });
     }

@@ -43,6 +43,7 @@
                 android:textSize="14sp" />
 
             <CheckBox
+                android:id="@+id/buttonFavorite"
                 android:layout_width="32dp"
                 android:layout_height="32dp"
                 android:layout_gravity="end"

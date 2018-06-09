@@ -6,10 +6,12 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.pdmparcial2.R;
+import com.example.pdmparcial2.database.NewsRepository;
 import com.example.pdmparcial2.model.New;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
@@ -42,7 +44,7 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.NewsViewHolder
 
     @Override
     public void onBindViewHolder(@NonNull NewsViewHolder holder, int position) {
-        New mNew = news.get(position);
+        final New mNew = news.get(position);
         holder.newsTitleTextView.setText(mNew.getTitle());
         holder.newsDescriptionTetView.setText(mNew.getDescription());
 
@@ -55,6 +57,18 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.NewsViewHolder
         }catch (Exception e){
             e.printStackTrace();
         }
+
+        final CheckBox buttonFavorite = holder.buttonFavorite;
+        buttonFavorite.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view) {
+                if (buttonFavorite.isChecked()) {
+                    NewsRepository.deleteFavorite(mNew.getId());
+                }else {
+                    NewsRepository.saveFavorite(mNew.getId());
+                }
+            }
+        });
     }
 
     @Override
@@ -67,12 +81,14 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.NewsViewHolder
         private ImageView newsImageView;
         private TextView newsTitleTextView;
         private TextView newsDescriptionTetView;
+        private CheckBox buttonFavorite;
 
         public NewsViewHolder(View view){
             super(view);
             newsImageView = view.findViewById(R.id.newsImageView);
             newsTitleTextView = view.findViewById(R.id.newsTitleTextView);
             newsDescriptionTetView = view.findViewById(R.id.newsDescriptionTextView);
+            buttonFavorite = view.findViewById(R.id.buttonFavorite);
         }
     }
 }
