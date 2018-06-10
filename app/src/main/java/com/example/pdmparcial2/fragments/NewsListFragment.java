@@ -53,9 +53,17 @@ public class NewsListFragment extends Fragment {
     public void setNewsList(List<New> news, String filter) {
         List<New> filteredNews = new ArrayList<>();
         if (!filter.matches("all")) {
-            for (New n : news) {
-                if (n.getGame().matches(filter)) {
-                    filteredNews.add(n);
+            if (filter.matches("favorites")) {
+                for (New n : news) {
+                    if (n.isFavorite()) {
+                        filteredNews.add(n);
+                    }
+                }
+            }else {
+                for (New n : news) {
+                    if (n.getGame().matches(filter)) {
+                        filteredNews.add(n);
+                    }
                 }
             }
         } else {

@@ -39,6 +39,9 @@ public class New implements Comparable<New> {
     @ColumnInfo(name = "game")
     private String game;
 
+    @Ignore
+    private boolean favorite = false;
+
     public New() {
 
     }
@@ -116,6 +119,14 @@ public class New implements Comparable<New> {
 
     public void setDate(Date date) {
         this.date = date;
+    }
+
+    public boolean isFavorite() {
+        return favorite;
+    }
+
+    public void setFavorite(boolean favorite) {
+        this.favorite = favorite;
     }
 
     @Override

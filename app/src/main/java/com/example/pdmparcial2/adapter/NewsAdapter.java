@@ -59,12 +59,21 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.NewsViewHolder
         }
 
         final CheckBox buttonFavorite = holder.buttonFavorite;
+
+        if (mNew.isFavorite()){
+            buttonFavorite.setChecked(true);
+        }else{
+            buttonFavorite.setChecked(false);
+        }
+
         buttonFavorite.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view) {
-                if (buttonFavorite.isChecked()) {
+                if (!buttonFavorite.isChecked()) {
+                    mNew.setFavorite(false);
                     NewsRepository.deleteFavorite(mNew.getId());
                 }else {
+                    mNew.setFavorite(true);
                     NewsRepository.saveFavorite(mNew.getId());
                 }
             }

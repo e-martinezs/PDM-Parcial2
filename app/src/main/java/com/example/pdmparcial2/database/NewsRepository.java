@@ -32,8 +32,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class NewsRepository {
 
-    private static String token;
-    private static String userId;
+    private static User user = new User();
     private NewDao newDao;
     private CategoryDao categoryDao;
     private PlayerDao playerDao;
@@ -83,7 +82,7 @@ public class NewsRepository {
     }
 
     public void refresh() {
-        if (token == null) {
+        if (user.getToken() == null) {
             login();
         } else {
             downloadNews();
@@ -103,6 +102,13 @@ public class NewsRepository {
         @Override
         protected Void doInBackground(List<New>... news) {
             for (New n : news[0]) {
+                for (String id:user.getFavoriteNews()){
+                    if (n.getId() == id){
+                        n.setFavorite(true);
+                    }else{
+                        n.setFavorite(false);
+                    }
+                }
                 newDao.insertNew(n);
             }
             return null;
@@ -170,7 +176,7 @@ public class NewsRepository {
         login.enqueue(new Callback<String>() {
             @Override
             public void onResponse(Call<String> call, Response<String> response) {
-                token = response.body();
+                user.setToken(response.body());
                 getUserData();
                 downloadNews();
                 downloadCategories();
@@ -189,7 +195,7 @@ public class NewsRepository {
         OkHttpClient client = new OkHttpClient.Builder().addInterceptor(new Interceptor() {
             @Override
             public okhttp3.Response intercept(Chain chain) throws IOException {
-                Request newRequest = chain.request().newBuilder().addHeader("Authorization", "Bearer " + token).build();
+                Request newRequest = chain.request().newBuilder().addHeader("Authorization", "Bearer " + user.getToken()).build();
                 return chain.proceed(newRequest);
             }
         }).build();
@@ -202,7 +208,7 @@ public class NewsRepository {
         getUserData.enqueue(new Callback<User>() {
             @Override
             public void onResponse(Call<User> call, Response<User> response) {
-                userId = response.body().getId();
+                user = response.body();
             }
 
             @Override
@@ -217,7 +223,7 @@ public class NewsRepository {
         OkHttpClient client = new OkHttpClient.Builder().addInterceptor(new Interceptor() {
             @Override
             public okhttp3.Response intercept(Chain chain) throws IOException {
-                Request newRequest = chain.request().newBuilder().addHeader("Authorization", "Bearer " + token).build();
+                Request newRequest = chain.request().newBuilder().addHeader("Authorization", "Bearer " + user.getToken()).build();
                 return chain.proceed(newRequest);
             }
         }).build();
@@ -248,7 +254,7 @@ public class NewsRepository {
         OkHttpClient client = new OkHttpClient.Builder().addInterceptor(new Interceptor() {
             @Override
             public okhttp3.Response intercept(Chain chain) throws IOException {
-                Request newRequest = chain.request().newBuilder().addHeader("Authorization", "Bearer " + token).build();
+                Request newRequest = chain.request().newBuilder().addHeader("Authorization", "Bearer " + user.getToken()).build();
                 return chain.proceed(newRequest);
             }
         }).build();
@@ -279,7 +285,7 @@ public class NewsRepository {
         OkHttpClient client = new OkHttpClient.Builder().addInterceptor(new Interceptor() {
             @Override
             public okhttp3.Response intercept(Chain chain) throws IOException {
-                Request newRequest = chain.request().newBuilder().addHeader("Authorization", "Bearer " + token).build();
+                Request newRequest = chain.request().newBuilder().addHeader("Authorization", "Bearer " + user.getToken()).build();
                 return chain.proceed(newRequest);
             }
         }).build();
@@ -305,54 +311,58 @@ public class NewsRepository {
         });
     }
 
-    public static void saveFavorite(String newId){
+    public static void saveFavorite(final String newId){
         OkHttpClient client = new OkHttpClient.Builder().addInterceptor(new Interceptor() {
             @Override
             public okhttp3.Response intercept(Chain chain) throws IOException {
-                Request newRequest = chain.request().newBuilder().addHeader("Authorization", "Bearer " + token).build();
+                Request newRequest = chain.request().newBuilder().addHeader("Authorization", "Bearer " + user.getToken()).build();
                 return chain.proceed(newRequest);
             }
         }).build();
-        Retrofit.Builder builder = new Retrofit.Builder().baseUrl(GameNewsAPI.BASE_URL).client(client);
+        Retrofit.Builder builder = new Retrofit.Builder().baseUrl(GameNewsAPI.BASE_URL).client(client).addConverterFactory(GsonConverterFactory.create(new Gson()));
         Retrofit retrofit = builder.build();
         GameNewsAPI gameNewsAPI = retrofit.create(GameNewsAPI.class);
 
-        Call<Void> saveFavorite = gameNewsAPI.saveFavorite(userId, newId);
+        System.out.println("USER "+user.getId()+" NEW "+newId);
+        Call<Void> saveFavorite = gameNewsAPI.saveFavorite(user.getId(), newId);
         saveFavorite.enqueue(new Callback<Void>() {
             @Override
             public void onResponse(Call<Void> call, Response<Void> response) {
-
+                System.out.println("ADDED "+response.toString());
+                user.getFavoriteNews().add(newId);
             }
 
             @Override
             public void onFailure(Call<Void> call, Throwable t) {
-
+                t.printStackTrace();
             }
         });
     }
 
-    public static void deleteFavorite(String newId){
+    public static void deleteFavorite(final String newId){
         OkHttpClient client = new OkHttpClient.Builder().addInterceptor(new Interceptor() {
             @Override
             public okhttp3.Response intercept(Chain chain) throws IOException {
-                Request newRequest = chain.request().newBuilder().addHeader("Authorization", "Bearer " + token).build();
+                Request newRequest = chain.request().newBuilder().addHeader("Authorization", "Bearer " + user.getToken()).build();
                 return chain.proceed(newRequest);
             }
         }).build();
-        Retrofit.Builder builder = new Retrofit.Builder().baseUrl(GameNewsAPI.BASE_URL).client(client);
+        Retrofit.Builder builder = new Retrofit.Builder().baseUrl(GameNewsAPI.BASE_URL).client(client).addConverterFactory(GsonConverterFactory.create(new Gson()));
         Retrofit retrofit = builder.build();
         GameNewsAPI gameNewsAPI = retrofit.create(GameNewsAPI.class);
 
-        Call<Void> deleteFavorite = gameNewsAPI.deleteFavorite(userId, newId);
+        System.out.println("USER "+user.getId()+" NEW "+newId);
+        Call<Void> deleteFavorite = gameNewsAPI.deleteFavorite(user.getId(), newId);
         deleteFavorite.enqueue(new Callback<Void>() {
             @Override
             public void onResponse(Call<Void> call, Response<Void> response) {
-
+                System.out.println("DELETED "+response.toString());
+                user.getFavoriteNews().remove(newId);
             }
 
             @Override
             public void onFailure(Call<Void> call, Throwable t) {
-
+                t.printStackTrace();
             }
         });
     }

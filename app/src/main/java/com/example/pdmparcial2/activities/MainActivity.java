@@ -82,9 +82,13 @@ public class MainActivity extends AppCompatActivity {
                         selectedCategory = "all";
                         newsListFragment.setNewsList(allNews, selectedCategory);
                         break;
+                    case R.id.drawerFavorites:
+                        tabLayout.getTabAt(0).select();
+                        selectedCategory = "favorites";
+                        newsListFragment.setNewsList(allNews, selectedCategory);
+                        break;
                 }
                 if (item.getGroupId() == R.id.drawerGameMenu) {
-                    System.out.println("NEWS: "+allNews.size());
                     tabLayout.setVisibility(View.VISIBLE);
                     subMenu.setGroupCheckable(R.id.drawerGameMenu, true, true);
                     selectedCategory = item.getTitle().toString();
