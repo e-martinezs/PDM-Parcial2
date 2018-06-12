@@ -1,7 +1,10 @@
 package com.example.pdmparcial2.adapter;
 
 import android.content.Context;
+import android.content.Intent;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,6 +13,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.pdmparcial2.R;
+import com.example.pdmparcial2.activities.PlayerDetail;
 import com.example.pdmparcial2.model.New;
 import com.example.pdmparcial2.model.Player;
 import com.squareup.picasso.Callback;
@@ -43,7 +47,7 @@ public class PlayerAdapter extends RecyclerView.Adapter<PlayerAdapter.PlayerView
 
     @Override
     public void onBindViewHolder(@NonNull PlayerViewHolder holder, int position) {
-        Player player = players.get(position);
+        final Player player = players.get(position);
         holder.playerNameTextView.setText(player.getName());
 
         try{
@@ -55,6 +59,17 @@ public class PlayerAdapter extends RecyclerView.Adapter<PlayerAdapter.PlayerView
         }catch (Exception e){
             e.printStackTrace();
         }
+
+        holder.cardView.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(context, PlayerDetail.class);
+                Bundle bundle = new Bundle();
+                bundle.putSerializable("PLAYER", player);
+                intent.putExtras(bundle);
+                context.startActivity(intent);
+            }
+        });
     }
 
     @Override
@@ -64,11 +79,13 @@ public class PlayerAdapter extends RecyclerView.Adapter<PlayerAdapter.PlayerView
 
     public class PlayerViewHolder extends RecyclerView.ViewHolder{
 
+        private CardView cardView;
         private ImageView playerImageView;
         private TextView playerNameTextView;
 
         public PlayerViewHolder(View view){
             super(view);
+            cardView = view.findViewById(R.id.cardview_player);
             playerImageView = view.findViewById(R.id.playerImageView);
             playerNameTextView = view.findViewById(R.id.playerNameTextView);
         }

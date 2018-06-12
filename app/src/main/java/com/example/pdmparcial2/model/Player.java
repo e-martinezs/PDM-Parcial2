@@ -5,8 +5,10 @@ import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.PrimaryKey;
 import android.support.annotation.NonNull;
 
+import java.io.Serializable;
+
 @Entity(tableName = "player_table")
-public class Player {
+public class Player implements Serializable{
 
     @PrimaryKey
     @NonNull

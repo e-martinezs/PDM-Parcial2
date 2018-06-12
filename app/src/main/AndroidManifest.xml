@@ -19,6 +19,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".activities.NewDetail"/>
+        <activity android:name=".activities.PlayerDetail"/>
     </application>
 
 </manifest>
