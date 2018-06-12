@@ -16,7 +16,6 @@ import android.widget.TextView;
 import com.example.pdmparcial2.R;
 import com.example.pdmparcial2.activities.NewDetail;
 import com.example.pdmparcial2.database.NewViewModel;
-import com.example.pdmparcial2.database.NewsRepository;
 import com.example.pdmparcial2.model.New;
 import com.squareup.picasso.Picasso;
 
@@ -85,13 +84,16 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.NewsViewHolder
             }
         });
 
-        holder.cardView.setOnClickListener(new View.OnClickListener(){
+        final View imageView = holder.newsImageView;
+        final View textView = holder.newsTitleTextView;
+        holder.cardView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(context, NewDetail.class);
                 Bundle bundle = new Bundle();
                 bundle.putSerializable("NEW", mNew);
                 intent.putExtras(bundle);
+
                 context.startActivity(intent);
             }
         });

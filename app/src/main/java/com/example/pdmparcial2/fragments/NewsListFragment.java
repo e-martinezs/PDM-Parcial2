@@ -52,7 +52,7 @@ public class NewsListFragment extends Fragment {
         return view;
     }
 
-    public void setViewModel(NewViewModel newViewModel){
+    public void setViewModel(NewViewModel newViewModel) {
         this.newViewModel = newViewModel;
     }
 
@@ -65,7 +65,7 @@ public class NewsListFragment extends Fragment {
                         filteredNews.add(n);
                     }
                 }
-            }else {
+            } else {
                 for (New n : news) {
                     if (n.getGame().matches(filter)) {
                         filteredNews.add(n);

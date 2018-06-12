@@ -30,7 +30,7 @@ public class NewDetail extends AppCompatActivity{
         titleTextView.setText(mNew.getTitle());
         descriptionTextView.setText(mNew.getDescription());
         bodyTextView.setText(mNew.getBody());
-        dateTextView.setText(mNew.getCreate_date());
+        dateTextView.setText(mNew.getCreate_date().subSequence(0,10));
 
         try{
             if (!mNew.getCoverImage().isEmpty()) {
