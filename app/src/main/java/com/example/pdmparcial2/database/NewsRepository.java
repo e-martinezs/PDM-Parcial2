@@ -187,6 +187,13 @@ public class NewsRepository {
             @Override
             public void onResponse(Call<String> call, Response<String> response) {
                 user.setToken(response.body());
+                for (New n: news.getValue()){
+                    if (n.isFavorite()){
+                        saveFavorite(n.getId());
+                    }else{
+                        deleteFavorite(n.getId());
+                    }
+                }
                 getUserData();
             }
 
