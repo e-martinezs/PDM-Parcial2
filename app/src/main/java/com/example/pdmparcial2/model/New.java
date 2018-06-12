@@ -39,7 +39,7 @@ public class New implements Comparable<New> {
     @ColumnInfo(name = "game")
     private String game;
 
-    @Ignore
+    @ColumnInfo(name = "favorite")
     private boolean favorite = false;
 
     public New() {

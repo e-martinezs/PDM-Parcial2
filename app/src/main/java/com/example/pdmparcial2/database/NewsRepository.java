@@ -32,7 +32,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class NewsRepository {
 
-    private static User user = new User();
+    private User user = new User();
     private NewDao newDao;
     private CategoryDao categoryDao;
     private PlayerDao playerDao;
@@ -83,18 +83,9 @@ public class NewsRepository {
 
     public void refresh() {
         login();
-        /*if (user.getToken() == null) {
-            login();
-        } else {
-            getUserData();
-            downloadNews();
-            downloadCategories();
-            downloadPlayers();
-        }*/
     }
 
     private class insertNewsAsyncTask extends AsyncTask<List<New>, Void, Void> {
-
         private NewDao newDao;
 
         public insertNewsAsyncTask(NewDao newDao) {
@@ -107,7 +98,7 @@ public class NewsRepository {
                 for (String id:user.getFavoriteNews()){
                     if (n.getId().matches(id)){
                         n.setFavorite(true);
-                        System.out.println("FAVORITE "+n.getTitle());
+                        break;
                     }else{
                         n.setFavorite(false);
                     }
@@ -124,7 +115,6 @@ public class NewsRepository {
     }
 
     private class insertCategoriesAsyncTask extends AsyncTask<List<Category>, Void, Void> {
-
         private CategoryDao categoryDao;
 
         public insertCategoriesAsyncTask(CategoryDao categoryDao) {
@@ -147,7 +137,6 @@ public class NewsRepository {
     }
 
     private class insertPlayersAsyncTask extends AsyncTask<List<Player>, Void, Void> {
-
         private PlayerDao playerDao;
 
         public insertPlayersAsyncTask(PlayerDao playerDao) {
@@ -168,6 +157,24 @@ public class NewsRepository {
         }
     }
 
+    private class setNewFavoriteAsyncTask extends AsyncTask<Void, Void, Void>{
+        private NewDao newDao;
+        private String id;
+        private boolean favorite;
+
+        public setNewFavoriteAsyncTask(NewDao newDao, String id, boolean favorite){
+            this.newDao = newDao;
+            this.id = id;
+            this.favorite = favorite;
+        }
+
+        @Override
+        protected Void doInBackground(Void... voids) {
+            newDao.setFavorite(id, favorite);
+            return null;
+        }
+    }
+
     private void login() {
         loading.setValue(true);
         Gson gson = new GsonBuilder().registerTypeAdapter(String.class, new TokenDeserializer()).create();
@@ -181,9 +188,6 @@ public class NewsRepository {
             public void onResponse(Call<String> call, Response<String> response) {
                 user.setToken(response.body());
                 getUserData();
-                /*downloadNews();
-                downloadCategories();
-                downloadPlayers();*/
             }
 
             @Override
@@ -318,7 +322,7 @@ public class NewsRepository {
         });
     }
 
-    public static void saveFavorite(final String newId){
+    public void saveFavorite(final String newId){
         OkHttpClient client = new OkHttpClient.Builder().addInterceptor(new Interceptor() {
             @Override
             public okhttp3.Response intercept(Chain chain) throws IOException {
@@ -330,23 +334,21 @@ public class NewsRepository {
         Retrofit retrofit = builder.build();
         GameNewsAPI gameNewsAPI = retrofit.create(GameNewsAPI.class);
 
-        System.out.println("USER "+user.getId()+" NEW "+newId+" TOKEN "+user.getToken());
         Call<Void> saveFavorite = gameNewsAPI.saveFavorite(user.getId(), newId);
         saveFavorite.enqueue(new Callback<Void>() {
             @Override
             public void onResponse(Call<Void> call, Response<Void> response) {
-                System.out.println("ADDED "+response.toString());
                 user.getFavoriteNews().add(newId);
+                new setNewFavoriteAsyncTask(newDao, user.getId(), true);
             }
 
             @Override
             public void onFailure(Call<Void> call, Throwable t) {
-                t.printStackTrace();
             }
         });
     }
 
-    public static void deleteFavorite(final String newId){
+    public void deleteFavorite(final String newId){
         OkHttpClient client = new OkHttpClient.Builder().addInterceptor(new Interceptor() {
             @Override
             public okhttp3.Response intercept(Chain chain) throws IOException {
@@ -358,18 +360,16 @@ public class NewsRepository {
         Retrofit retrofit = builder.build();
         GameNewsAPI gameNewsAPI = retrofit.create(GameNewsAPI.class);
 
-        System.out.println("USER "+user.getId()+" NEW "+newId);
         Call<Void> deleteFavorite = gameNewsAPI.deleteFavorite(user.getId(), newId);
         deleteFavorite.enqueue(new Callback<Void>() {
             @Override
             public void onResponse(Call<Void> call, Response<Void> response) {
-                System.out.println("DELETED "+response.toString());
                 user.getFavoriteNews().remove(newId);
+                new setNewFavoriteAsyncTask(newDao, user.getId(), false);
             }
 
             @Override
             public void onFailure(Call<Void> call, Throwable t) {
-                t.printStackTrace();
             }
         });
     }

@@ -21,4 +21,7 @@ public interface NewDao {
 
     @Query("SELECT * FROM news_table")
     LiveData<List<New>> getNews();
+
+    @Query("UPDATE news_table SET favorite=:favorite WHERE id=:id")
+    void setFavorite(String id, boolean favorite);
 }

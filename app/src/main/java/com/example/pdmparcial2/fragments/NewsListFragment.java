@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 
 import com.example.pdmparcial2.R;
 import com.example.pdmparcial2.adapter.NewsAdapter;
+import com.example.pdmparcial2.database.NewViewModel;
 import com.example.pdmparcial2.model.New;
 
 import java.util.ArrayList;
@@ -22,6 +23,7 @@ public class NewsListFragment extends Fragment {
 
     private List<New> news;
     private NewsAdapter newsAdapter;
+    private NewViewModel newViewModel;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -43,11 +45,15 @@ public class NewsListFragment extends Fragment {
         });
 
         recyclerView.setLayoutManager(gridLayoutManager);
-        newsAdapter = new NewsAdapter(container.getContext());
+        newsAdapter = new NewsAdapter(container.getContext(), newViewModel);
         recyclerView.setAdapter(newsAdapter);
         recyclerView.setHasFixedSize(true);
 
         return view;
+    }
+
+    public void setViewModel(NewViewModel newViewModel){
+        this.newViewModel = newViewModel;
     }
 
     public void setNewsList(List<New> news, String filter) {

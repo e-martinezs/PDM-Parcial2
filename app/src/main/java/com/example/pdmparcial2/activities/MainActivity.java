@@ -105,6 +105,7 @@ public class MainActivity extends AppCompatActivity {
         });
 
         newViewModel = ViewModelProviders.of(this).get(NewViewModel.class);
+        newsListFragment.setViewModel(newViewModel);
         newViewModel.getNews().observe(this, new Observer<List<New>>() {
             @Override
             public void onChanged(@Nullable List<New> news) {

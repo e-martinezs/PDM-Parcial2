@@ -47,4 +47,12 @@ public class NewViewModel extends AndroidViewModel{
     public void refresh(){
         repository.refresh();
     }
+
+    public void saveFavorite(String newId){
+        repository.saveFavorite(newId);
+    }
+
+    public void deleteFavorite(String newId){
+        repository.deleteFavorite(newId);
+    }
 }
