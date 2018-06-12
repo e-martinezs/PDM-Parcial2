@@ -82,13 +82,15 @@ public class NewsRepository {
     }
 
     public void refresh() {
-        if (user.getToken() == null) {
+        login();
+        /*if (user.getToken() == null) {
             login();
         } else {
+            getUserData();
             downloadNews();
             downloadCategories();
             downloadPlayers();
-        }
+        }*/
     }
 
     private class insertNewsAsyncTask extends AsyncTask<List<New>, Void, Void> {
@@ -103,8 +105,9 @@ public class NewsRepository {
         protected Void doInBackground(List<New>... news) {
             for (New n : news[0]) {
                 for (String id:user.getFavoriteNews()){
-                    if (n.getId() == id){
+                    if (n.getId().matches(id)){
                         n.setFavorite(true);
+                        System.out.println("FAVORITE "+n.getTitle());
                     }else{
                         n.setFavorite(false);
                     }
@@ -178,9 +181,9 @@ public class NewsRepository {
             public void onResponse(Call<String> call, Response<String> response) {
                 user.setToken(response.body());
                 getUserData();
-                downloadNews();
+                /*downloadNews();
                 downloadCategories();
-                downloadPlayers();
+                downloadPlayers();*/
             }
 
             @Override
@@ -208,7 +211,9 @@ public class NewsRepository {
         getUserData.enqueue(new Callback<User>() {
             @Override
             public void onResponse(Call<User> call, Response<User> response) {
-                user = response.body();
+                user.setId(response.body().getId());
+                user.setFavoriteNews(response.body().getFavoriteNews());
+                downloadNews();
             }
 
             @Override
@@ -240,6 +245,7 @@ public class NewsRepository {
                 if (news != null) {
                     insertNews(news);
                 }
+                downloadCategories();
             }
 
             @Override
@@ -271,6 +277,7 @@ public class NewsRepository {
                 if (categories != null) {
                     insertCategories(categories);
                 }
+                downloadPlayers();
             }
 
             @Override
@@ -323,7 +330,7 @@ public class NewsRepository {
         Retrofit retrofit = builder.build();
         GameNewsAPI gameNewsAPI = retrofit.create(GameNewsAPI.class);
 
-        System.out.println("USER "+user.getId()+" NEW "+newId);
+        System.out.println("USER "+user.getId()+" NEW "+newId+" TOKEN "+user.getToken());
         Call<Void> saveFavorite = gameNewsAPI.saveFavorite(user.getId(), newId);
         saveFavorite.enqueue(new Callback<Void>() {
             @Override

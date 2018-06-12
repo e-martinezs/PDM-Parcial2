@@ -26,7 +26,7 @@ public class UserDeserializer implements JsonDeserializer<User>{
         System.out.println("FAVORITES "+array.toString());
         for (int i=0; i<array.size(); i++){
             JsonObject object = array.get(i).getAsJsonObject();
-            news.add(object.get("_id").toString());
+            news.add(object.get("_id").getAsString());
         }
         user.setFavoriteNews(news);
 
