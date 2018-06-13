@@ -61,10 +61,11 @@ public class MainActivity extends AppCompatActivity {
 
         final TabLayout tabLayout = findViewById(R.id.tabLayout);
         ViewPager viewPager = findViewById(R.id.viewPager);
-        ViewPagerAdapter viewPagerAdapter = new ViewPagerAdapter(fragmentManager);
+        final ViewPagerAdapter viewPagerAdapter = new ViewPagerAdapter(fragmentManager);
         viewPager.setAdapter(viewPagerAdapter);
         viewPagerAdapter.addFragment(newsListFragment, "News");
         viewPagerAdapter.addFragment(playerListFragment, "Top Players");
+        viewPagerAdapter.setCount(1);
         tabLayout.setupWithViewPager(viewPager);
 
         drawerLayout = findViewById(R.id.drawerLayout);
@@ -80,11 +81,13 @@ public class MainActivity extends AppCompatActivity {
                     case R.id.drawerNews:
                         tabLayout.getTabAt(0).select();
                         selectedCategory = "all";
+                        viewPagerAdapter.setCount(1);
                         newsListFragment.setNewsList(allNews, selectedCategory);
                         break;
                     case R.id.drawerFavorites:
                         tabLayout.getTabAt(0).select();
                         selectedCategory = "favorites";
+                        viewPagerAdapter.setCount(1);
                         newsListFragment.setNewsList(allNews, selectedCategory);
                         break;
                 }
@@ -92,6 +95,7 @@ public class MainActivity extends AppCompatActivity {
                     tabLayout.setVisibility(View.VISIBLE);
                     subMenu.setGroupCheckable(R.id.drawerGameMenu, true, true);
                     selectedCategory = item.getTitle().toString();
+                    viewPagerAdapter.setCount(2);
                     newsListFragment.setNewsList(allNews, selectedCategory);
                     playerListFragment.setPlayerList(allPlayers, selectedCategory);
                 } else {

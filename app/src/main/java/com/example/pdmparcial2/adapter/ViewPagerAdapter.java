@@ -37,6 +37,11 @@ public class ViewPagerAdapter extends FragmentPagerAdapter {
         return tabTitles.get(position);
     }
 
+    public void setCount(int count){
+        COUNT = count;
+        this.notifyDataSetChanged();
+    }
+
     public void addFragment(Fragment fragment, String tabTitle){
         fragments.add(fragment);
         tabTitles.add(tabTitle);
