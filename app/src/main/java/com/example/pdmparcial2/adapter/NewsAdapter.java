@@ -1,5 +1,6 @@
 package com.example.pdmparcial2.adapter;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -84,8 +85,6 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.NewsViewHolder
             }
         });
 
-        final View imageView = holder.newsImageView;
-        final View textView = holder.newsTitleTextView;
         holder.cardView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -94,7 +93,7 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.NewsViewHolder
                 bundle.putSerializable("NEW", mNew);
                 intent.putExtras(bundle);
 
-                context.startActivity(intent);
+                ((Activity)context).startActivityForResult(intent, 1);
             }
         });
     }

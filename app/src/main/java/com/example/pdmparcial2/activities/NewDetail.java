@@ -1,12 +1,16 @@
 package com.example.pdmparcial2.activities;
 
+import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.view.View;
+import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.pdmparcial2.R;
+import com.example.pdmparcial2.database.NewViewModel;
 import com.example.pdmparcial2.model.New;
 import com.squareup.picasso.Picasso;
 
@@ -22,10 +26,11 @@ public class NewDetail extends AppCompatActivity{
         TextView descriptionTextView = findViewById(R.id.detail_newDescriptionTextView);
         TextView bodyTextView = findViewById(R.id.detail_newBodyTextView);
         TextView dateTextView = findViewById(R.id.detail_newDateTextView);
+        final CheckBox favoriteButton = findViewById(R.id.detail_buttonFavorite);
 
         Intent intent = this.getIntent();
         Bundle bundle = intent.getExtras();
-        New mNew = (New)bundle.getSerializable("NEW");
+        final New mNew = (New)bundle.getSerializable("NEW");
 
         titleTextView.setText(mNew.getTitle());
         descriptionTextView.setText(mNew.getDescription());
@@ -41,5 +46,25 @@ public class NewDetail extends AppCompatActivity{
         }catch (Exception e){
             e.printStackTrace();
         }
+
+        if(mNew.isFavorite()){
+            favoriteButton.setChecked(true);
+        }else{
+            favoriteButton.setChecked(false);
+        }
+
+        final NewViewModel newViewModel = ViewModelProviders.of(this).get(NewViewModel.class);
+        favoriteButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (!favoriteButton.isChecked()){
+                    mNew.setFavorite(false);
+                    newViewModel.deleteFavorite(mNew.getId());
+                }else{
+                    mNew.setFavorite(true);
+                    newViewModel.saveFavorite(mNew.getId());
+                }
+            }
+        });
     }
 }

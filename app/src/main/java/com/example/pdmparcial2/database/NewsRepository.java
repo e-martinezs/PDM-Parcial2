@@ -32,14 +32,14 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class NewsRepository {
 
-    private User user = new User();
     private NewDao newDao;
     private CategoryDao categoryDao;
     private PlayerDao playerDao;
-    private LiveData<List<New>> news;
-    private LiveData<List<Category>> categories;
-    private LiveData<List<Player>> players;
-    private MutableLiveData<Boolean> loading = new MutableLiveData<>();
+    private static User user = new User();
+    private static LiveData<List<New>> news;
+    private static LiveData<List<Category>> categories;
+    private static LiveData<List<Player>> players;
+    private static MutableLiveData<Boolean> loading = new MutableLiveData<>();
 
     public NewsRepository(Application application) {
         NewsRoomDatabase db = NewsRoomDatabase.getDatabase(application);
@@ -82,7 +82,7 @@ public class NewsRepository {
     }
 
     public void refresh() {
-        login();
+        getUserData();
     }
 
     private class insertNewsAsyncTask extends AsyncTask<List<New>, Void, Void> {
@@ -95,11 +95,11 @@ public class NewsRepository {
         @Override
         protected Void doInBackground(List<New>... news) {
             for (New n : news[0]) {
-                for (String id:user.getFavoriteNews()){
-                    if (n.getId().matches(id)){
+                for (String id : user.getFavoriteNews()) {
+                    if (n.getId().matches(id)) {
                         n.setFavorite(true);
                         break;
-                    }else{
+                    } else {
                         n.setFavorite(false);
                     }
                 }
@@ -157,12 +157,12 @@ public class NewsRepository {
         }
     }
 
-    private class setNewFavoriteAsyncTask extends AsyncTask<Void, Void, Void>{
+    private class setNewFavoriteAsyncTask extends AsyncTask<Void, Void, Void> {
         private NewDao newDao;
         private String id;
         private boolean favorite;
 
-        public setNewFavoriteAsyncTask(NewDao newDao, String id, boolean favorite){
+        public setNewFavoriteAsyncTask(NewDao newDao, String id, boolean favorite) {
             this.newDao = newDao;
             this.id = id;
             this.favorite = favorite;
@@ -187,11 +187,13 @@ public class NewsRepository {
             @Override
             public void onResponse(Call<String> call, Response<String> response) {
                 user.setToken(response.body());
-                for (New n: news.getValue()){
-                    if (n.isFavorite()){
-                        saveFavorite(n.getId());
-                    }else{
-                        deleteFavorite(n.getId());
+                if (news.getValue() != null) {
+                    for (New n : news.getValue()) {
+                        if (n.isFavorite()) {
+                            saveFavorite(n.getId());
+                        } else {
+                            deleteFavorite(n.getId());
+                        }
                     }
                 }
                 getUserData();
@@ -329,7 +331,7 @@ public class NewsRepository {
         });
     }
 
-    public void saveFavorite(final String newId){
+    public void saveFavorite(final String newId) {
         OkHttpClient client = new OkHttpClient.Builder().addInterceptor(new Interceptor() {
             @Override
             public okhttp3.Response intercept(Chain chain) throws IOException {
@@ -355,7 +357,7 @@ public class NewsRepository {
         });
     }
 
-    public void deleteFavorite(final String newId){
+    public void deleteFavorite(final String newId) {
         OkHttpClient client = new OkHttpClient.Builder().addInterceptor(new Interceptor() {
             @Override
             public okhttp3.Response intercept(Chain chain) throws IOException {

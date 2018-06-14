@@ -13,19 +13,21 @@ import java.util.List;
 
 public class NewViewModel extends AndroidViewModel{
 
-    private NewsRepository repository;
-    private LiveData<List<New>> news;
-    private LiveData<List<Category>> categories;
-    private LiveData<List<Player>> players;
-    private MutableLiveData<Boolean> loading;
+    private static NewsRepository repository;
+    private static LiveData<List<New>> news;
+    private static LiveData<List<Category>> categories;
+    private static LiveData<List<Player>> players;
+    private static MutableLiveData<Boolean> loading;
 
     public NewViewModel(Application application){
         super(application);
-        repository = new NewsRepository(application);
-        this.news = repository.getNews();
-        this.categories = repository.getCategories();
-        this.players = repository.getPlayers();
-        this.loading = repository.getLoading();
+        if (repository == null) {
+            repository = new NewsRepository(application);
+            news = repository.getNews();
+            categories = repository.getCategories();
+            players = repository.getPlayers();
+            loading = repository.getLoading();
+        }
     }
 
     public LiveData<List<New>> getNews(){
