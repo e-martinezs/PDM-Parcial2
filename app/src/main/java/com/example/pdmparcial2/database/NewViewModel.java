@@ -46,6 +46,10 @@ public class NewViewModel extends AndroidViewModel{
         return loading;
     }
 
+    public void login(String username, String password){
+        repository.login(username, password);
+    }
+
     public void refresh(){
         repository.refresh();
     }

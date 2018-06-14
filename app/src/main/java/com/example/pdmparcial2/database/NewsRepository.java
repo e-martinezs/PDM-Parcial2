@@ -3,7 +3,9 @@ package com.example.pdmparcial2.database;
 import android.app.Application;
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
+import android.preference.PreferenceManager;
 
 import com.example.pdmparcial2.api.CategoryDeserializer;
 import com.example.pdmparcial2.api.GameNewsAPI;
@@ -40,9 +42,11 @@ public class NewsRepository {
     private static LiveData<List<Category>> categories;
     private static LiveData<List<Player>> players;
     private static MutableLiveData<Boolean> loading = new MutableLiveData<>();
+    private static SharedPreferences sharedPreferences;
 
     public NewsRepository(Application application) {
         NewsRoomDatabase db = NewsRoomDatabase.getDatabase(application);
+        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(application.getApplicationContext());
         newDao = db.newsDao();
         categoryDao = db.categoryDao();
         playerDao = db.playerDao();
@@ -50,7 +54,6 @@ public class NewsRepository {
         categories = categoryDao.getCategories();
         players = playerDao.getPlayers();
         loading.setValue(false);
-        login();
     }
 
     public LiveData<List<New>> getNews() {
@@ -175,18 +178,23 @@ public class NewsRepository {
         }
     }
 
-    private void login() {
+    public void login(String username, String password) {
         loading.setValue(true);
         Gson gson = new GsonBuilder().registerTypeAdapter(String.class, new TokenDeserializer()).create();
         Retrofit.Builder builder = new Retrofit.Builder().baseUrl(GameNewsAPI.BASE_URL).addConverterFactory(GsonConverterFactory.create(gson));
         Retrofit retrofit = builder.build();
         GameNewsAPI gameNewsAPI = retrofit.create(GameNewsAPI.class);
 
-        final Call<String> login = gameNewsAPI.login("00116316", "00116316");
+        final Call<String> login = gameNewsAPI.login(username, password);
         login.enqueue(new Callback<String>() {
             @Override
             public void onResponse(Call<String> call, Response<String> response) {
                 user.setToken(response.body());
+
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+                editor.putString("TOKEN", user.getToken());
+                editor.apply();
+
                 if (news.getValue() != null) {
                     for (New n : news.getValue()) {
                         if (n.isFavorite()) {
