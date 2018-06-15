@@ -85,7 +85,7 @@ public class NewsRepository {
     }
 
     public void refresh() {
-        getUserData();
+        //getUserData();
     }
 
     private class insertNewsAsyncTask extends AsyncTask<List<New>, Void, Void> {
@@ -189,22 +189,24 @@ public class NewsRepository {
         login.enqueue(new Callback<String>() {
             @Override
             public void onResponse(Call<String> call, Response<String> response) {
-                user.setToken(response.body());
+                System.out.println("LOGIN "+response.toString());
+                if (response.code() == 200) {
+                    user.setToken(response.body());
+                    SharedPreferences.Editor editor = sharedPreferences.edit();
+                    editor.putString("TOKEN", user.getToken());
+                    editor.apply();
 
-                SharedPreferences.Editor editor = sharedPreferences.edit();
-                editor.putString("TOKEN", user.getToken());
-                editor.apply();
-
-                if (news.getValue() != null) {
-                    for (New n : news.getValue()) {
-                        if (n.isFavorite()) {
-                            saveFavorite(n.getId());
-                        } else {
-                            deleteFavorite(n.getId());
+                    if (news.getValue() != null) {
+                        for (New n : news.getValue()) {
+                            if (n.isFavorite()) {
+                                saveFavorite(n.getId());
+                            } else {
+                                deleteFavorite(n.getId());
+                            }
                         }
                     }
+                    getUserData();
                 }
-                getUserData();
             }
 
             @Override

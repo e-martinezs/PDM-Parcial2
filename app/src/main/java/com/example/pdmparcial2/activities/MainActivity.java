@@ -46,14 +46,16 @@ public class MainActivity extends AppCompatActivity {
     private String selectedCategory = "all";
     private List<New> allNews;
     private List<Player> allPlayers;
+    private SharedPreferences sharedPreferences;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-        if (sharedPreferences.getString("TOKEN", null) == null) {
+        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        String token = sharedPreferences.getString("TOKEN", null);
+        if (token == null || token.isEmpty()) {
             Intent intent = new Intent(this, LoginActivity.class);
             startActivity(intent);
             finish();
@@ -99,6 +101,9 @@ public class MainActivity extends AppCompatActivity {
                         selectedCategory = "favorites";
                         viewPagerAdapter.setCount(1);
                         newsListFragment.setNewsList(allNews, selectedCategory);
+                        break;
+                    case R.id.drawerLogout:
+                        logout();
                         break;
                 }
                 if (item.getGroupId() == R.id.drawerGameMenu) {
@@ -183,5 +188,15 @@ public class MainActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
         newViewModel.refresh();
         System.out.println("RESULT");
+    }
+
+    private void logout(){
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString("TOKEN", "");
+        editor.apply();
+
+        Intent intent = new Intent(this, LoginActivity.class);
+        startActivity(intent);
+        finish();
     }
 }

@@ -36,6 +36,9 @@
         <item
             android:id="@+id/drawerSettings"
             android:title="Settings" />
+        <item
+            android:id="@+id/drawerLogout"
+            android:title="Logout"/>
     </group>
 
 </menu>
