@@ -27,6 +27,7 @@ import android.widget.RelativeLayout;
 
 import com.example.pdmparcial2.R;
 import com.example.pdmparcial2.adapter.ViewPagerAdapter;
+import com.example.pdmparcial2.api.APIRequest;
 import com.example.pdmparcial2.database.NewViewModel;
 import com.example.pdmparcial2.fragments.NewsListFragment;
 import com.example.pdmparcial2.fragments.PlayerListFragment;
@@ -41,6 +42,7 @@ public class MainActivity extends AppCompatActivity {
 
     private DrawerLayout drawerLayout;
     private NewViewModel newViewModel;
+    private APIRequest apiRequest;
     private NewsListFragment newsListFragment;
     private PlayerListFragment playerListFragment;
     private String selectedCategory = "all";
@@ -53,8 +55,9 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-        if (sharedPreferences.contains("TOKEN")){
+        newViewModel = ViewModelProviders.of(this).get(NewViewModel.class);
+        apiRequest = new APIRequest(this, newViewModel);
+        if (!apiRequest.isLogged()){
             Intent intent = new Intent(this, LoginActivity.class);
             startActivity(intent);
             finish();
@@ -130,7 +133,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        newViewModel = ViewModelProviders.of(this).get(NewViewModel.class);
         newsListFragment.setViewModel(newViewModel);
         newViewModel.getNews().observe(this, new Observer<List<New>>() {
             @Override
