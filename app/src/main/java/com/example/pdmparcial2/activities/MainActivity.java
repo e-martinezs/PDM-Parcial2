@@ -54,6 +54,13 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        if (sharedPreferences.contains("TOKEN")){
+            Intent intent = new Intent(this, LoginActivity.class);
+            startActivity(intent);
+            finish();
+        }
+
+        /*sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         String token = sharedPreferences.getString("TOKEN", null);
         if (token == null || token.isEmpty()) {
             Intent intent = new Intent(this, LoginActivity.class);
@@ -116,7 +123,7 @@ public class MainActivity extends AppCompatActivity {
                 } else {
                     tabLayout.setVisibility(View.GONE);
                 }
-                newViewModel.refresh();
+                //newViewModel.refresh();
                 item.setChecked(true);
                 drawerLayout.closeDrawers();
                 return true;
@@ -152,18 +159,24 @@ public class MainActivity extends AppCompatActivity {
         });
         newViewModel.getLoading().observe(this, new Observer<Boolean>() {
             @Override
-            public void onChanged(@Nullable Boolean aBoolean) {
+            public void onChanged(@Nullable Boolean loading) {
                 RelativeLayout loadingLayout = findViewById(R.id.loadingLayout);
-                if (aBoolean) {
+                if (loading) {
                     loadingLayout.setVisibility(View.VISIBLE);
                 } else {
                     loadingLayout.setVisibility(View.INVISIBLE);
                 }
             }
         });
+
+        if (!newViewModel.getLogged().getValue()){
+            Intent intent = new Intent(this, LoginActivity.class);
+            startActivity(intent);
+            finish();
+        }*/
     }
 
-    @Override
+    /*@Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.action_menu, menu);
@@ -187,13 +200,10 @@ public class MainActivity extends AppCompatActivity {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         newViewModel.refresh();
-        System.out.println("RESULT");
-    }
+    }*/
 
     private void logout(){
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putString("TOKEN", "");
-        editor.apply();
+        newViewModel.logout();
 
         Intent intent = new Intent(this, LoginActivity.class);
         startActivity(intent);

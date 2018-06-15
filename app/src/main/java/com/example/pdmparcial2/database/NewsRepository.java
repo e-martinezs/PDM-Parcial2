@@ -42,18 +42,31 @@ public class NewsRepository {
     private static LiveData<List<Category>> categories;
     private static LiveData<List<Player>> players;
     private static MutableLiveData<Boolean> loading = new MutableLiveData<>();
+    private static MutableLiveData<Boolean> logged = new MutableLiveData<>();
+    private static MutableLiveData<String> message = new MutableLiveData<>();
     private static SharedPreferences sharedPreferences;
 
     public NewsRepository(Application application) {
         NewsRoomDatabase db = NewsRoomDatabase.getDatabase(application);
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(application.getApplicationContext());
-        newDao = db.newsDao();
+
+        /*newDao = db.newsDao();
         categoryDao = db.categoryDao();
         playerDao = db.playerDao();
         news = newDao.getNews();
         categories = categoryDao.getCategories();
         players = playerDao.getPlayers();
+
         loading.setValue(false);
+        message.setValue("");
+
+        String token = sharedPreferences.getString("TOKEN", null);
+        user.setToken(token);
+        if (token == null || token.isEmpty()){
+            logged.setValue(false);
+        }else{
+            logged.setValue(true);
+        }*/
     }
 
     public LiveData<List<New>> getNews() {
@@ -72,6 +85,12 @@ public class NewsRepository {
         return loading;
     }
 
+    public MutableLiveData<Boolean> getLogged(){return logged;}
+
+    public MutableLiveData<String> getMessage() {
+        return message;
+    }
+
     public void insertNews(List<New> news) {
         new insertNewsAsyncTask(newDao).execute(news);
     }
@@ -85,7 +104,7 @@ public class NewsRepository {
     }
 
     public void refresh() {
-        //getUserData();
+        getUserData();
     }
 
     private class insertNewsAsyncTask extends AsyncTask<List<New>, Void, Void> {
@@ -189,7 +208,6 @@ public class NewsRepository {
         login.enqueue(new Callback<String>() {
             @Override
             public void onResponse(Call<String> call, Response<String> response) {
-                System.out.println("LOGIN "+response.toString());
                 if (response.code() == 200) {
                     user.setToken(response.body());
                     SharedPreferences.Editor editor = sharedPreferences.edit();
@@ -205,8 +223,12 @@ public class NewsRepository {
                             }
                         }
                     }
-                    getUserData();
+                    logged.setValue(true);
+
+                }else if (response.code() == 401){
+                    message.setValue("Wrong username or password");
                 }
+                loading.setValue(false);
             }
 
             @Override
@@ -214,6 +236,13 @@ public class NewsRepository {
                 loading.setValue(false);
             }
         });
+    }
+
+    public void logout(){
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString("TOKEN", "");
+        editor.apply();
+        logged.setValue(false);
     }
 
     private void getUserData() {
@@ -234,9 +263,15 @@ public class NewsRepository {
         getUserData.enqueue(new Callback<User>() {
             @Override
             public void onResponse(Call<User> call, Response<User> response) {
-                user.setId(response.body().getId());
-                user.setFavoriteNews(response.body().getFavoriteNews());
-                downloadNews();
+                System.out.println("USER DATA "+response.toString());
+                if (response.code() == 200) {
+                    user.setId(response.body().getId());
+                    user.setFavoriteNews(response.body().getFavoriteNews());
+                    downloadNews();
+                }else if (response.code() == 401){
+                    message.setValue("Session expired");
+                    logout();
+                }
             }
 
             @Override

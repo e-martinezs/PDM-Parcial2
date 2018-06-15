@@ -18,6 +18,8 @@ public class NewViewModel extends AndroidViewModel{
     private static LiveData<List<Category>> categories;
     private static LiveData<List<Player>> players;
     private static MutableLiveData<Boolean> loading;
+    private static MutableLiveData<Boolean> logged;
+    private static MutableLiveData<String> message;
 
     public NewViewModel(Application application){
         super(application);
@@ -27,6 +29,8 @@ public class NewViewModel extends AndroidViewModel{
             categories = repository.getCategories();
             players = repository.getPlayers();
             loading = repository.getLoading();
+            logged = repository.getLogged();
+            message = repository.getMessage();
         }
     }
 
@@ -46,8 +50,20 @@ public class NewViewModel extends AndroidViewModel{
         return loading;
     }
 
+    public MutableLiveData<Boolean> getLogged(){
+        return logged;
+    }
+
+    public MutableLiveData<String> getMessage() {
+        return message;
+    }
+
     public void login(String username, String password){
         repository.login(username, password);
+    }
+
+    public void logout(){
+        repository.logout();
     }
 
     public void refresh(){
