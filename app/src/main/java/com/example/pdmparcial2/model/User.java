@@ -1,12 +1,13 @@
 package com.example.pdmparcial2.model;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class User {
 
     private String token;
     private String id;
-    private List<String> favoriteNews;
+    private List<String> favoriteNews = new ArrayList<>();
 
     public User(){
 

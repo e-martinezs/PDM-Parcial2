@@ -34,6 +34,10 @@ public class NewsRepository {
         new deleteNewsAsyncTask(newDao).execute();
     }
 
+    public void setFavorite(String newId, boolean favorite){
+        new setNewFavoriteAsyncTask(newDao, newId, favorite).execute();
+    }
+
     private class deleteNewsAsyncTask extends AsyncTask<Void, Void, Void>{
         private NewDao newDao;
 
@@ -59,15 +63,16 @@ public class NewsRepository {
 
         @Override
         protected Void doInBackground(List<New>... news) {
+            newDao.deleteNews();
             for (New n : news[0]) {
-                /*for (String id : user.getFavoriteNews()) {
+                for (String id : user.getFavoriteNews()) {
                     if (n.getId().matches(id)) {
                         n.setFavorite(true);
                         break;
                     } else {
                         n.setFavorite(false);
                     }
-                }*/
+                }
                 newDao.insertNew(n);
             }
             return null;
@@ -91,92 +96,4 @@ public class NewsRepository {
             return null;
         }
     }
-
-    /*private void getUserData() {
-        loading.setValue(true);
-        OkHttpClient client = new OkHttpClient.Builder().addInterceptor(new Interceptor() {
-            @Override
-            public okhttp3.Response intercept(Chain chain) throws IOException {
-                Request newRequest = chain.request().newBuilder().addHeader("Authorization", "Bearer " + user.getToken()).build();
-                return chain.proceed(newRequest);
-            }
-        }).build();
-        Gson gson = new GsonBuilder().registerTypeAdapter(User.class, new UserDeserializer()).create();
-        Retrofit.Builder builder = new Retrofit.Builder().baseUrl(GameNewsAPI.BASE_URL).client(client).addConverterFactory(GsonConverterFactory.create(gson));
-        Retrofit retrofit = builder.build();
-        GameNewsAPI gameNewsAPI = retrofit.create(GameNewsAPI.class);
-
-        Call<User> getUserData = gameNewsAPI.getUserData();
-        getUserData.enqueue(new Callback<User>() {
-            @Override
-            public void onResponse(Call<User> call, Response<User> response) {
-                System.out.println("USER DATA "+response.toString());
-                if (response.code() == 200) {
-                    user.setId(response.body().getId());
-                    user.setFavoriteNews(response.body().getFavoriteNews());
-                    downloadNews();
-                }else if (response.code() == 401){
-                    message.setValue("Session expired");
-                    //logout();
-                }
-            }
-
-            @Override
-            public void onFailure(Call<User> call, Throwable t) {
-                loading.setValue(false);
-            }
-        });
-    }*/
-
-    /*public void saveFavorite(final String newId) {
-        OkHttpClient client = new OkHttpClient.Builder().addInterceptor(new Interceptor() {
-            @Override
-            public okhttp3.Response intercept(Chain chain) throws IOException {
-                Request newRequest = chain.request().newBuilder().addHeader("Authorization", "Bearer " + user.getToken()).build();
-                return chain.proceed(newRequest);
-            }
-        }).build();
-        Retrofit.Builder builder = new Retrofit.Builder().baseUrl(GameNewsAPI.BASE_URL).client(client).addConverterFactory(GsonConverterFactory.create(new Gson()));
-        Retrofit retrofit = builder.build();
-        GameNewsAPI gameNewsAPI = retrofit.create(GameNewsAPI.class);
-
-        Call<Void> saveFavorite = gameNewsAPI.saveFavorite(user.getId(), newId);
-        saveFavorite.enqueue(new Callback<Void>() {
-            @Override
-            public void onResponse(Call<Void> call, Response<Void> response) {
-                user.getFavoriteNews().add(newId);
-                new setNewFavoriteAsyncTask(newDao, user.getId(), true);
-            }
-
-            @Override
-            public void onFailure(Call<Void> call, Throwable t) {
-            }
-        });
-    }*/
-
-    /*public void deleteFavorite(final String newId) {
-        OkHttpClient client = new OkHttpClient.Builder().addInterceptor(new Interceptor() {
-            @Override
-            public okhttp3.Response intercept(Chain chain) throws IOException {
-                Request newRequest = chain.request().newBuilder().addHeader("Authorization", "Bearer " + user.getToken()).build();
-                return chain.proceed(newRequest);
-            }
-        }).build();
-        Retrofit.Builder builder = new Retrofit.Builder().baseUrl(GameNewsAPI.BASE_URL).client(client).addConverterFactory(GsonConverterFactory.create(new Gson()));
-        Retrofit retrofit = builder.build();
-        GameNewsAPI gameNewsAPI = retrofit.create(GameNewsAPI.class);
-
-        Call<Void> deleteFavorite = gameNewsAPI.deleteFavorite(user.getId(), newId);
-        deleteFavorite.enqueue(new Callback<Void>() {
-            @Override
-            public void onResponse(Call<Void> call, Response<Void> response) {
-                user.getFavoriteNews().remove(newId);
-                new setNewFavoriteAsyncTask(newDao, user.getId(), false);
-            }
-
-            @Override
-            public void onFailure(Call<Void> call, Throwable t) {
-            }
-        });
-    }*/
 }

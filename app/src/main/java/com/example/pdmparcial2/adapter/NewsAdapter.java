@@ -16,6 +16,7 @@ import android.widget.TextView;
 
 import com.example.pdmparcial2.R;
 import com.example.pdmparcial2.activities.NewDetail;
+import com.example.pdmparcial2.api.APIRequest;
 import com.example.pdmparcial2.database.viewmodels.NewViewModel;
 import com.example.pdmparcial2.model.New;
 import com.squareup.picasso.Picasso;
@@ -27,12 +28,12 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.NewsViewHolder
 
     private List<New> news;
     private Context context;
-    private NewViewModel newViewModel;
+    private APIRequest apiRequest;
 
-    public NewsAdapter(Context context, NewViewModel newViewModel) {
+    public NewsAdapter(Context context, APIRequest apiRequest) {
         this.context = context;
         news = new ArrayList<>();
-        this.newViewModel = newViewModel;
+        this.apiRequest = apiRequest;
     }
 
     public void setNews(List<New> news) {
@@ -77,10 +78,10 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.NewsViewHolder
             public void onClick(View view) {
                 if (!buttonFavorite.isChecked()) {
                     mNew.setFavorite(false);
-                    //newViewModel.deleteFavorite(mNew.getId());
+                    apiRequest.deleteFavorite(mNew.getId());
                 } else {
                     mNew.setFavorite(true);
-                    //newViewModel.saveFavorite(mNew.getId());
+                    apiRequest.saveFavorite(mNew.getId());
                 }
             }
         });

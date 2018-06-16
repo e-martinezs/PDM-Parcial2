@@ -38,6 +38,7 @@ public class PlayerRepository {
 
         @Override
         protected Void doInBackground(List<Player>... players) {
+            playerDao.deletePlayers();
             for (Player p : players[0]) {
                 playerDao.insertPlayer(p);
             }

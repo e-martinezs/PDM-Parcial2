@@ -70,12 +70,12 @@ public class MainActivity extends AppCompatActivity {
 
         fragmentManager = getSupportFragmentManager();
         newsListFragment = new NewsListFragment();
+        newsListFragment.setApiRequest(apiRequest);
         playerListFragment = new PlayerListFragment();
 
         setupDrawer();
 
         refresh();
-        newsListFragment.setViewModel(newViewModel);
         newViewModel.getNews().observe(this, new Observer<List<New>>() {
             @Override
             public void onChanged(@Nullable List<New> news) {
@@ -185,12 +185,6 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    /*@Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        newViewModel.refresh();
-    }*/
-
     private void login(){
         if (!apiRequest.isLogged()){
             ActivityManager.openLoginActivity(this);
@@ -206,7 +200,5 @@ public class MainActivity extends AppCompatActivity {
 
     private void refresh(){
         apiRequest.refresh();
-        newsListFragment.setNewsList(new ArrayList<New>(), "");
-        playerListFragment.setPlayerList(new ArrayList<Player>(), "");
     }
 }

@@ -9,6 +9,7 @@ import com.example.pdmparcial2.api.deserializers.CategoryDeserializer;
 import com.example.pdmparcial2.api.deserializers.NewsDeserializer;
 import com.example.pdmparcial2.api.deserializers.PlayerDeserializer;
 import com.example.pdmparcial2.api.deserializers.TokenDeserializer;
+import com.example.pdmparcial2.api.deserializers.UserDeserializer;
 import com.example.pdmparcial2.database.viewmodels.CategoryViewModel;
 import com.example.pdmparcial2.database.viewmodels.NewViewModel;
 import com.example.pdmparcial2.database.viewmodels.PlayerViewModel;
@@ -21,6 +22,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import okhttp3.Interceptor;
@@ -35,6 +37,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class APIRequest {
 
     private static String TOKEN = "TOKEN";
+    private static User user = new User();
     private Context context;
     private View loadingLayout;
     private GameNewsAPI gameNewsAPI;
@@ -42,7 +45,6 @@ public class APIRequest {
     private PlayerViewModel playerViewModel;
     private CategoryViewModel categoryViewModel;
     private SharedPreferences sharedPreferences;
-    private User user = new User();
     private boolean loading = false;
     private boolean logged = false;
     private String message = "";
@@ -72,11 +74,11 @@ public class APIRequest {
         gameNewsAPI = retrofit.create(GameNewsAPI.class);
     }
 
-    public void checkLogged(){
-        if (sharedPreferences.contains(TOKEN)){
+    public void checkLogged() {
+        if (sharedPreferences.contains(TOKEN)) {
             setLogged(true);
             user.setToken(sharedPreferences.getString(TOKEN, null));
-        }else{
+        } else {
             setLogged(false);
             user.setToken("");
         }
@@ -94,22 +96,12 @@ public class APIRequest {
         login.enqueue(new Callback<String>() {
             @Override
             public void onResponse(Call<String> call, Response<String> response) {
-                System.out.println("RESPONSE "+response.toString());
                 if (response.code() == 200) {
                     user.setToken(response.body());
                     SharedPreferences.Editor editor = sharedPreferences.edit();
                     editor.putString(TOKEN, user.getToken());
                     editor.apply();
 
-                    /*if (news.getValue() != null) {
-                        for (New n : news.getValue()) {
-                            if (n.isFavorite()) {
-                                saveFavorite(n.getId());
-                            } else {
-                                deleteFavorite(n.getId());
-                            }
-                        }
-                    }*/
                     setLogged(true);
                     ActivityManager.openMainActivity(context);
 
@@ -121,25 +113,26 @@ public class APIRequest {
 
             @Override
             public void onFailure(Call<String> call, Throwable t) {
-               setLoading(false);
-               setMessage("Could not connect to server");
-               t.printStackTrace();
+                setLoading(false);
+                setMessage("Could not connect to server");
+                t.printStackTrace();
             }
         });
     }
 
-    public void logout(){
+    public void logout() {
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.remove(TOKEN);
         editor.apply();
         newViewModel.deleteNews();
     }
 
-    public void refresh(){
-        downloadAll();
+    public void refresh() {
+        syncFavorites();
+        getUserData();
     }
 
-    public void downloadAll(){
+    public void downloadAll() {
         downloadNews();
         downloadPlayers();
         downloadCategories();
@@ -154,12 +147,8 @@ public class APIRequest {
         getNews.enqueue(new Callback<List<New>>() {
             @Override
             public void onResponse(Call<List<New>> call, Response<List<New>> response) {
-                if (response.code() == 401){
-                    sessionExpired();
-                }
                 List<New> news = response.body();
                 if (news != null) {
-                    newViewModel.deleteNews();
                     newViewModel.insertNews(news, user);
                 }
                 setLoading(false);
@@ -222,15 +211,92 @@ public class APIRequest {
         });
     }
 
+    private void getUserData() {
+        setLoading(true);
+        Gson gson = new GsonBuilder().registerTypeAdapter(User.class, new UserDeserializer()).create();
+        createAPIClient(gson);
+
+        Call<User> getUserData = gameNewsAPI.getUserData();
+        getUserData.enqueue(new Callback<User>() {
+            @Override
+            public void onResponse(Call<User> call, Response<User> response) {
+                if (response.code() == 200) {
+                    user.setId(response.body().getId());
+                    user.setFavoriteNews(response.body().getFavoriteNews());
+                    downloadAll();
+                } else if (response.code() == 401) {
+                    sessionExpired();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<User> call, Throwable t) {
+                connectionError();
+                t.printStackTrace();
+            }
+        });
+    }
+
+    public void saveFavorite(final String newId) {
+        createAPIClient(new Gson());
+        Call<Void> saveFavorite = gameNewsAPI.saveFavorite(user.getId(), newId);
+        saveFavorite.enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                user.getFavoriteNews().add(newId);
+                newViewModel.saveFavorite(newId);
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+                user.getFavoriteNews().add(newId);
+                newViewModel.saveFavorite(newId);
+            }
+        });
+    }
+
+    public void deleteFavorite(final String newId) {
+        createAPIClient(new Gson());
+        Call<Void> deleteFavorite = gameNewsAPI.deleteFavorite(user.getId(), newId);
+        deleteFavorite.enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                user.getFavoriteNews().remove(newId);
+                newViewModel.deleteFavorite(newId);
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+                user.getFavoriteNews().remove(newId);
+                newViewModel.deleteFavorite(newId);
+            }
+        });
+    }
+
+    private void syncFavorites(){
+        List<New> news = newViewModel.getNews().getValue();
+        if (news != null) {
+            for (New n : news) {
+                if (n.isFavorite()) {
+                    saveFavorite(n.getId());
+                } else {
+                    deleteFavorite(n.getId());
+                }
+            }
+        }
+    }
+
     public boolean isLoading() {
         return loading;
     }
 
     public void setLoading(boolean loading) {
-        if (loading){
-            loadingLayout.setVisibility(View.VISIBLE);
-        }else{
-            loadingLayout.setVisibility(View.GONE);
+        if (loadingLayout != null) {
+            if (loading) {
+                loadingLayout.setVisibility(View.VISIBLE);
+            } else {
+                loadingLayout.setVisibility(View.GONE);
+            }
         }
         this.loading = loading;
     }
@@ -252,12 +318,12 @@ public class APIRequest {
         this.message = message;
     }
 
-    public void connectionError(){
+    public void connectionError() {
         setMessage("Could not connect to server");
         setLoading(false);
     }
 
-    public void sessionExpired(){
+    public void sessionExpired() {
         setMessage("Session expired");
         logout();
         ActivityManager.openLoginActivity(context);

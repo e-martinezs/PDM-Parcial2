@@ -38,7 +38,6 @@ public class LoginActivity extends AppCompatActivity{
                 if (username.matches("") || password.matches("")){
                     ActivityManager.showToast(getApplicationContext(), "Fields must not be empty");
                 }else{
-                    System.out.println("CLICK");
                     apiRequest.login(username, password);
                     new WaitAsyncTask().execute();
                 }

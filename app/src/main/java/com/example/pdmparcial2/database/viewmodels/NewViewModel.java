@@ -34,19 +34,11 @@ public class NewViewModel extends AndroidViewModel{
         repository.insertNews(news, user);
     }
 
-    /*public LiveData<List<Category>> getCategories(){
-        return categories;
-    }
-
-    public void refresh(){
-        repository.refresh();
-    }
-
     public void saveFavorite(String newId){
-        repository.saveFavorite(newId);
+        repository.setFavorite(newId, true);
     }
 
     public void deleteFavorite(String newId){
-        repository.deleteFavorite(newId);
-    }*/
+        repository.setFavorite(newId, false);
+    }
 }

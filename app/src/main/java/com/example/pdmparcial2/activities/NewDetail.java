@@ -10,14 +10,15 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.pdmparcial2.R;
+import com.example.pdmparcial2.api.APIRequest;
 import com.example.pdmparcial2.database.viewmodels.NewViewModel;
 import com.example.pdmparcial2.model.New;
 import com.squareup.picasso.Picasso;
 
-public class NewDetail extends AppCompatActivity{
+public class NewDetail extends AppCompatActivity {
 
     @Override
-    public void onCreate(Bundle savedInstanceState){
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_detail);
 
@@ -30,39 +31,40 @@ public class NewDetail extends AppCompatActivity{
 
         Intent intent = this.getIntent();
         Bundle bundle = intent.getExtras();
-        final New mNew = (New)bundle.getSerializable("NEW");
+        final New mNew = (New) bundle.getSerializable("NEW");
 
         titleTextView.setText(mNew.getTitle());
         descriptionTextView.setText(mNew.getDescription());
         bodyTextView.setText(mNew.getBody());
-        dateTextView.setText(mNew.getCreate_date().subSequence(0,10));
+        dateTextView.setText(mNew.getCreate_date().subSequence(0, 10));
 
-        try{
+        try {
             if (!mNew.getCoverImage().isEmpty()) {
                 Picasso.get().load(mNew.getCoverImage()).error(R.drawable.ic_image).into(newImageView);
-            }else{
+            } else {
                 Picasso.get().load(R.drawable.ic_image).error(R.drawable.ic_image).into(newImageView);
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
-        if(mNew.isFavorite()){
+        if (mNew.isFavorite()) {
             favoriteButton.setChecked(true);
-        }else{
+        } else {
             favoriteButton.setChecked(false);
         }
 
         final NewViewModel newViewModel = ViewModelProviders.of(this).get(NewViewModel.class);
+        final APIRequest apiRequest = new APIRequest(this, null, newViewModel, null, null);
         favoriteButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (!favoriteButton.isChecked()){
+                if (!favoriteButton.isChecked()) {
                     mNew.setFavorite(false);
-                    //newViewModel.deleteFavorite(mNew.getId());
-                }else{
+                    apiRequest.deleteFavorite(mNew.getId());
+                } else {
                     mNew.setFavorite(true);
-                    //newViewModel.saveFavorite(mNew.getId());
+                    apiRequest.saveFavorite(mNew.getId());
                 }
             }
         });

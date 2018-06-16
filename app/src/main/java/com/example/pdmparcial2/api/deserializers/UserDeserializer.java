@@ -23,7 +23,6 @@ public class UserDeserializer implements JsonDeserializer<User>{
 
         List<String> news = new ArrayList<>();
         JsonArray array = jsonObject.getAsJsonArray("favoriteNews");
-        System.out.println("FAVORITES "+array.toString());
         for (int i=0; i<array.size(); i++){
             news.add(array.get(i).getAsString());
         }
