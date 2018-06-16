@@ -79,14 +79,12 @@ public class MainActivity extends AppCompatActivity {
         newViewModel.getNews().observe(this, new Observer<List<New>>() {
             @Override
             public void onChanged(@Nullable List<New> news) {
-                newsListFragment.setNewsList(news, selectedCategory);
                 allNews = news;
             }
         });
         playerViewModel.getPlayers().observe(this, new Observer<List<Player>>() {
             @Override
             public void onChanged(@Nullable List<Player> players) {
-                playerListFragment.setPlayerList(players, selectedCategory);
                 allPlayers = players;
             }
         });
@@ -155,13 +153,15 @@ public class MainActivity extends AppCompatActivity {
                         tabLayout.getTabAt(0).select();
                         selectedCategory = ALL;
                         viewPagerAdapter.setCount(1);
-                        newsListFragment.setNewsList(allNews, selectedCategory);
+                        newViewModel.setCategory(selectedCategory);
+                        playerViewModel.setCategory(selectedCategory);
                         break;
                     case R.id.drawerFavorites:
                         tabLayout.getTabAt(0).select();
                         selectedCategory = FAVORITES;
                         viewPagerAdapter.setCount(1);
-                        newsListFragment.setNewsList(allNews, selectedCategory);
+                        newViewModel.setCategory(selectedCategory);
+                        playerViewModel.setCategory(selectedCategory);
                         break;
                     case R.id.drawerLogout:
                         logout();
@@ -172,8 +172,8 @@ public class MainActivity extends AppCompatActivity {
                     subMenu.setGroupCheckable(R.id.drawerGameMenu, true, true);
                     selectedCategory = item.getTitle().toString().toLowerCase();
                     viewPagerAdapter.setCount(2);
-                    newsListFragment.setNewsList(allNews, selectedCategory);
-                    playerListFragment.setPlayerList(allPlayers, selectedCategory);
+                    newViewModel.setCategory(selectedCategory);
+                    playerViewModel.setCategory(selectedCategory);
                 } else {
                     tabLayout.setVisibility(View.GONE);
                 }

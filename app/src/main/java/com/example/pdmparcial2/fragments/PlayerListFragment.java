@@ -1,6 +1,9 @@
 package com.example.pdmparcial2.fragments;
 
+import android.arch.lifecycle.Observer;
+import android.arch.lifecycle.ViewModelProviders;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -10,6 +13,7 @@ import android.view.ViewGroup;
 
 import com.example.pdmparcial2.R;
 import com.example.pdmparcial2.adapter.PlayerAdapter;
+import com.example.pdmparcial2.database.viewmodels.PlayerViewModel;
 import com.example.pdmparcial2.model.Player;
 
 import java.util.ArrayList;
@@ -19,6 +23,7 @@ public class PlayerListFragment extends Fragment {
 
     private List<Player> players;
     private PlayerAdapter playerAdapter;
+    private String selectedCategory = "all";
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -30,6 +35,20 @@ public class PlayerListFragment extends Fragment {
         playerAdapter = new PlayerAdapter(container.getContext());
         recyclerView.setAdapter(playerAdapter);
         recyclerView.setHasFixedSize(true);
+
+        PlayerViewModel playerViewModel = ViewModelProviders.of(this).get(PlayerViewModel.class);
+        playerViewModel.getPlayers().observe(this, new Observer<List<Player>>() {
+            @Override
+            public void onChanged(@Nullable List<Player> players) {
+                setPlayerList(players, selectedCategory);
+            }
+        });
+        playerViewModel.getCategory().observe(this, new Observer<String>() {
+            @Override
+            public void onChanged(@Nullable String category) {
+                selectedCategory = category;
+            }
+        });
 
         return view;
     }
