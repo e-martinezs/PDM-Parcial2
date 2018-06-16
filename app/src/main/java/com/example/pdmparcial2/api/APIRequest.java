@@ -3,10 +3,11 @@ package com.example.pdmparcial2.api;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
+import android.view.View;
 
 import com.example.pdmparcial2.database.NewViewModel;
-import com.example.pdmparcial2.model.New;
 import com.example.pdmparcial2.model.User;
+import com.example.pdmparcial2.utils.ActivityManager;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -23,7 +24,9 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class APIRequest {
 
-    public static String TOKEN = "TOKEN";
+    private static String TOKEN = "TOKEN";
+    private Context context;
+    private View loadingLayout;
     private GameNewsAPI gameNewsAPI;
     private NewViewModel newViewModel;
     private SharedPreferences sharedPreferences;
@@ -32,17 +35,13 @@ public class APIRequest {
     private boolean logged = false;
     private String message = "";
 
-    public APIRequest(Context context, NewViewModel newViewModel) {
-        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context.getApplicationContext());
-        if (sharedPreferences.contains(TOKEN)){
-            logged = true;
-            user.setToken(sharedPreferences.getString(TOKEN, null));
-        }else{
-            logged = false;
-            user.setToken("");
-        }
-
+    public APIRequest(Context context, View loadingLayout, NewViewModel newViewModel) {
+        this.context = context;
+        this.loadingLayout = loadingLayout;
         this.newViewModel = newViewModel;
+
+        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context.getApplicationContext());
+        checkLogged();
     }
 
     private void createAPIClient(Gson gson) {
@@ -59,34 +58,38 @@ public class APIRequest {
         gameNewsAPI = retrofit.create(GameNewsAPI.class);
     }
 
-    public boolean isLoading() {
-        return loading;
-    }
-
-    public boolean isLogged(){
-        return logged;
-    }
-
-    public String getMessage() {
-        return message;
+    public void checkLogged(){
+        if (sharedPreferences.contains(TOKEN)){
+            setLogged(true);
+            user.setToken(sharedPreferences.getString(TOKEN, null));
+        }else{
+            setLogged(false);
+            user.setToken("");
+        }
     }
 
     public void login(String username, String password) {
-        loading = true;
+        setLoading(true);
+        /*Gson gson = new GsonBuilder().registerTypeAdapter(String.class, new TokenDeserializer()).create();
+        createAPIClient(gson);*/
         Gson gson = new GsonBuilder().registerTypeAdapter(String.class, new TokenDeserializer()).create();
-        createAPIClient(gson);
+        Retrofit.Builder builder = new Retrofit.Builder().baseUrl(GameNewsAPI.BASE_URL).addConverterFactory(GsonConverterFactory.create(gson));
+        Retrofit retrofit = builder.build();
+        GameNewsAPI gameNewsAPI = retrofit.create(GameNewsAPI.class);
 
+        System.out.println("LOGIN?");
         final Call<String> login = gameNewsAPI.login(username, password);
         login.enqueue(new Callback<String>() {
             @Override
             public void onResponse(Call<String> call, Response<String> response) {
+                System.out.println("RESPONSE "+response.toString());
                 if (response.code() == 200) {
                     user.setToken(response.body());
                     SharedPreferences.Editor editor = sharedPreferences.edit();
                     editor.putString(TOKEN, user.getToken());
                     editor.apply();
 
-                    /*f (news.getValue() != null) {
+                    /*if (news.getValue() != null) {
                         for (New n : news.getValue()) {
                             if (n.isFavorite()) {
                                 saveFavorite(n.getId());
@@ -95,18 +98,52 @@ public class APIRequest {
                             }
                         }
                     }*/
-                    logged = true;
+                    setLogged(true);
+                    ActivityManager.openMainActivity(context);
 
                 } else if (response.code() == 401) {
-                    message = "Wrong username or password";
+                    setMessage("Wrong username or password");
                 }
-                loading = false;
+                setLoading(false);
             }
 
             @Override
             public void onFailure(Call<String> call, Throwable t) {
-                loading = false;
+               setLoading(false);
+               setMessage("Could not connect to server");
+               t.printStackTrace();
             }
         });
+
+    }
+
+    public boolean isLoading() {
+        return loading;
+    }
+
+    public void setLoading(boolean loading) {
+        if (loading){
+            loadingLayout.setVisibility(View.VISIBLE);
+        }else{
+            loadingLayout.setVisibility(View.GONE);
+        }
+        this.loading = loading;
+    }
+
+    public boolean isLogged() {
+        return logged;
+    }
+
+    public void setLogged(boolean logged) {
+        this.logged = logged;
+    }
+
+    public String getMessage() {
+        return message;
+    }
+
+    public void setMessage(String message) {
+        ActivityManager.showToast(context, message);
+        this.message = message;
     }
 }

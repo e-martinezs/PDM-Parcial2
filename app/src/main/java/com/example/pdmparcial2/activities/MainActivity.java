@@ -34,6 +34,7 @@ import com.example.pdmparcial2.fragments.PlayerListFragment;
 import com.example.pdmparcial2.model.Category;
 import com.example.pdmparcial2.model.New;
 import com.example.pdmparcial2.model.Player;
+import com.example.pdmparcial2.utils.ActivityManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -55,11 +56,12 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        View loadingLayout = findViewById(R.id.loadingLayout);
+
         newViewModel = ViewModelProviders.of(this).get(NewViewModel.class);
-        apiRequest = new APIRequest(this, newViewModel);
+        apiRequest = new APIRequest(this, loadingLayout, newViewModel);
         if (!apiRequest.isLogged()){
-            Intent intent = new Intent(this, LoginActivity.class);
-            startActivity(intent);
+            ActivityManager.openLoginActivity(this);
             finish();
         }
 
