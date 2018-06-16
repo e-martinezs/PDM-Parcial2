@@ -6,12 +6,14 @@ import android.preference.PreferenceManager;
 import android.view.View;
 
 import com.example.pdmparcial2.database.NewViewModel;
+import com.example.pdmparcial2.model.New;
 import com.example.pdmparcial2.model.User;
 import com.example.pdmparcial2.utils.ActivityManager;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import java.io.IOException;
+import java.util.List;
 
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
@@ -70,8 +72,6 @@ public class APIRequest {
 
     public void login(String username, String password) {
         setLoading(true);
-        /*Gson gson = new GsonBuilder().registerTypeAdapter(String.class, new TokenDeserializer()).create();
-        createAPIClient(gson);*/
         Gson gson = new GsonBuilder().registerTypeAdapter(String.class, new TokenDeserializer()).create();
         Retrofit.Builder builder = new Retrofit.Builder().baseUrl(GameNewsAPI.BASE_URL).addConverterFactory(GsonConverterFactory.create(gson));
         Retrofit retrofit = builder.build();
@@ -120,6 +120,33 @@ public class APIRequest {
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.remove(TOKEN);
         editor.apply();
+    }
+
+    public void downloadNews() {
+        setLoading(true);
+        Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'").registerTypeAdapter(New.class, new NewsDeserializer()).create();
+        createAPIClient(gson);
+
+        Call<List<New>> getNews = gameNewsAPI.getNews();
+        getNews.enqueue(new Callback<List<New>>() {
+            @Override
+            public void onResponse(Call<List<New>> call, Response<List<New>> response) {
+                List<New> news = response.body();
+                if (news != null) {
+                    newViewModel.deleteNews();
+                    newViewModel.insertNews(news, user);
+                }
+                setLoading(false);
+                //downloadCategories();
+            }
+
+            @Override
+            public void onFailure(Call<List<New>> call, Throwable t) {
+                setMessage("Could not connect to server");
+                setLoading(false);
+                t.printStackTrace();
+            }
+        });
     }
 
     public boolean isLoading() {

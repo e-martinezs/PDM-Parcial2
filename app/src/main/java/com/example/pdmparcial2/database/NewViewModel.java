@@ -8,6 +8,7 @@ import android.arch.lifecycle.MutableLiveData;
 import com.example.pdmparcial2.model.Category;
 import com.example.pdmparcial2.model.New;
 import com.example.pdmparcial2.model.Player;
+import com.example.pdmparcial2.model.User;
 
 import java.util.List;
 
@@ -15,15 +16,10 @@ public class NewViewModel extends AndroidViewModel{
 
     private static NewsRepository repository;
     private static LiveData<List<New>> news;
-    private static LiveData<List<Category>> categories;
-    private static LiveData<List<Player>> players;
-    private static MutableLiveData<Boolean> loading;
-    private static MutableLiveData<Boolean> logged;
-    private static MutableLiveData<String> message;
 
     public NewViewModel(Application application){
         super(application);
-        if (repository == null) {
+        /*if (repository == null) {
             repository = new NewsRepository(application);
             news = repository.getNews();
             categories = repository.getCategories();
@@ -31,14 +27,25 @@ public class NewViewModel extends AndroidViewModel{
             loading = repository.getLoading();
             logged = repository.getLogged();
             message = repository.getMessage();
-        }
+        }*/
+
+        repository = new NewsRepository(application);
+        news = repository.getNews();
     }
 
     public LiveData<List<New>> getNews(){
         return news;
     }
 
-    public LiveData<List<Category>> getCategories(){
+    public void deleteNews(){
+        repository.deleteNews();
+    }
+
+    public void insertNews(List<New> news, User user){
+        repository.insertNews(news, user);
+    }
+
+    /*public LiveData<List<Category>> getCategories(){
         return categories;
     }
 
@@ -46,24 +53,8 @@ public class NewViewModel extends AndroidViewModel{
         return players;
     }
 
-    public MutableLiveData<Boolean> getLoading(){
-        return loading;
-    }
-
-    public MutableLiveData<Boolean> getLogged(){
-        return logged;
-    }
-
-    public MutableLiveData<String> getMessage() {
-        return message;
-    }
-
     public void login(String username, String password){
         repository.login(username, password);
-    }
-
-    public void logout(){
-        repository.logout();
     }
 
     public void refresh(){
@@ -76,5 +67,5 @@ public class NewViewModel extends AndroidViewModel{
 
     public void deleteFavorite(String newId){
         repository.deleteFavorite(newId);
-    }
+    }*/
 }

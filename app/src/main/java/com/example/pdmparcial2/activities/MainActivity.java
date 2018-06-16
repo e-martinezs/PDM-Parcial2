@@ -41,13 +41,14 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
+    private static String ALL = "all";
     private DrawerLayout drawerLayout;
     private NewViewModel newViewModel;
     private APIRequest apiRequest;
     private FragmentManager fragmentManager;
     private NewsListFragment newsListFragment;
     private PlayerListFragment playerListFragment;
-    private String selectedCategory = "all";
+    private String selectedCategory = ALL;
     private List<New> allNews;
     private List<Player> allPlayers;
 
@@ -70,7 +71,8 @@ public class MainActivity extends AppCompatActivity {
 
         setupDrawer();
 
-        /*newsListFragment.setViewModel(newViewModel);
+        apiRequest.downloadNews();
+        newsListFragment.setViewModel(newViewModel);
         newViewModel.getNews().observe(this, new Observer<List<New>>() {
             @Override
             public void onChanged(@Nullable List<New> news) {
@@ -78,7 +80,7 @@ public class MainActivity extends AppCompatActivity {
                 allNews = news;
             }
         });
-        newViewModel.getCategories().observe(this, new Observer<List<Category>>() {
+        /*newViewModel.getCategories().observe(this, new Observer<List<Category>>() {
             @Override
             public void onChanged(@Nullable List<Category> categories) {
                 subMenu.clear();
@@ -129,7 +131,7 @@ public class MainActivity extends AppCompatActivity {
                 drawerLayout.openDrawer(GravityCompat.START);
                 return true;
             case R.id.refreshButton:
-                newViewModel.refresh();
+                //newViewModel.refresh();
                 return true;
         }
         return false;
@@ -165,7 +167,7 @@ public class MainActivity extends AppCompatActivity {
                 switch (item.getItemId()) {
                     case R.id.drawerNews:
                         tabLayout.getTabAt(0).select();
-                        selectedCategory = "all";
+                        selectedCategory = ALL;
                         viewPagerAdapter.setCount(1);
                         newsListFragment.setNewsList(allNews, selectedCategory);
                         break;
@@ -173,7 +175,7 @@ public class MainActivity extends AppCompatActivity {
                         tabLayout.getTabAt(0).select();
                         selectedCategory = "favorites";
                         viewPagerAdapter.setCount(1);
-                        newsListFragment.setNewsList(allNews, selectedCategory);
+                        //newsListFragment.setNewsList(allNews, selectedCategory);
                         break;
                     case R.id.drawerLogout:
                         logout();

@@ -37,7 +37,7 @@ public class NewsRepository {
     private NewDao newDao;
     private CategoryDao categoryDao;
     private PlayerDao playerDao;
-    private static User user = new User();
+    //private static User user = new User();
     private static LiveData<List<New>> news;
     private static LiveData<List<Category>> categories;
     private static LiveData<List<Player>> players;
@@ -50,23 +50,13 @@ public class NewsRepository {
         NewsRoomDatabase db = NewsRoomDatabase.getDatabase(application);
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(application.getApplicationContext());
 
-        /*newDao = db.newsDao();
+        newDao = db.newsDao();
         categoryDao = db.categoryDao();
         playerDao = db.playerDao();
+
         news = newDao.getNews();
-        categories = categoryDao.getCategories();
-        players = playerDao.getPlayers();
-
-        loading.setValue(false);
-        message.setValue("");
-
-        String token = sharedPreferences.getString("TOKEN", null);
-        user.setToken(token);
-        if (token == null || token.isEmpty()){
-            logged.setValue(false);
-        }else{
-            logged.setValue(true);
-        }*/
+        /*categories = categoryDao.getCategories();
+        players = playerDao.getPlayers();*/
     }
 
     public LiveData<List<New>> getNews() {
@@ -91,8 +81,8 @@ public class NewsRepository {
         return message;
     }
 
-    public void insertNews(List<New> news) {
-        new insertNewsAsyncTask(newDao).execute(news);
+    public void insertNews(List<New> news, User user) {
+        new insertNewsAsyncTask(newDao, user).execute(news);
     }
 
     public void insertCategories(List<Category> categories) {
@@ -103,28 +93,48 @@ public class NewsRepository {
         new insertPlayersAsyncTask(playerDao).execute(players);
     }
 
+    public void deleteNews(){
+        new deleteNewsAsyncTask(newDao).execute();
+    }
+
     public void refresh() {
-        getUserData();
+        //getUserData();
+    }
+
+    private class deleteNewsAsyncTask extends AsyncTask<Void, Void, Void>{
+        private NewDao newDao;
+
+        public deleteNewsAsyncTask(NewDao newDao){
+            this.newDao = newDao;
+        }
+
+        @Override
+        protected Void doInBackground(Void... voids) {
+            newDao.deleteNews();
+            return null;
+        }
     }
 
     private class insertNewsAsyncTask extends AsyncTask<List<New>, Void, Void> {
         private NewDao newDao;
+        private User user;
 
-        public insertNewsAsyncTask(NewDao newDao) {
+        public insertNewsAsyncTask(NewDao newDao, User user) {
             this.newDao = newDao;
+            this.user = user;
         }
 
         @Override
         protected Void doInBackground(List<New>... news) {
             for (New n : news[0]) {
-                for (String id : user.getFavoriteNews()) {
+                /*for (String id : user.getFavoriteNews()) {
                     if (n.getId().matches(id)) {
                         n.setFavorite(true);
                         break;
                     } else {
                         n.setFavorite(false);
                     }
-                }
+                }*/
                 newDao.insertNew(n);
             }
             return null;
@@ -197,7 +207,7 @@ public class NewsRepository {
         }
     }
 
-    public void login(String username, String password) {
+    /*public void login(String username, String password) {
         loading.setValue(true);
         Gson gson = new GsonBuilder().registerTypeAdapter(String.class, new TokenDeserializer()).create();
         Retrofit.Builder builder = new Retrofit.Builder().baseUrl(GameNewsAPI.BASE_URL).addConverterFactory(GsonConverterFactory.create(gson));
@@ -243,9 +253,9 @@ public class NewsRepository {
         editor.putString("TOKEN", "");
         editor.apply();
         logged.setValue(false);
-    }
+    }*/
 
-    private void getUserData() {
+    /*private void getUserData() {
         loading.setValue(true);
         OkHttpClient client = new OkHttpClient.Builder().addInterceptor(new Interceptor() {
             @Override
@@ -270,7 +280,7 @@ public class NewsRepository {
                     downloadNews();
                 }else if (response.code() == 401){
                     message.setValue("Session expired");
-                    logout();
+                    //logout();
                 }
             }
 
@@ -279,9 +289,9 @@ public class NewsRepository {
                 loading.setValue(false);
             }
         });
-    }
+    }*/
 
-    private void downloadNews() {
+    /*private void downloadNews() {
         loading.setValue(true);
         OkHttpClient client = new OkHttpClient.Builder().addInterceptor(new Interceptor() {
             @Override
@@ -311,9 +321,9 @@ public class NewsRepository {
                 loading.setValue(false);
             }
         });
-    }
+    }*/
 
-    private void downloadCategories() {
+    /*private void downloadCategories() {
         loading.setValue(true);
         OkHttpClient client = new OkHttpClient.Builder().addInterceptor(new Interceptor() {
             @Override
@@ -343,9 +353,9 @@ public class NewsRepository {
                 loading.setValue(false);
             }
         });
-    }
+    }*/
 
-    private void downloadPlayers() {
+    /*private void downloadPlayers() {
         loading.setValue(true);
         OkHttpClient client = new OkHttpClient.Builder().addInterceptor(new Interceptor() {
             @Override
@@ -374,9 +384,9 @@ public class NewsRepository {
                 loading.setValue(false);
             }
         });
-    }
+    }*/
 
-    public void saveFavorite(final String newId) {
+    /*public void saveFavorite(final String newId) {
         OkHttpClient client = new OkHttpClient.Builder().addInterceptor(new Interceptor() {
             @Override
             public okhttp3.Response intercept(Chain chain) throws IOException {
@@ -400,9 +410,9 @@ public class NewsRepository {
             public void onFailure(Call<Void> call, Throwable t) {
             }
         });
-    }
+    }*/
 
-    public void deleteFavorite(final String newId) {
+    /*public void deleteFavorite(final String newId) {
         OkHttpClient client = new OkHttpClient.Builder().addInterceptor(new Interceptor() {
             @Override
             public okhttp3.Response intercept(Chain chain) throws IOException {
@@ -426,5 +436,5 @@ public class NewsRepository {
             public void onFailure(Call<Void> call, Throwable t) {
             }
         });
-    }
+    }*/
 }

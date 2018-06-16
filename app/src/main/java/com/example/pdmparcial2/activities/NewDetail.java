@@ -59,10 +59,10 @@ public class NewDetail extends AppCompatActivity{
             public void onClick(View view) {
                 if (!favoriteButton.isChecked()){
                     mNew.setFavorite(false);
-                    newViewModel.deleteFavorite(mNew.getId());
+                    //newViewModel.deleteFavorite(mNew.getId());
                 }else{
                     mNew.setFavorite(true);
-                    newViewModel.saveFavorite(mNew.getId());
+                    //newViewModel.saveFavorite(mNew.getId());
                 }
             }
         });
