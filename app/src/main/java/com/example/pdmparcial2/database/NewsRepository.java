@@ -35,71 +35,37 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class NewsRepository {
 
     private NewDao newDao;
-    private CategoryDao categoryDao;
-    private PlayerDao playerDao;
-    //private static User user = new User();
-    private static LiveData<List<New>> news;
-    private static LiveData<List<Category>> categories;
-    private static LiveData<List<Player>> players;
-    private static MutableLiveData<Boolean> loading = new MutableLiveData<>();
-    private static MutableLiveData<Boolean> logged = new MutableLiveData<>();
-    private static MutableLiveData<String> message = new MutableLiveData<>();
-    private static SharedPreferences sharedPreferences;
+    private LiveData<List<New>> news;
 
     public NewsRepository(Application application) {
         NewsRoomDatabase db = NewsRoomDatabase.getDatabase(application);
-        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(application.getApplicationContext());
-
         newDao = db.newsDao();
-        categoryDao = db.categoryDao();
-        playerDao = db.playerDao();
-
         news = newDao.getNews();
-        /*categories = categoryDao.getCategories();
-        players = playerDao.getPlayers();*/
     }
 
     public LiveData<List<New>> getNews() {
         return news;
     }
 
-    public LiveData<List<Category>> getCategories() {
+    /*public LiveData<List<Category>> getCategories() {
         return categories;
-    }
-
-    public LiveData<List<Player>> getPlayers() {
-        return players;
-    }
-
-    public MutableLiveData<Boolean> getLoading() {
-        return loading;
-    }
-
-    public MutableLiveData<Boolean> getLogged(){return logged;}
-
-    public MutableLiveData<String> getMessage() {
-        return message;
-    }
+    }*/
 
     public void insertNews(List<New> news, User user) {
         new insertNewsAsyncTask(newDao, user).execute(news);
     }
 
-    public void insertCategories(List<Category> categories) {
+    /*public void insertCategories(List<Category> categories) {
         new insertCategoriesAsyncTask(categoryDao).execute(categories);
-    }
-
-    public void insertPlayers(List<Player> players) {
-        new insertPlayersAsyncTask(playerDao).execute(players);
-    }
+    }*/
 
     public void deleteNews(){
         new deleteNewsAsyncTask(newDao).execute();
     }
 
-    public void refresh() {
+    /*public void refresh() {
         //getUserData();
-    }
+    }*/
 
     private class deleteNewsAsyncTask extends AsyncTask<Void, Void, Void>{
         private NewDao newDao;
@@ -139,14 +105,9 @@ public class NewsRepository {
             }
             return null;
         }
-
-        @Override
-        protected void onPostExecute(Void voids) {
-            loading.setValue(false);
-        }
     }
 
-    private class insertCategoriesAsyncTask extends AsyncTask<List<Category>, Void, Void> {
+    /*private class insertCategoriesAsyncTask extends AsyncTask<List<Category>, Void, Void> {
         private CategoryDao categoryDao;
 
         public insertCategoriesAsyncTask(CategoryDao categoryDao) {
@@ -166,28 +127,7 @@ public class NewsRepository {
         protected void onPostExecute(Void voids) {
             loading.setValue(false);
         }
-    }
-
-    private class insertPlayersAsyncTask extends AsyncTask<List<Player>, Void, Void> {
-        private PlayerDao playerDao;
-
-        public insertPlayersAsyncTask(PlayerDao playerDao) {
-            this.playerDao = playerDao;
-        }
-
-        @Override
-        protected Void doInBackground(List<Player>... players) {
-            for (Player p : players[0]) {
-                playerDao.insertPlayer(p);
-            }
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(Void voids) {
-            loading.setValue(false);
-        }
-    }
+    }*/
 
     private class setNewFavoriteAsyncTask extends AsyncTask<Void, Void, Void> {
         private NewDao newDao;
@@ -206,54 +146,6 @@ public class NewsRepository {
             return null;
         }
     }
-
-    /*public void login(String username, String password) {
-        loading.setValue(true);
-        Gson gson = new GsonBuilder().registerTypeAdapter(String.class, new TokenDeserializer()).create();
-        Retrofit.Builder builder = new Retrofit.Builder().baseUrl(GameNewsAPI.BASE_URL).addConverterFactory(GsonConverterFactory.create(gson));
-        Retrofit retrofit = builder.build();
-        GameNewsAPI gameNewsAPI = retrofit.create(GameNewsAPI.class);
-
-        final Call<String> login = gameNewsAPI.login(username, password);
-        login.enqueue(new Callback<String>() {
-            @Override
-            public void onResponse(Call<String> call, Response<String> response) {
-                if (response.code() == 200) {
-                    user.setToken(response.body());
-                    SharedPreferences.Editor editor = sharedPreferences.edit();
-                    editor.putString("TOKEN", user.getToken());
-                    editor.apply();
-
-                    if (news.getValue() != null) {
-                        for (New n : news.getValue()) {
-                            if (n.isFavorite()) {
-                                saveFavorite(n.getId());
-                            } else {
-                                deleteFavorite(n.getId());
-                            }
-                        }
-                    }
-                    logged.setValue(true);
-
-                }else if (response.code() == 401){
-                    message.setValue("Wrong username or password");
-                }
-                loading.setValue(false);
-            }
-
-            @Override
-            public void onFailure(Call<String> call, Throwable t) {
-                loading.setValue(false);
-            }
-        });
-    }
-
-    public void logout(){
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putString("TOKEN", "");
-        editor.apply();
-        logged.setValue(false);
-    }*/
 
     /*private void getUserData() {
         loading.setValue(true);
@@ -291,38 +183,6 @@ public class NewsRepository {
         });
     }*/
 
-    /*private void downloadNews() {
-        loading.setValue(true);
-        OkHttpClient client = new OkHttpClient.Builder().addInterceptor(new Interceptor() {
-            @Override
-            public okhttp3.Response intercept(Chain chain) throws IOException {
-                Request newRequest = chain.request().newBuilder().addHeader("Authorization", "Bearer " + user.getToken()).build();
-                return chain.proceed(newRequest);
-            }
-        }).build();
-        Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'").registerTypeAdapter(New.class, new NewsDeserializer()).create();
-        Retrofit.Builder builder = new Retrofit.Builder().baseUrl(GameNewsAPI.BASE_URL).client(client).addConverterFactory(GsonConverterFactory.create(gson));
-        Retrofit retrofit = builder.build();
-        GameNewsAPI gameNewsAPI = retrofit.create(GameNewsAPI.class);
-
-        Call<List<New>> getNews = gameNewsAPI.getNews();
-        getNews.enqueue(new Callback<List<New>>() {
-            @Override
-            public void onResponse(Call<List<New>> call, Response<List<New>> response) {
-                List<New> news = response.body();
-                if (news != null) {
-                    insertNews(news);
-                }
-                downloadCategories();
-            }
-
-            @Override
-            public void onFailure(Call<List<New>> call, Throwable t) {
-                loading.setValue(false);
-            }
-        });
-    }*/
-
     /*private void downloadCategories() {
         loading.setValue(true);
         OkHttpClient client = new OkHttpClient.Builder().addInterceptor(new Interceptor() {
@@ -350,37 +210,6 @@ public class NewsRepository {
 
             @Override
             public void onFailure(Call<List<Category>> call, Throwable t) {
-                loading.setValue(false);
-            }
-        });
-    }*/
-
-    /*private void downloadPlayers() {
-        loading.setValue(true);
-        OkHttpClient client = new OkHttpClient.Builder().addInterceptor(new Interceptor() {
-            @Override
-            public okhttp3.Response intercept(Chain chain) throws IOException {
-                Request newRequest = chain.request().newBuilder().addHeader("Authorization", "Bearer " + user.getToken()).build();
-                return chain.proceed(newRequest);
-            }
-        }).build();
-        Gson gson = new GsonBuilder().registerTypeAdapter(Player.class, new PlayerDeserializer()).create();
-        Retrofit.Builder builder = new Retrofit.Builder().baseUrl(GameNewsAPI.BASE_URL).client(client).addConverterFactory(GsonConverterFactory.create(gson));
-        Retrofit retrofit = builder.build();
-        GameNewsAPI gameNewsAPI = retrofit.create(GameNewsAPI.class);
-
-        Call<List<Player>> getPlayers = gameNewsAPI.getPlayers();
-        getPlayers.enqueue(new Callback<List<Player>>() {
-            @Override
-            public void onResponse(Call<List<Player>> call, Response<List<Player>> response) {
-                List<Player> players = response.body();
-                if (players != null) {
-                    insertPlayers(players);
-                }
-            }
-
-            @Override
-            public void onFailure(Call<List<Player>> call, Throwable t) {
                 loading.setValue(false);
             }
         });

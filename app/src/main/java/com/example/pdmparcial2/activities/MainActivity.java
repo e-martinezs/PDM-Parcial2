@@ -29,6 +29,7 @@ import com.example.pdmparcial2.R;
 import com.example.pdmparcial2.adapter.ViewPagerAdapter;
 import com.example.pdmparcial2.api.APIRequest;
 import com.example.pdmparcial2.database.NewViewModel;
+import com.example.pdmparcial2.database.PlayerViewModel;
 import com.example.pdmparcial2.fragments.NewsListFragment;
 import com.example.pdmparcial2.fragments.PlayerListFragment;
 import com.example.pdmparcial2.model.Category;
@@ -42,8 +43,10 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity {
 
     private static String ALL = "all";
+    private static String FAVORITES = "favorites";
     private DrawerLayout drawerLayout;
     private NewViewModel newViewModel;
+    private PlayerViewModel playerViewModel;
     private APIRequest apiRequest;
     private FragmentManager fragmentManager;
     private NewsListFragment newsListFragment;
@@ -60,7 +63,8 @@ public class MainActivity extends AppCompatActivity {
         View loadingLayout = findViewById(R.id.loadingLayout);
 
         newViewModel = ViewModelProviders.of(this).get(NewViewModel.class);
-        apiRequest = new APIRequest(this, loadingLayout, newViewModel);
+        playerViewModel = ViewModelProviders.of(this).get(PlayerViewModel.class);
+        apiRequest = new APIRequest(this, loadingLayout, newViewModel, playerViewModel);
         login();
 
         setupToolbar();
@@ -71,13 +75,20 @@ public class MainActivity extends AppCompatActivity {
 
         setupDrawer();
 
-        apiRequest.downloadNews();
+        apiRequest.downloadAll();
         newsListFragment.setViewModel(newViewModel);
         newViewModel.getNews().observe(this, new Observer<List<New>>() {
             @Override
             public void onChanged(@Nullable List<New> news) {
                 newsListFragment.setNewsList(news, selectedCategory);
                 allNews = news;
+            }
+        });
+        playerViewModel.getPlayers().observe(this, new Observer<List<Player>>() {
+            @Override
+            public void onChanged(@Nullable List<Player> players) {
+                playerListFragment.setPlayerList(players, selectedCategory);
+                allPlayers = players;
             }
         });
         /*newViewModel.getCategories().observe(this, new Observer<List<Category>>() {
@@ -90,31 +101,7 @@ public class MainActivity extends AppCompatActivity {
                     i++;
                 }
             }
-        });
-        newViewModel.getPlayers().observe(this, new Observer<List<Player>>() {
-            @Override
-            public void onChanged(@Nullable List<Player> players) {
-                playerListFragment.setPlayerList(players, selectedCategory);
-                allPlayers = players;
-            }
-        });
-        newViewModel.getLoading().observe(this, new Observer<Boolean>() {
-            @Override
-            public void onChanged(@Nullable Boolean loading) {
-                RelativeLayout loadingLayout = findViewById(R.id.loadingLayout);
-                if (loading) {
-                    loadingLayout.setVisibility(View.VISIBLE);
-                } else {
-                    loadingLayout.setVisibility(View.INVISIBLE);
-                }
-            }
-        });
-
-        if (!newViewModel.getLogged().getValue()){
-            Intent intent = new Intent(this, LoginActivity.class);
-            startActivity(intent);
-            finish();
-        }*/
+        });*/
     }
 
     @Override
@@ -173,21 +160,21 @@ public class MainActivity extends AppCompatActivity {
                         break;
                     case R.id.drawerFavorites:
                         tabLayout.getTabAt(0).select();
-                        selectedCategory = "favorites";
+                        selectedCategory = FAVORITES;
                         viewPagerAdapter.setCount(1);
-                        //newsListFragment.setNewsList(allNews, selectedCategory);
+                        newsListFragment.setNewsList(allNews, selectedCategory);
                         break;
                     case R.id.drawerLogout:
                         logout();
                         break;
                 }
                 if (item.getGroupId() == R.id.drawerGameMenu) {
-                    /*tabLayout.setVisibility(View.VISIBLE);
+                    tabLayout.setVisibility(View.VISIBLE);
                     subMenu.setGroupCheckable(R.id.drawerGameMenu, true, true);
                     selectedCategory = item.getTitle().toString();
                     viewPagerAdapter.setCount(2);
                     newsListFragment.setNewsList(allNews, selectedCategory);
-                    playerListFragment.setPlayerList(allPlayers, selectedCategory);*/
+                    playerListFragment.setPlayerList(allPlayers, selectedCategory);
                 } else {
                     tabLayout.setVisibility(View.GONE);
                 }

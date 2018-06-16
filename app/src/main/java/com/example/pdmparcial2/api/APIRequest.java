@@ -6,7 +6,9 @@ import android.preference.PreferenceManager;
 import android.view.View;
 
 import com.example.pdmparcial2.database.NewViewModel;
+import com.example.pdmparcial2.database.PlayerViewModel;
 import com.example.pdmparcial2.model.New;
+import com.example.pdmparcial2.model.Player;
 import com.example.pdmparcial2.model.User;
 import com.example.pdmparcial2.utils.ActivityManager;
 import com.google.gson.Gson;
@@ -31,16 +33,18 @@ public class APIRequest {
     private View loadingLayout;
     private GameNewsAPI gameNewsAPI;
     private NewViewModel newViewModel;
+    private PlayerViewModel playerViewModel;
     private SharedPreferences sharedPreferences;
     private User user = new User();
     private boolean loading = false;
     private boolean logged = false;
     private String message = "";
 
-    public APIRequest(Context context, View loadingLayout, NewViewModel newViewModel) {
+    public APIRequest(Context context, View loadingLayout, NewViewModel newViewModel, PlayerViewModel playerViewModel) {
         this.context = context;
         this.loadingLayout = loadingLayout;
         this.newViewModel = newViewModel;
+        this.playerViewModel = playerViewModel;
 
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context.getApplicationContext());
         checkLogged();
@@ -122,6 +126,11 @@ public class APIRequest {
         editor.apply();
     }
 
+    public void downloadAll(){
+        downloadNews();
+        downloadPlayers();
+    }
+
     public void downloadNews() {
         setLoading(true);
         Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'").registerTypeAdapter(New.class, new NewsDeserializer()).create();
@@ -137,14 +146,35 @@ public class APIRequest {
                     newViewModel.insertNews(news, user);
                 }
                 setLoading(false);
-                //downloadCategories();
             }
 
             @Override
             public void onFailure(Call<List<New>> call, Throwable t) {
-                setMessage("Could not connect to server");
-                setLoading(false);
+                connectionError();
                 t.printStackTrace();
+            }
+        });
+    }
+
+    private void downloadPlayers() {
+        setLoading(true);
+        Gson gson = new GsonBuilder().registerTypeAdapter(Player.class, new PlayerDeserializer()).create();
+        createAPIClient(gson);
+
+        Call<List<Player>> getPlayers = gameNewsAPI.getPlayers();
+        getPlayers.enqueue(new Callback<List<Player>>() {
+            @Override
+            public void onResponse(Call<List<Player>> call, Response<List<Player>> response) {
+                List<Player> players = response.body();
+                if (players != null) {
+                    playerViewModel.insertPlayers(players);
+                }
+                setLoading(false);
+            }
+
+            @Override
+            public void onFailure(Call<List<Player>> call, Throwable t) {
+                connectionError();
             }
         });
     }
@@ -177,5 +207,10 @@ public class APIRequest {
     public void setMessage(String message) {
         ActivityManager.showToast(context, message);
         this.message = message;
+    }
+
+    public void connectionError(){
+        setMessage("Could not connect to server");
+        setLoading(false);
     }
 }

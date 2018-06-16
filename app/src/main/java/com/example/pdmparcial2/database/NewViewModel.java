@@ -4,6 +4,7 @@ import android.app.Application;
 import android.arch.lifecycle.AndroidViewModel;
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
+import android.support.annotation.NonNull;
 
 import com.example.pdmparcial2.model.Category;
 import com.example.pdmparcial2.model.New;
@@ -14,21 +15,11 @@ import java.util.List;
 
 public class NewViewModel extends AndroidViewModel{
 
-    private static NewsRepository repository;
-    private static LiveData<List<New>> news;
+    private NewsRepository repository;
+    private LiveData<List<New>> news;
 
-    public NewViewModel(Application application){
+    public NewViewModel(@NonNull Application application){
         super(application);
-        /*if (repository == null) {
-            repository = new NewsRepository(application);
-            news = repository.getNews();
-            categories = repository.getCategories();
-            players = repository.getPlayers();
-            loading = repository.getLoading();
-            logged = repository.getLogged();
-            message = repository.getMessage();
-        }*/
-
         repository = new NewsRepository(application);
         news = repository.getNews();
     }
@@ -47,14 +38,6 @@ public class NewViewModel extends AndroidViewModel{
 
     /*public LiveData<List<Category>> getCategories(){
         return categories;
-    }
-
-    public LiveData<List<Player>> getPlayers() {
-        return players;
-    }
-
-    public void login(String username, String password){
-        repository.login(username, password);
     }
 
     public void refresh(){

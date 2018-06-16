@@ -28,7 +28,7 @@ public class LoginActivity extends AppCompatActivity{
         final Button loginButton = findViewById(R.id.login_loginButton);
 
         final NewViewModel newViewModel = ViewModelProviders.of(this).get(NewViewModel.class);
-        apiRequest = new APIRequest(this, loadingLayout, newViewModel);
+        apiRequest = new APIRequest(this, loadingLayout, newViewModel, null);
 
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
