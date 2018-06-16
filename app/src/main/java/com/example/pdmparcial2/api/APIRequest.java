@@ -114,7 +114,12 @@ public class APIRequest {
                t.printStackTrace();
             }
         });
+    }
 
+    public void logout(){
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.remove(TOKEN);
+        editor.apply();
     }
 
     public boolean isLoading() {

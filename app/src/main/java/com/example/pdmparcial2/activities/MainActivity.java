@@ -44,12 +44,12 @@ public class MainActivity extends AppCompatActivity {
     private DrawerLayout drawerLayout;
     private NewViewModel newViewModel;
     private APIRequest apiRequest;
+    private FragmentManager fragmentManager;
     private NewsListFragment newsListFragment;
     private PlayerListFragment playerListFragment;
     private String selectedCategory = "all";
     private List<New> allNews;
     private List<Player> allPlayers;
-    private SharedPreferences sharedPreferences;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,82 +60,17 @@ public class MainActivity extends AppCompatActivity {
 
         newViewModel = ViewModelProviders.of(this).get(NewViewModel.class);
         apiRequest = new APIRequest(this, loadingLayout, newViewModel);
-        if (!apiRequest.isLogged()){
-            ActivityManager.openLoginActivity(this);
-            finish();
-        }
+        login();
 
-        /*sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-        String token = sharedPreferences.getString("TOKEN", null);
-        if (token == null || token.isEmpty()) {
-            Intent intent = new Intent(this, LoginActivity.class);
-            startActivity(intent);
-            finish();
-        }
+        setupToolbar();
 
-        Toolbar toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-        ActionBar actionBar = getSupportActionBar();
-        actionBar.setDisplayHomeAsUpEnabled(true);
-        actionBar.setHomeAsUpIndicator(R.drawable.ic_menu);
-
-        FragmentManager fragmentManager = getSupportFragmentManager();
+        fragmentManager = getSupportFragmentManager();
         newsListFragment = new NewsListFragment();
         playerListFragment = new PlayerListFragment();
 
-        final TabLayout tabLayout = findViewById(R.id.tabLayout);
-        ViewPager viewPager = findViewById(R.id.viewPager);
-        final ViewPagerAdapter viewPagerAdapter = new ViewPagerAdapter(fragmentManager);
-        viewPager.setAdapter(viewPagerAdapter);
-        viewPagerAdapter.addFragment(newsListFragment, "News");
-        viewPagerAdapter.addFragment(playerListFragment, "Top Players");
-        viewPagerAdapter.setCount(1);
-        tabLayout.setupWithViewPager(viewPager);
+        setupDrawer();
 
-        drawerLayout = findViewById(R.id.drawerLayout);
-        NavigationView navigationView = findViewById(R.id.navigationView);
-        final Menu menu = navigationView.getMenu();
-        final SubMenu subMenu = menu.findItem(R.id.drawerGames).getSubMenu();
-        navigationView.getMenu().getItem(0).setChecked(true);
-        navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
-
-            @Override
-            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                switch (item.getItemId()) {
-                    case R.id.drawerNews:
-                        tabLayout.getTabAt(0).select();
-                        selectedCategory = "all";
-                        viewPagerAdapter.setCount(1);
-                        newsListFragment.setNewsList(allNews, selectedCategory);
-                        break;
-                    case R.id.drawerFavorites:
-                        tabLayout.getTabAt(0).select();
-                        selectedCategory = "favorites";
-                        viewPagerAdapter.setCount(1);
-                        newsListFragment.setNewsList(allNews, selectedCategory);
-                        break;
-                    case R.id.drawerLogout:
-                        logout();
-                        break;
-                }
-                if (item.getGroupId() == R.id.drawerGameMenu) {
-                    tabLayout.setVisibility(View.VISIBLE);
-                    subMenu.setGroupCheckable(R.id.drawerGameMenu, true, true);
-                    selectedCategory = item.getTitle().toString();
-                    viewPagerAdapter.setCount(2);
-                    newsListFragment.setNewsList(allNews, selectedCategory);
-                    playerListFragment.setPlayerList(allPlayers, selectedCategory);
-                } else {
-                    tabLayout.setVisibility(View.GONE);
-                }
-                //newViewModel.refresh();
-                item.setChecked(true);
-                drawerLayout.closeDrawers();
-                return true;
-            }
-        });
-
-        newsListFragment.setViewModel(newViewModel);
+        /*newsListFragment.setViewModel(newViewModel);
         newViewModel.getNews().observe(this, new Observer<List<New>>() {
             @Override
             public void onChanged(@Nullable List<New> news) {
@@ -180,7 +115,7 @@ public class MainActivity extends AppCompatActivity {
         }*/
     }
 
-    /*@Override
+    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.action_menu, menu);
@@ -200,17 +135,84 @@ public class MainActivity extends AppCompatActivity {
         return false;
     }
 
-    @Override
+    private void setupToolbar(){
+        Toolbar toolbar = findViewById(R.id.toolbar);
+         setSupportActionBar(toolbar);
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setDisplayHomeAsUpEnabled(true);
+        actionBar.setHomeAsUpIndicator(R.drawable.ic_menu);
+    }
+
+    private void setupDrawer(){
+        final TabLayout tabLayout = findViewById(R.id.tabLayout);
+        ViewPager viewPager = findViewById(R.id.viewPager);
+        final ViewPagerAdapter viewPagerAdapter = new ViewPagerAdapter(fragmentManager);
+        viewPager.setAdapter(viewPagerAdapter);
+        viewPagerAdapter.addFragment(newsListFragment, "News");
+        viewPagerAdapter.addFragment(playerListFragment, "Top Players");
+        viewPagerAdapter.setCount(1);
+        tabLayout.setupWithViewPager(viewPager);
+
+        drawerLayout = findViewById(R.id.drawerLayout);
+        NavigationView navigationView = findViewById(R.id.navigationView);
+        final Menu menu = navigationView.getMenu();
+        final SubMenu subMenu = menu.findItem(R.id.drawerGames).getSubMenu();
+        navigationView.getMenu().getItem(0).setChecked(true);
+        navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                switch (item.getItemId()) {
+                    case R.id.drawerNews:
+                        tabLayout.getTabAt(0).select();
+                        selectedCategory = "all";
+                        viewPagerAdapter.setCount(1);
+                        newsListFragment.setNewsList(allNews, selectedCategory);
+                        break;
+                    case R.id.drawerFavorites:
+                        tabLayout.getTabAt(0).select();
+                        selectedCategory = "favorites";
+                        viewPagerAdapter.setCount(1);
+                        newsListFragment.setNewsList(allNews, selectedCategory);
+                        break;
+                    case R.id.drawerLogout:
+                        logout();
+                        break;
+                }
+                if (item.getGroupId() == R.id.drawerGameMenu) {
+                    /*tabLayout.setVisibility(View.VISIBLE);
+                    subMenu.setGroupCheckable(R.id.drawerGameMenu, true, true);
+                    selectedCategory = item.getTitle().toString();
+                    viewPagerAdapter.setCount(2);
+                    newsListFragment.setNewsList(allNews, selectedCategory);
+                    playerListFragment.setPlayerList(allPlayers, selectedCategory);*/
+                } else {
+                    tabLayout.setVisibility(View.GONE);
+                }
+                //newViewModel.refresh();
+                item.setChecked(true);
+                drawerLayout.closeDrawers();
+                return true;
+            }
+        });
+    }
+
+    /*@Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         newViewModel.refresh();
     }*/
 
-    private void logout(){
-        newViewModel.logout();
+    private void login(){
+        if (!apiRequest.isLogged()){
+            ActivityManager.openLoginActivity(this);
+            finish();
+        }
+    }
 
-        Intent intent = new Intent(this, LoginActivity.class);
-        startActivity(intent);
+    private void logout(){
+        apiRequest.logout();
+        ActivityManager.openMainActivity(this);
         finish();
     }
 }
