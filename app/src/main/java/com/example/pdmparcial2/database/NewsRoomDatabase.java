@@ -3,9 +3,11 @@ package com.example.pdmparcial2.database;
 import android.arch.persistence.room.Database;
 import android.arch.persistence.room.Room;
 import android.arch.persistence.room.RoomDatabase;
-import android.arch.persistence.room.TypeConverters;
 import android.content.Context;
 
+import com.example.pdmparcial2.database.daos.CategoryDao;
+import com.example.pdmparcial2.database.daos.NewDao;
+import com.example.pdmparcial2.database.daos.PlayerDao;
 import com.example.pdmparcial2.model.Category;
 import com.example.pdmparcial2.model.New;
 import com.example.pdmparcial2.model.Player;

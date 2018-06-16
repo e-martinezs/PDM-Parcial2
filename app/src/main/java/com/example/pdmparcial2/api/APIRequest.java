@@ -5,9 +5,13 @@ import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.view.View;
 
-import com.example.pdmparcial2.database.CategoryViewModel;
-import com.example.pdmparcial2.database.NewViewModel;
-import com.example.pdmparcial2.database.PlayerViewModel;
+import com.example.pdmparcial2.api.deserializers.CategoryDeserializer;
+import com.example.pdmparcial2.api.deserializers.NewsDeserializer;
+import com.example.pdmparcial2.api.deserializers.PlayerDeserializer;
+import com.example.pdmparcial2.api.deserializers.TokenDeserializer;
+import com.example.pdmparcial2.database.viewmodels.CategoryViewModel;
+import com.example.pdmparcial2.database.viewmodels.NewViewModel;
+import com.example.pdmparcial2.database.viewmodels.PlayerViewModel;
 import com.example.pdmparcial2.model.Category;
 import com.example.pdmparcial2.model.New;
 import com.example.pdmparcial2.model.Player;

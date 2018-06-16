@@ -1,10 +1,11 @@
-package com.example.pdmparcial2.database;
+package com.example.pdmparcial2.database.viewmodels;
 
 import android.app.Application;
 import android.arch.lifecycle.AndroidViewModel;
 import android.arch.lifecycle.LiveData;
 import android.support.annotation.NonNull;
 
+import com.example.pdmparcial2.database.repositories.CategoryRepository;
 import com.example.pdmparcial2.model.Category;
 
 import java.util.List;

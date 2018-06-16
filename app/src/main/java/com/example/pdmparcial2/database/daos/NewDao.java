@@ -1,4 +1,4 @@
-package com.example.pdmparcial2.database;
+package com.example.pdmparcial2.database.daos;
 
 import android.arch.lifecycle.LiveData;
 import android.arch.persistence.room.Dao;

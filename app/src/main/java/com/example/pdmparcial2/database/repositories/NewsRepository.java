@@ -1,36 +1,15 @@
-package com.example.pdmparcial2.database;
+package com.example.pdmparcial2.database.repositories;
 
 import android.app.Application;
 import android.arch.lifecycle.LiveData;
-import android.arch.lifecycle.MutableLiveData;
-import android.content.SharedPreferences;
 import android.os.AsyncTask;
-import android.preference.PreferenceManager;
 
-import com.example.pdmparcial2.api.CategoryDeserializer;
-import com.example.pdmparcial2.api.GameNewsAPI;
-import com.example.pdmparcial2.api.NewsDeserializer;
-import com.example.pdmparcial2.api.PlayerDeserializer;
-import com.example.pdmparcial2.api.TokenDeserializer;
-import com.example.pdmparcial2.api.UserDeserializer;
-import com.example.pdmparcial2.model.Category;
+import com.example.pdmparcial2.database.NewsRoomDatabase;
+import com.example.pdmparcial2.database.daos.NewDao;
 import com.example.pdmparcial2.model.New;
-import com.example.pdmparcial2.model.Player;
 import com.example.pdmparcial2.model.User;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 
-import java.io.IOException;
 import java.util.List;
-
-import okhttp3.Interceptor;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
 
 public class NewsRepository {
 

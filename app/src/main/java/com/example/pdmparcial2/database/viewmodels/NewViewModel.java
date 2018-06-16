@@ -1,14 +1,12 @@
-package com.example.pdmparcial2.database;
+package com.example.pdmparcial2.database.viewmodels;
 
 import android.app.Application;
 import android.arch.lifecycle.AndroidViewModel;
 import android.arch.lifecycle.LiveData;
-import android.arch.lifecycle.MutableLiveData;
 import android.support.annotation.NonNull;
 
-import com.example.pdmparcial2.model.Category;
+import com.example.pdmparcial2.database.repositories.NewsRepository;
 import com.example.pdmparcial2.model.New;
-import com.example.pdmparcial2.model.Player;
 import com.example.pdmparcial2.model.User;
 
 import java.util.List;

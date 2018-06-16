@@ -10,7 +10,7 @@ import android.widget.EditText;
 
 import com.example.pdmparcial2.R;
 import com.example.pdmparcial2.api.APIRequest;
-import com.example.pdmparcial2.database.NewViewModel;
+import com.example.pdmparcial2.database.viewmodels.NewViewModel;
 import com.example.pdmparcial2.utils.ActivityManager;
 
 public class LoginActivity extends AppCompatActivity{

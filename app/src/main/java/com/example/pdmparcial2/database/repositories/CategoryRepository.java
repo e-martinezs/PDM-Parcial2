@@ -1,9 +1,11 @@
-package com.example.pdmparcial2.database;
+package com.example.pdmparcial2.database.repositories;
 
 import android.app.Application;
 import android.arch.lifecycle.LiveData;
 import android.os.AsyncTask;
 
+import com.example.pdmparcial2.database.NewsRoomDatabase;
+import com.example.pdmparcial2.database.daos.CategoryDao;
 import com.example.pdmparcial2.model.Category;
 
 import java.util.List;

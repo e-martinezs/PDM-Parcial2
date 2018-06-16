@@ -1,4 +1,4 @@
-package com.example.pdmparcial2.api;
+package com.example.pdmparcial2.api.deserializers;
 
 import com.example.pdmparcial2.model.New;
 import com.google.gson.JsonDeserializationContext;

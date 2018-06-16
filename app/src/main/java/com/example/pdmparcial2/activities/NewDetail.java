@@ -10,7 +10,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.pdmparcial2.R;
-import com.example.pdmparcial2.database.NewViewModel;
+import com.example.pdmparcial2.database.viewmodels.NewViewModel;
 import com.example.pdmparcial2.model.New;
 import com.squareup.picasso.Picasso;
 
