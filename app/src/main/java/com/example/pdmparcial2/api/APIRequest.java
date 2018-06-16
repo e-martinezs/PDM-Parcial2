@@ -128,6 +128,11 @@ public class APIRequest {
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.remove(TOKEN);
         editor.apply();
+        newViewModel.deleteNews();
+    }
+
+    public void refresh(){
+        downloadAll();
     }
 
     public void downloadAll(){
@@ -145,6 +150,9 @@ public class APIRequest {
         getNews.enqueue(new Callback<List<New>>() {
             @Override
             public void onResponse(Call<List<New>> call, Response<List<New>> response) {
+                if (response.code() == 401){
+                    sessionExpired();
+                }
                 List<New> news = response.body();
                 if (news != null) {
                     newViewModel.deleteNews();
@@ -180,6 +188,7 @@ public class APIRequest {
             @Override
             public void onFailure(Call<List<Player>> call, Throwable t) {
                 connectionError();
+                t.printStackTrace();
             }
         });
     }
@@ -204,6 +213,7 @@ public class APIRequest {
             @Override
             public void onFailure(Call<List<Category>> call, Throwable t) {
                 connectionError();
+                t.printStackTrace();
             }
         });
     }
@@ -241,5 +251,12 @@ public class APIRequest {
     public void connectionError(){
         setMessage("Could not connect to server");
         setLoading(false);
+    }
+
+    public void sessionExpired(){
+        setMessage("Session expired");
+        logout();
+        ActivityManager.openLoginActivity(context);
+        ActivityManager.closeActivity(context);
     }
 }

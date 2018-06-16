@@ -79,7 +79,7 @@ public class MainActivity extends AppCompatActivity {
 
         setupDrawer();
 
-        apiRequest.downloadAll();
+        refresh();
         newsListFragment.setViewModel(newViewModel);
         newViewModel.getNews().observe(this, new Observer<List<New>>() {
             @Override
@@ -122,7 +122,7 @@ public class MainActivity extends AppCompatActivity {
                 drawerLayout.openDrawer(GravityCompat.START);
                 return true;
             case R.id.refreshButton:
-                //newViewModel.refresh();
+                refresh();
                 return true;
         }
         return false;
@@ -175,14 +175,14 @@ public class MainActivity extends AppCompatActivity {
                 if (item.getGroupId() == R.id.drawerGameMenu) {
                     tabLayout.setVisibility(View.VISIBLE);
                     subMenu.setGroupCheckable(R.id.drawerGameMenu, true, true);
-                    selectedCategory = item.getTitle().toString();
+                    selectedCategory = item.getTitle().toString().toLowerCase();
                     viewPagerAdapter.setCount(2);
                     newsListFragment.setNewsList(allNews, selectedCategory);
                     playerListFragment.setPlayerList(allPlayers, selectedCategory);
                 } else {
                     tabLayout.setVisibility(View.GONE);
                 }
-                //newViewModel.refresh();
+                refresh();
                 item.setChecked(true);
                 drawerLayout.closeDrawers();
                 return true;
@@ -207,5 +207,11 @@ public class MainActivity extends AppCompatActivity {
         apiRequest.logout();
         ActivityManager.openMainActivity(this);
         finish();
+    }
+
+    private void refresh(){
+        apiRequest.refresh();
+        newsListFragment.setNewsList(new ArrayList<New>(), "");
+        playerListFragment.setPlayerList(new ArrayList<Player>(), "");
     }
 }
