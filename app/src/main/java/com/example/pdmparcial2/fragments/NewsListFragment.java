@@ -8,8 +8,12 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.SearchView;
 
 import com.example.pdmparcial2.R;
 import com.example.pdmparcial2.adapter.NewsAdapter;
@@ -25,7 +29,16 @@ public class NewsListFragment extends Fragment {
 
     private NewsAdapter newsAdapter;
     private APIRequest apiRequest;
+    private NewViewModel newViewModel;
     private String selectedCategory = "all";
+    private String searchQuery = "";
+    private List<New> newsList = new ArrayList<>();
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -51,11 +64,12 @@ public class NewsListFragment extends Fragment {
         recyclerView.setAdapter(newsAdapter);
         recyclerView.setHasFixedSize(true);
 
-        NewViewModel newViewModel = ViewModelProviders.of(this).get(NewViewModel.class);
+        newViewModel = ViewModelProviders.of(this).get(NewViewModel.class);
         newViewModel.getNews().observe(this, new Observer<List<New>>() {
             @Override
             public void onChanged(@Nullable List<New> news) {
                 setNewsList(news, selectedCategory);
+                newsList = news;
             }
         });
         newViewModel.getCategory().observe(this, new Observer<String>() {
@@ -64,8 +78,47 @@ public class NewsListFragment extends Fragment {
                 selectedCategory = category;
             }
         });
+        newViewModel.getSearch().observe(this, new Observer<String>() {
+            @Override
+            public void onChanged(@Nullable String query) {
+                searchQuery = query;
+            }
+        });
 
         return view;
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        final MenuItem item = menu.findItem(R.id.searchView);
+        final SearchView searchView = (SearchView) item.getActionView();
+        newViewModel.setSearch("");
+        setNewsList(newsList, selectedCategory);
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                searchView.clearFocus();
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String query) {
+                newViewModel.setSearch(query);
+                setNewsList(newsList, selectedCategory);
+                return false;
+            }
+        });
+        searchView.setOnCloseListener(new SearchView.OnCloseListener() {
+            @Override
+            public boolean onClose() {
+                newViewModel.setSearch("");
+                setNewsList(newsList, selectedCategory);
+                searchView.clearFocus();
+                item.collapseActionView();
+                return false;
+            }
+        });
+        super.onCreateOptionsMenu(menu, inflater);
     }
 
     public void setApiRequest(APIRequest apiRequest) {
@@ -92,10 +145,17 @@ public class NewsListFragment extends Fragment {
             filteredNews = news;
         }
 
-        Collections.sort(filteredNews);
-        Collections.reverse(filteredNews);
+        List<New> searchNews = new ArrayList<>();
+        for (New n:filteredNews){
+            if (n.getTitle().contains(searchQuery) || n.getDescription().contains(searchQuery)){
+                searchNews.add(n);
+            }
+        }
+
+        Collections.sort(searchNews);
+        Collections.reverse(searchNews);
         if (newsAdapter != null) {
-            newsAdapter.setNews(filteredNews);
+            newsAdapter.setNews(searchNews);
         }
     }
 }

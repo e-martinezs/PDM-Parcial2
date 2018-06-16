@@ -17,12 +17,14 @@ public class NewViewModel extends AndroidViewModel{
     private NewsRepository repository;
     private LiveData<List<New>> news;
     private static MutableLiveData<String> category = new MutableLiveData<>();
+    private static MutableLiveData<String> search = new MutableLiveData<>();
 
     public NewViewModel(@NonNull Application application){
         super(application);
         repository = new NewsRepository(application);
         news = repository.getNews();
         setCategory("all");
+        setSearch("");
     }
 
     public LiveData<List<New>> getNews(){
@@ -45,11 +47,19 @@ public class NewViewModel extends AndroidViewModel{
         repository.setFavorite(newId, false);
     }
 
-    public void setCategory(String category){
-        this.category.setValue(category);
+    public void setCategory(String newCategory){
+       category.setValue(newCategory);
     }
 
     public MutableLiveData<String> getCategory() {
         return category;
+    }
+
+    public void setSearch(String newSearch){
+        search.setValue(newSearch);
+    }
+
+    public MutableLiveData<String> getSearch() {
+        return search;
     }
 }

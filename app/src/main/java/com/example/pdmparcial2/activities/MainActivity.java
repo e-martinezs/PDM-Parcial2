@@ -49,8 +49,6 @@ public class MainActivity extends AppCompatActivity {
     private NewsListFragment newsListFragment;
     private PlayerListFragment playerListFragment;
     private String selectedCategory = ALL;
-    private List<New> allNews;
-    private List<Player> allPlayers;
     private SubMenu subMenu;
 
     @Override
@@ -76,18 +74,6 @@ public class MainActivity extends AppCompatActivity {
         setupDrawer();
 
         refresh();
-        newViewModel.getNews().observe(this, new Observer<List<New>>() {
-            @Override
-            public void onChanged(@Nullable List<New> news) {
-                allNews = news;
-            }
-        });
-        playerViewModel.getPlayers().observe(this, new Observer<List<Player>>() {
-            @Override
-            public void onChanged(@Nullable List<Player> players) {
-                allPlayers = players;
-            }
-        });
         categoryViewModel.getCategories().observe(this, new Observer<List<Category>>() {
             @Override
             public void onChanged(@Nullable List<Category> categories) {
@@ -140,7 +126,7 @@ public class MainActivity extends AppCompatActivity {
         tabLayout.setupWithViewPager(viewPager);
 
         drawerLayout = findViewById(R.id.drawerLayout);
-        NavigationView navigationView = findViewById(R.id.navigationView);
+        final NavigationView navigationView = findViewById(R.id.navigationView);
         final Menu menu = navigationView.getMenu();
         subMenu = menu.findItem(R.id.drawerGames).getSubMenu();
         navigationView.getMenu().getItem(0).setChecked(true);
@@ -164,6 +150,7 @@ public class MainActivity extends AppCompatActivity {
                         playerViewModel.setCategory(selectedCategory);
                         break;
                     case R.id.drawerSettings:
+                        navigationView.getMenu().getItem(R.id.drawerSettings).setChecked(false);
                         openSettings();
                         break;
                     case R.id.drawerLogout:
