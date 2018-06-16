@@ -16,12 +16,14 @@ public class PlayerViewModel extends AndroidViewModel{
     private PlayerRepository repository;
     private LiveData<List<Player>> players;
     private static MutableLiveData<String> category = new MutableLiveData<>();
+    private static MutableLiveData<String> search = new MutableLiveData<>();
 
     public PlayerViewModel(@NonNull Application application) {
         super(application);
         repository = new PlayerRepository(application);
         players = repository.getPlayers();
         setCategory("all");
+        setSearch("");
     }
 
     public LiveData<List<Player>> getPlayers() {
@@ -38,5 +40,13 @@ public class PlayerViewModel extends AndroidViewModel{
 
     public MutableLiveData<String> getCategory() {
         return category;
+    }
+
+    public void setSearch(String newSearch){
+        search.setValue(newSearch);
+    }
+
+    public MutableLiveData<String> getSearch() {
+        return search;
     }
 }

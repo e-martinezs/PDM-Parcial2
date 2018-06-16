@@ -81,6 +81,9 @@ public class MainActivity extends AppCompatActivity {
                 int i = 0;
                 for (Category c : categories) {
                     subMenu.add(R.id.drawerGameMenu, i, i, c.getName().toUpperCase()).setCheckable(true);
+                    if (c.getName().matches(selectedCategory)) {
+                        subMenu.getItem(i).setChecked(true);
+                    }
                     i++;
                 }
             }
@@ -150,7 +153,12 @@ public class MainActivity extends AppCompatActivity {
                         playerViewModel.setCategory(selectedCategory);
                         break;
                     case R.id.drawerSettings:
-                        navigationView.getMenu().getItem(R.id.drawerSettings).setChecked(false);
+                        navigationView.getMenu().getItem(0).setChecked(true);
+                        tabLayout.getTabAt(0).select();
+                        selectedCategory = ALL;
+                        viewPagerAdapter.setCount(1);
+                        newViewModel.setCategory(selectedCategory);
+                        playerViewModel.setCategory(selectedCategory);
                         openSettings();
                         break;
                     case R.id.drawerLogout:
@@ -164,11 +172,10 @@ public class MainActivity extends AppCompatActivity {
                     viewPagerAdapter.setCount(2);
                     newViewModel.setCategory(selectedCategory);
                     playerViewModel.setCategory(selectedCategory);
-                } else {
+                } else{
                     tabLayout.setVisibility(View.GONE);
                 }
                 refresh();
-                item.setChecked(true);
                 drawerLayout.closeDrawers();
                 return true;
             }
