@@ -7,6 +7,7 @@ public class User {
 
     private String token;
     private String id;
+    private String password;
     private List<String> favoriteNews = new ArrayList<>();
 
     public User(){
@@ -27,6 +28,14 @@ public class User {
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     public List<String> getFavoriteNews() {

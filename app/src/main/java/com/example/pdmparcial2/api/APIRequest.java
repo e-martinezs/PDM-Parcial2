@@ -222,6 +222,7 @@ public class APIRequest {
             public void onResponse(Call<User> call, Response<User> response) {
                 if (response.code() == 200) {
                     user.setId(response.body().getId());
+                    user.setPassword(response.body().getPassword());
                     user.setFavoriteNews(response.body().getFavoriteNews());
                     downloadAll();
                 } else if (response.code() == 401) {
@@ -284,6 +285,32 @@ public class APIRequest {
                 }
             }
         }
+    }
+
+    public void changePassword(String oldPassword, String newPassword){
+        if (!oldPassword.matches(user.getPassword())){
+            ActivityManager.showToast(context, "Wrong password");
+            return;
+        }
+        setLoading(true);
+        createAPIClient(new Gson());
+        Call<Void> changePassword = gameNewsAPI.changePassword(user.getId(), newPassword);
+        changePassword.enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                if (response.code() == 200){
+                    ActivityManager.showToast(context, "Password changed");
+                }else{
+                    ActivityManager.showToast(context, "There was an error");
+                }
+                setLoading(false);
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+                connectionError();
+            }
+        });
     }
 
     public boolean isLoading() {

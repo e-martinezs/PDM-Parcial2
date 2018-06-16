@@ -7,6 +7,7 @@ import android.widget.Toast;
 
 import com.example.pdmparcial2.activities.LoginActivity;
 import com.example.pdmparcial2.activities.MainActivity;
+import com.example.pdmparcial2.activities.SettingsActivity;
 
 public class ActivityManager {
 
@@ -17,6 +18,11 @@ public class ActivityManager {
 
     public static void openLoginActivity(Context context){
         Intent intent = new Intent(context, LoginActivity.class);
+        context.startActivity(intent);
+    }
+
+    public static void openSettingsActivity(Context context){
+        Intent intent = new Intent(context, SettingsActivity.class);
         context.startActivity(intent);
     }
 

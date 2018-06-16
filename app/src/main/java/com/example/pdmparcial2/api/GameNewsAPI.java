@@ -15,6 +15,7 @@ import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
 import retrofit2.http.HTTP;
 import retrofit2.http.POST;
+import retrofit2.http.PUT;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
 
@@ -44,5 +45,9 @@ public interface GameNewsAPI {
     @FormUrlEncoded
     @HTTP(method="DELETE", path="/users/{userId}/fav", hasBody = true)
     Call<Void> deleteFavorite(@Path("userId") String userId, @Field("new") String newId);
+
+    @FormUrlEncoded
+    @PUT("/users/{userId}")
+    Call<Void> changePassword(@Path("userId") String userId, @Field("password") String newPassword);
 
 }

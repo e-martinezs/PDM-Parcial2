@@ -163,6 +163,9 @@ public class MainActivity extends AppCompatActivity {
                         newViewModel.setCategory(selectedCategory);
                         playerViewModel.setCategory(selectedCategory);
                         break;
+                    case R.id.drawerSettings:
+                        openSettings();
+                        break;
                     case R.id.drawerLogout:
                         logout();
                         break;
@@ -196,6 +199,10 @@ public class MainActivity extends AppCompatActivity {
         apiRequest.logout();
         ActivityManager.openMainActivity(this);
         finish();
+    }
+
+    private void openSettings(){
+        ActivityManager.openSettingsActivity(this);
     }
 
     private void refresh(){
