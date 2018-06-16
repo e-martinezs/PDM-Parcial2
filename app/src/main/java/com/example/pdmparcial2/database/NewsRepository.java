@@ -47,25 +47,13 @@ public class NewsRepository {
         return news;
     }
 
-    /*public LiveData<List<Category>> getCategories() {
-        return categories;
-    }*/
-
     public void insertNews(List<New> news, User user) {
         new insertNewsAsyncTask(newDao, user).execute(news);
     }
 
-    /*public void insertCategories(List<Category> categories) {
-        new insertCategoriesAsyncTask(categoryDao).execute(categories);
-    }*/
-
     public void deleteNews(){
         new deleteNewsAsyncTask(newDao).execute();
     }
-
-    /*public void refresh() {
-        //getUserData();
-    }*/
 
     private class deleteNewsAsyncTask extends AsyncTask<Void, Void, Void>{
         private NewDao newDao;
@@ -106,28 +94,6 @@ public class NewsRepository {
             return null;
         }
     }
-
-    /*private class insertCategoriesAsyncTask extends AsyncTask<List<Category>, Void, Void> {
-        private CategoryDao categoryDao;
-
-        public insertCategoriesAsyncTask(CategoryDao categoryDao) {
-            this.categoryDao = categoryDao;
-        }
-
-        @Override
-        protected Void doInBackground(List<Category>... categories) {
-            categoryDao.deleteCategories();
-            for (Category c : categories[0]) {
-                categoryDao.insertCategory(c);
-            }
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(Void voids) {
-            loading.setValue(false);
-        }
-    }*/
 
     private class setNewFavoriteAsyncTask extends AsyncTask<Void, Void, Void> {
         private NewDao newDao;
@@ -178,38 +144,6 @@ public class NewsRepository {
 
             @Override
             public void onFailure(Call<User> call, Throwable t) {
-                loading.setValue(false);
-            }
-        });
-    }*/
-
-    /*private void downloadCategories() {
-        loading.setValue(true);
-        OkHttpClient client = new OkHttpClient.Builder().addInterceptor(new Interceptor() {
-            @Override
-            public okhttp3.Response intercept(Chain chain) throws IOException {
-                Request newRequest = chain.request().newBuilder().addHeader("Authorization", "Bearer " + user.getToken()).build();
-                return chain.proceed(newRequest);
-            }
-        }).build();
-        Gson gson = new GsonBuilder().registerTypeAdapter(Category.class, new CategoryDeserializer()).create();
-        Retrofit.Builder builder = new Retrofit.Builder().baseUrl(GameNewsAPI.BASE_URL).client(client).addConverterFactory(GsonConverterFactory.create(gson));
-        Retrofit retrofit = builder.build();
-        GameNewsAPI gameNewsAPI = retrofit.create(GameNewsAPI.class);
-
-        Call<List<Category>> getCategories = gameNewsAPI.getCategories();
-        getCategories.enqueue(new Callback<List<Category>>() {
-            @Override
-            public void onResponse(Call<List<Category>> call, Response<List<Category>> response) {
-                List<Category> categories = response.body();
-                if (categories != null) {
-                    insertCategories(categories);
-                }
-                downloadPlayers();
-            }
-
-            @Override
-            public void onFailure(Call<List<Category>> call, Throwable t) {
                 loading.setValue(false);
             }
         });

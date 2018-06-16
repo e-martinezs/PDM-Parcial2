@@ -28,6 +28,7 @@ import android.widget.RelativeLayout;
 import com.example.pdmparcial2.R;
 import com.example.pdmparcial2.adapter.ViewPagerAdapter;
 import com.example.pdmparcial2.api.APIRequest;
+import com.example.pdmparcial2.database.CategoryViewModel;
 import com.example.pdmparcial2.database.NewViewModel;
 import com.example.pdmparcial2.database.PlayerViewModel;
 import com.example.pdmparcial2.fragments.NewsListFragment;
@@ -47,6 +48,7 @@ public class MainActivity extends AppCompatActivity {
     private DrawerLayout drawerLayout;
     private NewViewModel newViewModel;
     private PlayerViewModel playerViewModel;
+    private CategoryViewModel categoryViewModel;
     private APIRequest apiRequest;
     private FragmentManager fragmentManager;
     private NewsListFragment newsListFragment;
@@ -54,6 +56,7 @@ public class MainActivity extends AppCompatActivity {
     private String selectedCategory = ALL;
     private List<New> allNews;
     private List<Player> allPlayers;
+    private SubMenu subMenu;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,7 +67,8 @@ public class MainActivity extends AppCompatActivity {
 
         newViewModel = ViewModelProviders.of(this).get(NewViewModel.class);
         playerViewModel = ViewModelProviders.of(this).get(PlayerViewModel.class);
-        apiRequest = new APIRequest(this, loadingLayout, newViewModel, playerViewModel);
+        categoryViewModel = ViewModelProviders.of(this).get(CategoryViewModel.class);
+        apiRequest = new APIRequest(this, loadingLayout, newViewModel, playerViewModel, categoryViewModel);
         login();
 
         setupToolbar();
@@ -91,17 +95,17 @@ public class MainActivity extends AppCompatActivity {
                 allPlayers = players;
             }
         });
-        /*newViewModel.getCategories().observe(this, new Observer<List<Category>>() {
+        categoryViewModel.getCategories().observe(this, new Observer<List<Category>>() {
             @Override
             public void onChanged(@Nullable List<Category> categories) {
                 subMenu.clear();
                 int i = 0;
                 for (Category c : categories) {
-                    subMenu.add(R.id.drawerGameMenu, i, i, c.getName());
+                    subMenu.add(R.id.drawerGameMenu, i, i, c.getName().toUpperCase()).setCheckable(true);
                     i++;
                 }
             }
-        });*/
+        });
     }
 
     @Override
@@ -145,7 +149,7 @@ public class MainActivity extends AppCompatActivity {
         drawerLayout = findViewById(R.id.drawerLayout);
         NavigationView navigationView = findViewById(R.id.navigationView);
         final Menu menu = navigationView.getMenu();
-        final SubMenu subMenu = menu.findItem(R.id.drawerGames).getSubMenu();
+        subMenu = menu.findItem(R.id.drawerGames).getSubMenu();
         navigationView.getMenu().getItem(0).setChecked(true);
         navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
 

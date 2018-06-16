@@ -5,8 +5,10 @@ import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.view.View;
 
+import com.example.pdmparcial2.database.CategoryViewModel;
 import com.example.pdmparcial2.database.NewViewModel;
 import com.example.pdmparcial2.database.PlayerViewModel;
+import com.example.pdmparcial2.model.Category;
 import com.example.pdmparcial2.model.New;
 import com.example.pdmparcial2.model.Player;
 import com.example.pdmparcial2.model.User;
@@ -34,17 +36,19 @@ public class APIRequest {
     private GameNewsAPI gameNewsAPI;
     private NewViewModel newViewModel;
     private PlayerViewModel playerViewModel;
+    private CategoryViewModel categoryViewModel;
     private SharedPreferences sharedPreferences;
     private User user = new User();
     private boolean loading = false;
     private boolean logged = false;
     private String message = "";
 
-    public APIRequest(Context context, View loadingLayout, NewViewModel newViewModel, PlayerViewModel playerViewModel) {
+    public APIRequest(Context context, View loadingLayout, NewViewModel newViewModel, PlayerViewModel playerViewModel, CategoryViewModel categoryViewModel) {
         this.context = context;
         this.loadingLayout = loadingLayout;
         this.newViewModel = newViewModel;
         this.playerViewModel = playerViewModel;
+        this.categoryViewModel = categoryViewModel;
 
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context.getApplicationContext());
         checkLogged();
@@ -129,6 +133,7 @@ public class APIRequest {
     public void downloadAll(){
         downloadNews();
         downloadPlayers();
+        downloadCategories();
     }
 
     public void downloadNews() {
@@ -174,6 +179,30 @@ public class APIRequest {
 
             @Override
             public void onFailure(Call<List<Player>> call, Throwable t) {
+                connectionError();
+            }
+        });
+    }
+
+    private void downloadCategories() {
+        setLoading(true);
+        Gson gson = new GsonBuilder().registerTypeAdapter(Category.class, new CategoryDeserializer()).create();
+        createAPIClient(gson);
+
+        Call<List<Category>> getCategories = gameNewsAPI.getCategories();
+        getCategories.enqueue(new Callback<List<Category>>() {
+            @Override
+            public void onResponse(Call<List<Category>> call, Response<List<Category>> response) {
+                List<Category> categories = response.body();
+                if (categories != null) {
+                    categoryViewModel.insertCategories(categories);
+                }
+                downloadPlayers();
+                setLoading(false);
+            }
+
+            @Override
+            public void onFailure(Call<List<Category>> call, Throwable t) {
                 connectionError();
             }
         });
