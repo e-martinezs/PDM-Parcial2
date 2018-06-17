@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Game News UCA</string>
+    <string name="login_title">GAME NEWS UCA</string>
+    <string name="login_username">Usuario</string>
+    <string name="login_username_hint">Usuario</string>
+    <string name="login_password">Contraseña</string>
+    <string name="login_password_hint">Contraseña</string>
+    <string name="login_login_button">Ingresar</string>
+    <string name="settings_change_pasword">Cambiar contraseña</string>
+    <string name="settings_current_password">Contraseña actual</string>
+    <string name="settings_current_password_hint">Contraseña actual</string>
+    <string name="settings_new_password">Contraseña nueva</string>
+    <string name="settings_new_password_hint">Contraseña nueva</string>
+    <string name="settings_reenter_password_hint">Contraseña nueva</string>
+    <string name="settings_reenter_password">Confirmar contraseña</string>
+    <string name="settings_save_button">Guardar</string>
+    <string name="action_refresh">Refrescar</string>
+    <string name="action_search">Buscar</string>
+    <string name="drawer_news">Noticias</string>
+    <string name="drawer_favorites">Favoritos</string>
+    <string name="drawer_games">Juegos</string>
+    <string name="drawer_lol">League of Legends</string>
+    <string name="drawer_csgo">CS GO</string>
+    <string name="drawer_overwatch">Overwatch</string>
+    <string name="drawer_settings">Opciones</string>
+    <string name="drawer_logout">Salir</string>
+    <string name="error_session_expired">Sesión expirada</string>
+    <string name="error_connection">No se pudo conectar al servidor</string>
+    <string name="error_default">Hubo un error</string>
+    <string name="message_password_changed">Contraseña cambiada</string>
+    <string name="error_wrong_password">Contraseña incorrecta</string>
+    <string name="error_wrong_credentials">Usuario o contraseña incorrecta</string>
+    <string name="error_empty_fields">Los campos deben estar llenos</string>
+    <string name="error_password_notmatch">La nueva contraseña no es igual</string>
+</resources>
