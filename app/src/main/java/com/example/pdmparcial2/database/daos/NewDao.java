@@ -19,7 +19,7 @@ public interface NewDao {
     @Query("DELETE FROM news_table")
     void deleteNews();
 
-    @Query("SELECT * FROM news_table")
+    @Query("SELECT * FROM news_table ORDER BY create_date DESC")
     LiveData<List<New>> getNews();
 
     @Query("UPDATE news_table SET favorite=:favorite WHERE id=:id")

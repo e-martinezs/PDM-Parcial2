@@ -152,8 +152,6 @@ public class NewsListFragment extends Fragment {
             }
         }
 
-        Collections.sort(searchNews);
-        Collections.reverse(searchNews);
         if (newsAdapter != null) {
             newsAdapter.setNews(searchNews);
         }

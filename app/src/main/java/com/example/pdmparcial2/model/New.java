@@ -12,7 +12,7 @@ import java.util.Date;
 import java.util.Locale;
 
 @Entity(tableName = "news_table")
-public class New implements Comparable<New>, Serializable {
+public class New implements Serializable {
 
     @PrimaryKey
     @NonNull
@@ -27,9 +27,6 @@ public class New implements Comparable<New>, Serializable {
 
     @ColumnInfo(name = "create_date")
     private String create_date;
-
-    @Ignore
-    private Date date;
 
     @ColumnInfo(name = "description")
     private String description;
@@ -114,31 +111,11 @@ public class New implements Comparable<New>, Serializable {
         this.game = game;
     }
 
-    public Date getDate() {
-        return date;
-    }
-
-    public void setDate(Date date) {
-        this.date = date;
-    }
-
     public boolean isFavorite() {
         return favorite;
     }
 
     public void setFavorite(boolean favorite) {
         this.favorite = favorite;
-    }
-
-    @Override
-    public int compareTo(@NonNull New aNew) {
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.getDefault());
-        try {
-            setDate(dateFormat.parse(getCreate_date()));
-            aNew.setDate(dateFormat.parse(aNew.getCreate_date()));
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return getDate().compareTo(aNew.getDate());
     }
 }
