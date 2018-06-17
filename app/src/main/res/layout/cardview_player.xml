@@ -34,7 +34,8 @@
                 android:ellipsize="end"
                 android:lines="1"
                 android:textAlignment="center"
-                android:textAppearance="@style/TextAppearance.AppCompat.Subhead" />
+                android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
+                android:textStyle="bold" />
 
         </LinearLayout>
     </android.support.v7.widget.CardView>
