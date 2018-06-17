@@ -17,6 +17,8 @@ import com.squareup.picasso.Picasso;
 
 public class NewDetail extends AppCompatActivity {
 
+    public static String NEW = "NEW";
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -31,7 +33,7 @@ public class NewDetail extends AppCompatActivity {
 
         Intent intent = this.getIntent();
         Bundle bundle = intent.getExtras();
-        final New mNew = (New) bundle.getSerializable("NEW");
+        final New mNew = (New) bundle.getSerializable(NEW);
 
         titleTextView.setText(mNew.getTitle());
         descriptionTextView.setText(mNew.getDescription());

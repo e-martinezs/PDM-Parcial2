@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.view.View;
 
+import com.example.pdmparcial2.R;
 import com.example.pdmparcial2.api.deserializers.CategoryDeserializer;
 import com.example.pdmparcial2.api.deserializers.NewsDeserializer;
 import com.example.pdmparcial2.api.deserializers.PlayerDeserializer;
@@ -107,15 +108,14 @@ public class APIRequest {
                     ActivityManager.openMainActivity(context);
 
                 } else if (response.code() == 401) {
-                    setMessage("Wrong username or password");
+                    setMessage(context.getString(R.string.error_wrong_credentials));
                 }
                 setLoading(false);
             }
 
             @Override
             public void onFailure(Call<String> call, Throwable t) {
-                setLoading(false);
-                setMessage("Could not connect to server");
+                connectionError();
                 t.printStackTrace();
             }
         });
@@ -291,7 +291,7 @@ public class APIRequest {
 
     public void changePassword(String oldPassword, String newPassword){
         if (!oldPassword.matches(user.getPassword())){
-            ActivityManager.showToast(context, "Wrong password");
+            ActivityManager.showToast(context, context.getString(R.string.error_wrong_password));
             return;
         }
         setLoading(true);
@@ -301,9 +301,9 @@ public class APIRequest {
             @Override
             public void onResponse(Call<Void> call, Response<Void> response) {
                 if (response.code() == 200){
-                    ActivityManager.showToast(context, "Password changed");
+                    ActivityManager.showToast(context, context.getString(R.string.message_password_changed));
                 }else{
-                    ActivityManager.showToast(context, "There was an error");
+                    ActivityManager.showToast(context, context.getString(R.string.error_default));
                 }
                 setLoading(false);
             }
@@ -348,12 +348,12 @@ public class APIRequest {
     }
 
     public void connectionError() {
-        setMessage("Could not connect to server");
+        setMessage(context.getString(R.string.error_connection));
         setLoading(false);
     }
 
     public void sessionExpired() {
-        setMessage("Session expired");
+        setMessage(context.getString(R.string.error_session_expired));
         logout();
         ActivityManager.openLoginActivity(context);
         ActivityManager.closeActivity(context);

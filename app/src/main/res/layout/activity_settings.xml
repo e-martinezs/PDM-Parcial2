@@ -10,7 +10,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="8dp"
+            android:layout_margin="@dimen/marginMedium"
             android:gravity="center"
             android:orientation="vertical">
 
@@ -18,8 +18,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="start"
-                android:layout_margin="8dp"
-                android:text="Change pasword"
+                android:layout_margin="@dimen/marginMedium"
+                android:text="@string/settings_change_pasword"
                 android:textAppearance="@style/TextAppearance.AppCompat.Large" />
 
 
@@ -27,16 +27,16 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="start"
-                android:layout_margin="8dp"
-                android:text="Current password"
+                android:layout_margin="@dimen/marginMedium"
+                android:text="@string/settings_current_password"
                 android:textAppearance="@style/TextAppearance.AppCompat.Subhead" />
 
             <EditText
                 android:id="@+id/settings_oldPasswordEditText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="8dp"
-                android:hint="Current password"
+                android:layout_margin="@dimen/marginMedium"
+                android:hint="@string/settings_current_password_hint"
                 android:inputType="textPassword"
                 android:lines="1"
                 android:textAppearance="@style/TextAppearance.AppCompat.Subhead" />
@@ -46,16 +46,16 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="start"
-                android:layout_margin="8dp"
-                android:text="New password"
+                android:layout_margin="@dimen/marginMedium"
+                android:text="@string/settings_new_password"
                 android:textAppearance="@style/TextAppearance.AppCompat.Subhead" />
 
             <EditText
                 android:id="@+id/settings_newPasswordEditText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="8dp"
-                android:hint="New password"
+                android:layout_margin="@dimen/marginMedium"
+                android:hint="@string/settings_new_password_hint"
                 android:inputType="textPassword"
                 android:lines="1"
                 android:textAppearance="@style/TextAppearance.AppCompat.Subhead" />
@@ -64,16 +64,16 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="start"
-                android:layout_margin="8dp"
-                android:text="Reenter password"
+                android:layout_margin="@dimen/marginMedium"
+                android:text="@string/settings_reenter_password"
                 android:textAppearance="@style/TextAppearance.AppCompat.Subhead" />
 
             <EditText
                 android:id="@+id/settings_repeatPasswordEditText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="8dp"
-                android:hint="New password"
+                android:layout_margin="@dimen/marginMedium"
+                android:hint="@string/settings_reenter_password_hint"
                 android:inputType="textPassword"
                 android:lines="1"
                 android:textAppearance="@style/TextAppearance.AppCompat.Subhead" />
@@ -82,8 +82,8 @@
                 android:id="@+id/settings_saveButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_margin="8dp"
-                android:text="Save" />
+                android:layout_margin="@dimen/marginMedium"
+                android:text="@string/settings_save_button" />
 
         </LinearLayout>
     </ScrollView>

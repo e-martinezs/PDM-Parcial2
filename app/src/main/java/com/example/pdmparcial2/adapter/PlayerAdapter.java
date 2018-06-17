@@ -65,7 +65,7 @@ public class PlayerAdapter extends RecyclerView.Adapter<PlayerAdapter.PlayerView
             public void onClick(View view) {
                 Intent intent = new Intent(context, PlayerDetail.class);
                 Bundle bundle = new Bundle();
-                bundle.putSerializable("PLAYER", player);
+                bundle.putSerializable(PlayerDetail.PLAYER, player);
                 intent.putExtras(bundle);
                 context.startActivity(intent);
             }

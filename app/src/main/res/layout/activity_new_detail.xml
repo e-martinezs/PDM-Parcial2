@@ -11,7 +11,7 @@
         <ImageView
             android:id="@+id/detail_newImageView"
             android:layout_width="match_parent"
-            android:layout_height="200dp"
+            android:layout_height="@dimen/detailCoverSize"
             android:adjustViewBounds="true"
             android:scaleType="centerCrop" />
 
@@ -19,13 +19,13 @@
             android:id="@+id/detail_newTitleTextView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="8dp"
+            android:layout_margin="@dimen/marginMedium"
             android:textAppearance="@style/TextAppearance.AppCompat.Headline"
             android:textStyle="bold"/>
 
         <View
             android:layout_width="match_parent"
-            android:layout_height="2dp"
+            android:layout_height="@dimen/lineSize"
             android:background="@color/colorAccent" />
 
         <LinearLayout
@@ -38,16 +38,16 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:layout_margin="8dp"
+                android:layout_margin="@dimen/marginMedium"
                 android:layout_gravity="center_vertical"
                 android:textAppearance="@style/TextAppearance.AppCompat.Small" />
 
             <CheckBox
                 android:id="@+id/detail_buttonFavorite"
-                android:layout_width="32dp"
-                android:layout_height="32dp"
+                android:layout_width="@dimen/favoriteButtonSize"
+                android:layout_height="@dimen/favoriteButtonSize"
                 android:layout_gravity="center_vertical"
-                android:layout_margin="8dp"
+                android:layout_margin="@dimen/marginMedium"
                 android:background="@drawable/button_favorite"
                 android:button="@null" />
         </LinearLayout>
@@ -57,7 +57,7 @@
             android:id="@+id/detail_newDescriptionTextView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="8dp"
+            android:layout_margin="@dimen/marginMedium"
             android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
             android:textStyle="bold" />
 
@@ -65,7 +65,7 @@
             android:id="@+id/detail_newBodyTextView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="8dp"
+            android:layout_margin="@dimen/marginMedium"
             android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
     </LinearLayout>
 </ScrollView>

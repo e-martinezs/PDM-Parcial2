@@ -11,7 +11,7 @@
         <ImageView
             android:id="@+id/detail_playerImageView"
             android:layout_width="match_parent"
-            android:layout_height="200dp"
+            android:layout_height="@dimen/detailCoverSize"
             android:adjustViewBounds="true"
             android:scaleType="centerCrop" />
 
@@ -19,20 +19,20 @@
             android:id="@+id/detail_playerNameTextView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="8dp"
+            android:layout_margin="@dimen/marginMedium"
             android:textAppearance="@style/TextAppearance.AppCompat.Headline"
             android:textStyle="bold" />
 
         <View
             android:layout_width="match_parent"
-            android:layout_height="2dp"
+            android:layout_height="@dimen/lineSize"
             android:background="@color/colorAccent" />
 
         <TextView
             android:id="@+id/detail_playerBiographyTextView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="8dp"
+            android:layout_margin="@dimen/marginMedium"
             android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
     </LinearLayout>
 </ScrollView>

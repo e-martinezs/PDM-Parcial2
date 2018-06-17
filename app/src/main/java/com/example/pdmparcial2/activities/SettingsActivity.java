@@ -37,9 +37,9 @@ public class SettingsActivity extends AppCompatActivity{
                 String newPassword = newPasswordEditText.getText().toString();
                 String repeatPassword = repeatPasswordEditText.getText().toString();
                 if (oldPassword.matches("") || newPassword.matches("") || repeatPassword.matches("")){
-                    ActivityManager.showToast(getApplicationContext(), "Fields must not be empty");
+                    ActivityManager.showToast(getApplicationContext(), getString(R.string.error_empty_fields));
                 }else if(!newPassword.matches(repeatPassword)){
-                    ActivityManager.showToast(getApplicationContext(), "New password does not match");
+                    ActivityManager.showToast(getApplicationContext(), getString(R.string.error_password_notmatch));
                 }else{
                     apiRequest.changePassword(oldPassword, newPassword);
                 }

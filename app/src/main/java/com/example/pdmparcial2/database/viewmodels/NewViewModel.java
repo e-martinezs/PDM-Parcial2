@@ -6,6 +6,7 @@ import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
 import android.support.annotation.NonNull;
 
+import com.example.pdmparcial2.activities.MainActivity;
 import com.example.pdmparcial2.database.repositories.NewsRepository;
 import com.example.pdmparcial2.model.New;
 import com.example.pdmparcial2.model.User;
@@ -23,7 +24,7 @@ public class NewViewModel extends AndroidViewModel{
         super(application);
         repository = new NewsRepository(application);
         news = repository.getNews();
-        setCategory("all");
+        setCategory(MainActivity.ALL);
         setSearch("");
     }
 

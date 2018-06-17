@@ -36,7 +36,7 @@ public class LoginActivity extends AppCompatActivity{
                 String username = usernameEditText.getText().toString();
                 String password = passwordEditText.getText().toString();
                 if (username.matches("") || password.matches("")){
-                    ActivityManager.showToast(getApplicationContext(), "Fields must not be empty");
+                    ActivityManager.showToast(getApplicationContext(), getString(R.string.error_empty_fields));
                 }else{
                     apiRequest.login(username, password);
                     new WaitAsyncTask().execute();

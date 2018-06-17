@@ -6,28 +6,28 @@
         <item
             android:id="@+id/drawerNews"
             android:icon="@drawable/ic_news"
-            android:title="News" />
+            android:title="@string/drawer_news" />
         <item
             android:id="@+id/drawerFavorites"
             android:icon="@drawable/ic_star_on"
-            android:title="Favorites" />
+            android:title="@string/drawer_favorites" />
         <item
             android:id="@+id/drawerGames"
             android:checkable="false"
-            android:title="Games">
+            android:title="@string/drawer_games">
             <menu>
                 <group
                     android:id="@+id/drawerGameMenu"
                     android:checkableBehavior="single">
                     <item
                         android:id="@+id/drawerLOL"
-                        android:title="League of Legends" />
+                        android:title="@string/drawer_lol" />
                     <item
                         android:id="@+id/drawerCSGO"
-                        android:title="CS GO" />
+                        android:title="@string/drawer_csgo" />
                     <item
                         android:id="@+id/drawerOverwatch"
-                        android:title="Overwatch" />
+                        android:title="@string/drawer_overwatch" />
                 </group>
             </menu>
         </item>
@@ -39,10 +39,10 @@
             android:id="@+id/drawerSettings"
             android:checkable="false"
             android:icon="@drawable/ic_settings"
-            android:title="Settings" />
+            android:title="@string/drawer_settings" />
         <item
             android:id="@+id/drawerLogout"
-            android:title="Logout" />
+            android:title="@string/drawer_logout" />
     </group>
 
 </menu>

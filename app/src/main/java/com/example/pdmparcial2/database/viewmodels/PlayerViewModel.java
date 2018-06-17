@@ -6,6 +6,7 @@ import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
 import android.support.annotation.NonNull;
 
+import com.example.pdmparcial2.activities.MainActivity;
 import com.example.pdmparcial2.database.repositories.PlayerRepository;
 import com.example.pdmparcial2.model.Player;
 
@@ -22,7 +23,7 @@ public class PlayerViewModel extends AndroidViewModel{
         super(application);
         repository = new PlayerRepository(application);
         players = repository.getPlayers();
-        setCategory("all");
+        setCategory(MainActivity.ALL);
         setSearch("");
     }
 
@@ -34,8 +35,8 @@ public class PlayerViewModel extends AndroidViewModel{
         repository.insertPlayers(players);
     }
 
-    public void setCategory(String category){
-        this.category.setValue(category);
+    public void setCategory(String newCategory){
+        category.setValue(newCategory);
     }
 
     public MutableLiveData<String> getCategory() {

@@ -29,7 +29,7 @@ public class PlayerRepository {
         new insertPlayersAsyncTask(playerDao).execute(players);
     }
 
-    private class insertPlayersAsyncTask extends AsyncTask<List<Player>, Void, Void> {
+    private static class insertPlayersAsyncTask extends AsyncTask<List<Player>, Void, Void> {
         private PlayerDao playerDao;
 
         public insertPlayersAsyncTask(PlayerDao playerDao) {

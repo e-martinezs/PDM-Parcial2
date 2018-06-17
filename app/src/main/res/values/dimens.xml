@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="marginMedium">8dp</dimen>
+    <dimen name="detailCoverSize">200dp</dimen>
+    <dimen name="lineSize">2dp</dimen>
+    <dimen name="favoriteButtonSize">32dp</dimen>
+    <dimen name="elevationCardview">2dp</dimen>
+    <dimen name="marginSmall">4dp</dimen>
+    <dimen name="drawerHeaderHeight">192dp</dimen>
+    <dimen name="drawerHeaderPadding">16dp</dimen>
+    <dimen name="playerCardviewHeight">100dp</dimen>
+    <dimen name="newsCardviewHeight">400dp</dimen>
+</resources>

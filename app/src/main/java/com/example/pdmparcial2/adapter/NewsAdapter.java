@@ -91,7 +91,7 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.NewsViewHolder
             public void onClick(View view) {
                 Intent intent = new Intent(context, NewDetail.class);
                 Bundle bundle = new Bundle();
-                bundle.putSerializable("NEW", mNew);
+                bundle.putSerializable(NewDetail.NEW, mNew);
                 intent.putExtras(bundle);
 
                 ((Activity)context).startActivityForResult(intent, 1);

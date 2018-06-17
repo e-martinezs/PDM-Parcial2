@@ -39,8 +39,8 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
-    private static String ALL = "all";
-    private static String FAVORITES = "favorites";
+    public static String ALL = "all";
+    public static String FAVORITES = "favorites";
     private DrawerLayout drawerLayout;
     private NewViewModel newViewModel;
     private PlayerViewModel playerViewModel;

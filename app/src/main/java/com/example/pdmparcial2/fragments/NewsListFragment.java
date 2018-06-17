@@ -16,6 +16,7 @@ import android.view.ViewGroup;
 import android.widget.SearchView;
 
 import com.example.pdmparcial2.R;
+import com.example.pdmparcial2.activities.MainActivity;
 import com.example.pdmparcial2.adapter.NewsAdapter;
 import com.example.pdmparcial2.api.APIRequest;
 import com.example.pdmparcial2.database.viewmodels.NewViewModel;
@@ -30,7 +31,7 @@ public class NewsListFragment extends Fragment {
     private NewsAdapter newsAdapter;
     private APIRequest apiRequest;
     private NewViewModel newViewModel;
-    private String selectedCategory = "all";
+    private String selectedCategory = MainActivity.ALL;
     private String searchQuery = "";
     private List<New> newsList = new ArrayList<>();
 
@@ -127,8 +128,8 @@ public class NewsListFragment extends Fragment {
 
     public void setNewsList(List<New> news, String filter) {
         List<New> filteredNews = new ArrayList<>();
-        if (!filter.matches("all")) {
-            if (filter.matches("favorites")) {
+        if (!filter.matches(MainActivity.ALL)) {
+            if (filter.matches(MainActivity.FAVORITES)) {
                 for (New n : news) {
                     if (n.isFavorite()) {
                         filteredNews.add(n);

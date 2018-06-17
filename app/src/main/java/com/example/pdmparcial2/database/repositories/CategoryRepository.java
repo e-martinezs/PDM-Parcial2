@@ -30,7 +30,7 @@ public class CategoryRepository {
     }
 
 
-    private class insertCategoriesAsyncTask extends AsyncTask<List<Category>, Void, Void> {
+    private static class insertCategoriesAsyncTask extends AsyncTask<List<Category>, Void, Void> {
         private CategoryDao categoryDao;
 
         public insertCategoriesAsyncTask(CategoryDao categoryDao) {

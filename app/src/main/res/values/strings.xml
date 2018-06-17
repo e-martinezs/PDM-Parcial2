@@ -1,3 +1,35 @@
 <resources>
     <string name="app_name">Game News UCA</string>
+    <string name="login_title">GAME NEWS UCA</string>
+    <string name="login_username">Username</string>
+    <string name="login_username_hint">Username</string>
+    <string name="login_password">Password</string>
+    <string name="login_password_hint">Password</string>
+    <string name="login_login_button">Login</string>
+    <string name="settings_change_pasword">Change pasword</string>
+    <string name="settings_current_password">Current password</string>
+    <string name="settings_current_password_hint">Current password</string>
+    <string name="settings_new_password">New password</string>
+    <string name="settings_new_password_hint">New password</string>
+    <string name="settings_reenter_password">Reenter password</string>
+    <string name="settings_reenter_password_hint">New password</string>
+    <string name="settings_save_button">Save</string>
+    <string name="action_refresh">Refresh</string>
+    <string name="action_search">Search</string>
+    <string name="drawer_news">News</string>
+    <string name="drawer_favorites">Favorites</string>
+    <string name="drawer_games">Games</string>
+    <string name="drawer_lol">League of Legends</string>
+    <string name="drawer_csgo">CS GO</string>
+    <string name="drawer_overwatch">Overwatch</string>
+    <string name="drawer_settings">Settings</string>
+    <string name="drawer_logout">Logout</string>
+    <string name="error_session_expired">Session expired</string>
+    <string name="error_connection">Could not connect to server</string>
+    <string name="error_default">There was an error</string>
+    <string name="message_password_changed">Password changed</string>
+    <string name="error_wrong_password">Wrong password</string>
+    <string name="error_wrong_credentials">Wrong username or password</string>
+    <string name="error_empty_fields">Fields must not be empty</string>
+    <string name="error_password_notmatch">New password does not match</string>
 </resources>

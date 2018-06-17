@@ -11,31 +11,31 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_margin="8dp"
+            android:layout_margin="@dimen/marginMedium"
             android:gravity="center"
             android:orientation="vertical">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_margin="8dp"
-                android:text="GAME NEWS UCA"
+                android:layout_margin="@dimen/marginMedium"
+                android:text="@string/login_title"
                 android:textAppearance="@style/TextAppearance.AppCompat.Headline"
                 android:textStyle="bold" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_margin="8dp"
-                android:text="Username"
+                android:layout_margin="@dimen/marginMedium"
+                android:text="@string/login_username"
                 android:textAppearance="@style/TextAppearance.AppCompat.Large" />
 
             <EditText
                 android:id="@+id/login_usernameEditText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="8dp"
-                android:hint="Username"
+                android:layout_margin="@dimen/marginMedium"
+                android:hint="@string/login_username_hint"
                 android:lines="1"
                 android:textAlignment="center"
                 android:textAppearance="@style/TextAppearance.AppCompat.Large" />
@@ -43,16 +43,16 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_margin="8dp"
-                android:text="Password"
+                android:layout_margin="@dimen/marginMedium"
+                android:text="@string/login_password"
                 android:textAppearance="@style/TextAppearance.AppCompat.Large" />
 
             <EditText
                 android:id="@+id/login_passwordEditText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="8dp"
-                android:hint="Password"
+                android:layout_margin="@dimen/marginMedium"
+                android:hint="@string/login_password_hint"
                 android:inputType="textPassword"
                 android:lines="1"
                 android:textAlignment="center"
@@ -62,8 +62,9 @@
                 android:id="@+id/login_loginButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_margin="8dp"
-                android:text="Login" />
+                android:layout_margin="@dimen/marginMedium"
+                android:background="@color/colorPrimary"
+                android:text="@string/login_login_button" />
         </LinearLayout>
     </ScrollView>
 

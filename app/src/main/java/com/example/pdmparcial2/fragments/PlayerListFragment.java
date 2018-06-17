@@ -16,6 +16,7 @@ import android.view.ViewGroup;
 import android.widget.SearchView;
 
 import com.example.pdmparcial2.R;
+import com.example.pdmparcial2.activities.MainActivity;
 import com.example.pdmparcial2.adapter.PlayerAdapter;
 import com.example.pdmparcial2.database.viewmodels.PlayerViewModel;
 import com.example.pdmparcial2.model.New;
@@ -26,10 +27,9 @@ import java.util.List;
 
 public class PlayerListFragment extends Fragment {
 
-    private List<Player> players;
     private PlayerAdapter playerAdapter;
     private PlayerViewModel playerViewModel;
-    private String selectedCategory = "all";
+    private String selectedCategory = MainActivity.ALL;
     private String searchQuery = "";
     private List<Player> playerList = new ArrayList<>();
 

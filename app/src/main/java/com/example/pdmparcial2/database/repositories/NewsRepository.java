@@ -38,7 +38,7 @@ public class NewsRepository {
         new setNewFavoriteAsyncTask(newDao, newId, favorite).execute();
     }
 
-    private class deleteNewsAsyncTask extends AsyncTask<Void, Void, Void>{
+    private static class deleteNewsAsyncTask extends AsyncTask<Void, Void, Void>{
         private NewDao newDao;
 
         public deleteNewsAsyncTask(NewDao newDao){
@@ -52,7 +52,7 @@ public class NewsRepository {
         }
     }
 
-    private class insertNewsAsyncTask extends AsyncTask<List<New>, Void, Void> {
+    private static class insertNewsAsyncTask extends AsyncTask<List<New>, Void, Void> {
         private NewDao newDao;
         private User user;
 
@@ -79,7 +79,7 @@ public class NewsRepository {
         }
     }
 
-    private class setNewFavoriteAsyncTask extends AsyncTask<Void, Void, Void> {
+    private static class setNewFavoriteAsyncTask extends AsyncTask<Void, Void, Void> {
         private NewDao newDao;
         private String id;
         private boolean favorite;

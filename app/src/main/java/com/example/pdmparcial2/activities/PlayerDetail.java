@@ -12,6 +12,8 @@ import com.squareup.picasso.Picasso;
 
 public class PlayerDetail extends AppCompatActivity{
 
+    public static String PLAYER = "PLAYER";
+
     @Override
     public void onCreate(Bundle savedInstanceBundle){
         super.onCreate(savedInstanceBundle);
@@ -23,7 +25,7 @@ public class PlayerDetail extends AppCompatActivity{
 
         Intent intent = this.getIntent();
         Bundle bundle = intent.getExtras();
-        Player player = (Player) bundle.getSerializable("PLAYER");
+        Player player = (Player) bundle.getSerializable(PLAYER);
 
         nameTextView.setText(player.getName());
         biographyTextView.setText(player.getBiography());
