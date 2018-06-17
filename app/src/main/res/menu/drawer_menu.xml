@@ -5,7 +5,12 @@
         android:checkableBehavior="single">
         <item
             android:id="@+id/drawerNews"
+            android:icon="@drawable/ic_news"
             android:title="News" />
+        <item
+            android:id="@+id/drawerFavorites"
+            android:icon="@drawable/ic_star_on"
+            android:title="Favorites" />
         <item
             android:id="@+id/drawerGames"
             android:checkable="false"
@@ -31,15 +36,13 @@
         android:id="@+id/drawerBottomMenu"
         android:checkableBehavior="single">
         <item
-            android:id="@+id/drawerFavorites"
-            android:title="Favorites" />
-        <item
             android:id="@+id/drawerSettings"
-            android:title="Settings"
-            android:checkable="false"/>
+            android:checkable="false"
+            android:icon="@drawable/ic_settings"
+            android:title="Settings" />
         <item
             android:id="@+id/drawerLogout"
-            android:title="Logout"/>
+            android:title="Logout" />
     </group>
 
 </menu>

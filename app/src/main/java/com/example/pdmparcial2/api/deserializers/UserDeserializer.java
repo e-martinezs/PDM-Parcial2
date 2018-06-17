@@ -20,6 +20,7 @@ public class UserDeserializer implements JsonDeserializer<User>{
         JsonObject jsonObject = json.getAsJsonObject();
 
         user.setId(jsonObject.get("_id").getAsString());
+        user.setUsername(jsonObject.get("user").getAsString());
         user.setPassword(jsonObject.get("password").getAsString());
 
         List<String> news = new ArrayList<>();

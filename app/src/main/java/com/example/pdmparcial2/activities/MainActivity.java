@@ -19,6 +19,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.SubMenu;
 import android.view.View;
+import android.widget.TextView;
 
 import com.example.pdmparcial2.R;
 import com.example.pdmparcial2.adapter.ViewPagerAdapter;
@@ -73,7 +74,6 @@ public class MainActivity extends AppCompatActivity {
 
         setupDrawer();
 
-        refresh();
         categoryViewModel.getCategories().observe(this, new Observer<List<Category>>() {
             @Override
             public void onChanged(@Nullable List<Category> categories) {
@@ -88,6 +88,8 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
+
+        refresh();
     }
 
     @Override
@@ -201,5 +203,10 @@ public class MainActivity extends AppCompatActivity {
 
     private void refresh(){
         apiRequest.refresh();
+
+        final NavigationView navigationView = findViewById(R.id.navigationView);
+        View header = navigationView.getHeaderView(0);
+        TextView usernameTextView = header.findViewById(R.id.headerUsernameTextView);
+        usernameTextView.setText(apiRequest.getUsername());
     }
 }

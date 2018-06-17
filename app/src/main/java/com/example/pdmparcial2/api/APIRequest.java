@@ -37,6 +37,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class APIRequest {
 
     private static String TOKEN = "TOKEN";
+    private static String USER = "USER";
     private static User user = new User();
     private Context context;
     private View loadingLayout;
@@ -84,14 +85,13 @@ public class APIRequest {
         }
     }
 
-    public void login(String username, String password) {
+    public void login(final String username, String password) {
         setLoading(true);
         Gson gson = new GsonBuilder().registerTypeAdapter(String.class, new TokenDeserializer()).create();
         Retrofit.Builder builder = new Retrofit.Builder().baseUrl(GameNewsAPI.BASE_URL).addConverterFactory(GsonConverterFactory.create(gson));
         Retrofit retrofit = builder.build();
         GameNewsAPI gameNewsAPI = retrofit.create(GameNewsAPI.class);
 
-        System.out.println("LOGIN?");
         final Call<String> login = gameNewsAPI.login(username, password);
         login.enqueue(new Callback<String>() {
             @Override
@@ -100,6 +100,7 @@ public class APIRequest {
                     user.setToken(response.body());
                     SharedPreferences.Editor editor = sharedPreferences.edit();
                     editor.putString(TOKEN, user.getToken());
+                    editor.putString(USER, username);
                     editor.apply();
 
                     setLogged(true);
@@ -222,6 +223,7 @@ public class APIRequest {
             public void onResponse(Call<User> call, Response<User> response) {
                 if (response.code() == 200) {
                     user.setId(response.body().getId());
+                    user.setUsername(response.body().getUsername());
                     user.setPassword(response.body().getPassword());
                     user.setFavoriteNews(response.body().getFavoriteNews());
                     downloadAll();
@@ -355,5 +357,9 @@ public class APIRequest {
         logout();
         ActivityManager.openLoginActivity(context);
         ActivityManager.closeActivity(context);
+    }
+
+    public String getUsername(){
+        return sharedPreferences.getString(USER, null);
     }
 }
