@@ -20,17 +20,18 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="8dp"
                 android:text="Current password"
-                android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
+                android:textAppearance="@style/TextAppearance.AppCompat.Subhead" />
 
             <EditText
                 android:id="@+id/settings_oldPasswordEditText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="8dp"
+                android:hint="Current password"
                 android:inputType="textPassword"
                 android:lines="1"
                 android:textAlignment="center"
-                android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
+                android:textAppearance="@style/TextAppearance.AppCompat.Subhead" />
 
 
             <TextView
@@ -38,34 +39,36 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="8dp"
                 android:text="New password"
-                android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
+                android:textAppearance="@style/TextAppearance.AppCompat.Subhead" />
 
             <EditText
                 android:id="@+id/settings_newPasswordEditText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="8dp"
+                android:hint="New password"
                 android:inputType="textPassword"
                 android:lines="1"
                 android:textAlignment="center"
-                android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
+                android:textAppearance="@style/TextAppearance.AppCompat.Subhead" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="8dp"
                 android:text="Reenter password"
-                android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
+                android:textAppearance="@style/TextAppearance.AppCompat.Subhead" />
 
             <EditText
                 android:id="@+id/settings_repeatPasswordEditText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="8dp"
+                android:hint="New password"
                 android:inputType="textPassword"
                 android:lines="1"
                 android:textAlignment="center"
-                android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
+                android:textAppearance="@style/TextAppearance.AppCompat.Subhead" />
 
             <Button
                 android:id="@+id/settings_saveButton"
