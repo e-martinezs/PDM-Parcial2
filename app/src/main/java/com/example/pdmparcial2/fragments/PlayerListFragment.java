@@ -19,7 +19,6 @@ import com.example.pdmparcial2.R;
 import com.example.pdmparcial2.activities.MainActivity;
 import com.example.pdmparcial2.adapter.PlayerAdapter;
 import com.example.pdmparcial2.database.viewmodels.PlayerViewModel;
-import com.example.pdmparcial2.model.New;
 import com.example.pdmparcial2.model.Player;
 
 import java.util.ArrayList;
@@ -50,6 +49,7 @@ public class PlayerListFragment extends Fragment {
         recyclerView.setAdapter(playerAdapter);
         recyclerView.setHasFixedSize(true);
 
+        //Actualiza la lista de jugadores y los filtros con observer
         playerViewModel = ViewModelProviders.of(this).get(PlayerViewModel.class);
         playerViewModel.getPlayers().observe(this, new Observer<List<Player>>() {
             @Override
@@ -74,6 +74,7 @@ public class PlayerListFragment extends Fragment {
         return view;
     }
 
+    //Configura el SearchView
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         final MenuItem item = menu.findItem(R.id.searchView);
@@ -107,7 +108,10 @@ public class PlayerListFragment extends Fragment {
         super.onCreateOptionsMenu(menu, inflater);
     }
 
+    //Actualiza la lista de jugadores segun categoria y busqueda
     public void setPlayerList(List<Player> players, String filter) {
+
+        //Filtro de categoria
         List<Player> filteredPlayers = new ArrayList<>();
         for (Player p : players) {
             if (p.getGame().matches(filter)) {
@@ -115,9 +119,10 @@ public class PlayerListFragment extends Fragment {
             }
         }
 
+        //Filtro de busqueda
         List<Player> searchPlayers = new ArrayList<>();
-        for (Player p:filteredPlayers){
-            if (p.getName().contains(searchQuery)){
+        for (Player p : filteredPlayers) {
+            if (p.getName().contains(searchQuery)) {
                 searchPlayers.add(p);
             }
         }

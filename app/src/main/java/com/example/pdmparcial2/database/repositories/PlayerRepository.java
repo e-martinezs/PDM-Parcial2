@@ -15,7 +15,7 @@ public class PlayerRepository {
     private PlayerDao playerDao;
     private LiveData<List<Player>> players;
 
-    public PlayerRepository(Application application){
+    public PlayerRepository(Application application) {
         NewsRoomDatabase db = NewsRoomDatabase.getDatabase(application);
         playerDao = db.playerDao();
         players = playerDao.getPlayers();
@@ -29,6 +29,7 @@ public class PlayerRepository {
         new insertPlayersAsyncTask(playerDao).execute(players);
     }
 
+    //Elimina los jugadores e ingresa los nuevos
     private static class insertPlayersAsyncTask extends AsyncTask<List<Player>, Void, Void> {
         private PlayerDao playerDao;
 

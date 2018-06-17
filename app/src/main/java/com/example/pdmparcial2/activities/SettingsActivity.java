@@ -12,12 +12,12 @@ import com.example.pdmparcial2.api.APIRequest;
 import com.example.pdmparcial2.database.viewmodels.NewViewModel;
 import com.example.pdmparcial2.utils.ActivityManager;
 
-public class SettingsActivity extends AppCompatActivity{
+public class SettingsActivity extends AppCompatActivity {
 
     private APIRequest apiRequest;
 
     @Override
-    public void onCreate(Bundle savedInstanceState){
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
 
@@ -36,11 +36,13 @@ public class SettingsActivity extends AppCompatActivity{
                 String oldPassword = oldPasswordEditText.getText().toString();
                 String newPassword = newPasswordEditText.getText().toString();
                 String repeatPassword = repeatPasswordEditText.getText().toString();
-                if (oldPassword.matches("") || newPassword.matches("") || repeatPassword.matches("")){
+
+                //Verifica si los campos estan vacios y si la nueva password es igual a la de confirmacion
+                if (oldPassword.matches("") || newPassword.matches("") || repeatPassword.matches("")) {
                     ActivityManager.showToast(getApplicationContext(), getString(R.string.error_empty_fields));
-                }else if(!newPassword.matches(repeatPassword)){
+                } else if (!newPassword.matches(repeatPassword)) {
                     ActivityManager.showToast(getApplicationContext(), getString(R.string.error_password_notmatch));
-                }else{
+                } else {
                     apiRequest.changePassword(oldPassword, newPassword);
                 }
             }

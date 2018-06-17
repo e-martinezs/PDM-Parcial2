@@ -8,14 +8,14 @@ import android.widget.TextView;
 
 import com.example.pdmparcial2.R;
 import com.example.pdmparcial2.model.Player;
-import com.squareup.picasso.Picasso;
+import com.example.pdmparcial2.utils.ImageLoader;
 
-public class PlayerDetail extends AppCompatActivity{
+public class PlayerDetail extends AppCompatActivity {
 
     public static String PLAYER = "PLAYER";
 
     @Override
-    public void onCreate(Bundle savedInstanceBundle){
+    public void onCreate(Bundle savedInstanceBundle) {
         super.onCreate(savedInstanceBundle);
         setContentView(R.layout.activity_player_detail);
 
@@ -23,6 +23,7 @@ public class PlayerDetail extends AppCompatActivity{
         TextView nameTextView = findViewById(R.id.detail_playerNameTextView);
         TextView biographyTextView = findViewById(R.id.detail_playerBiographyTextView);
 
+        //Obtiene el jugador que se mostrara
         Intent intent = this.getIntent();
         Bundle bundle = intent.getExtras();
         Player player = (Player) bundle.getSerializable(PLAYER);
@@ -30,14 +31,7 @@ public class PlayerDetail extends AppCompatActivity{
         nameTextView.setText(player.getName());
         biographyTextView.setText(player.getBiography());
 
-        try{
-            if (!player.getAvatar().isEmpty()) {
-                Picasso.get().load(player.getAvatar()).error(R.drawable.ic_image).into(avatarImageView);
-            }else{
-                Picasso.get().load(R.drawable.ic_image).error(R.drawable.ic_image).into(avatarImageView);
-            }
-        }catch (Exception e){
-            e.printStackTrace();
-        }
+        //Carga la imagen con Picasso
+        ImageLoader.LoadImage(player.getAvatar(), avatarImageView);
     }
 }

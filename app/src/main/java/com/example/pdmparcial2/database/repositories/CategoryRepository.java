@@ -15,7 +15,7 @@ public class CategoryRepository {
     private CategoryDao categoryDao;
     private LiveData<List<Category>> categories;
 
-    public CategoryRepository(Application application){
+    public CategoryRepository(Application application) {
         NewsRoomDatabase db = NewsRoomDatabase.getDatabase(application);
         categoryDao = db.categoryDao();
         categories = categoryDao.getCategories();
@@ -30,6 +30,7 @@ public class CategoryRepository {
     }
 
 
+    //Elimina las categorias e ingresa las nuevas
     private static class insertCategoriesAsyncTask extends AsyncTask<List<Category>, Void, Void> {
         private CategoryDao categoryDao;
 

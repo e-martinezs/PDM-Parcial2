@@ -19,6 +19,7 @@ public interface NewDao {
     @Query("DELETE FROM news_table")
     void deleteNews();
 
+    //Retorna la lista de noticias en order descendiente segun la fecha de creacion
     @Query("SELECT * FROM news_table ORDER BY create_date DESC")
     LiveData<List<New>> getNews();
 

@@ -8,7 +8,6 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 
 import java.lang.reflect.Type;
-import java.util.Date;
 
 public class NewsDeserializer implements JsonDeserializer<New> {
 

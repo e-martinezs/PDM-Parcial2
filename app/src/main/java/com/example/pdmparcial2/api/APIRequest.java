@@ -23,7 +23,6 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
 import okhttp3.Interceptor;
@@ -62,6 +61,7 @@ public class APIRequest {
         checkLogged();
     }
 
+    //Crea el cliente para acceder al API, lo pone el token de autorizacion y un gson para deserializar el resultado
     private void createAPIClient(Gson gson) {
         OkHttpClient okHttpClient = new OkHttpClient.Builder().addInterceptor(new Interceptor() {
             @Override
@@ -76,6 +76,7 @@ public class APIRequest {
         gameNewsAPI = retrofit.create(GameNewsAPI.class);
     }
 
+    //Verifica si ya hay un token almacenado
     public void checkLogged() {
         if (sharedPreferences.contains(TOKEN)) {
             setLogged(true);
@@ -86,6 +87,7 @@ public class APIRequest {
         }
     }
 
+    //Realiza el login
     public void login(final String username, String password) {
         setLoading(true);
         Gson gson = new GsonBuilder().registerTypeAdapter(String.class, new TokenDeserializer()).create();
@@ -97,7 +99,11 @@ public class APIRequest {
         login.enqueue(new Callback<String>() {
             @Override
             public void onResponse(Call<String> call, Response<String> response) {
+
+                //Verifica si la respuesta fue OK
                 if (response.code() == 200) {
+
+                    //Almacena el token obtenido del API
                     user.setToken(response.body());
                     SharedPreferences.Editor editor = sharedPreferences.edit();
                     editor.putString(TOKEN, user.getToken());
@@ -121,6 +127,7 @@ public class APIRequest {
         });
     }
 
+    //Elimina el token almacenado y elimina las noticias
     public void logout() {
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.remove(TOKEN);
@@ -128,17 +135,20 @@ public class APIRequest {
         newViewModel.deleteNews();
     }
 
+    //Obtiene los datos para refrescar el app
     public void refresh() {
         syncFavorites();
         getUserData();
     }
 
+    //Descarga las noticias, jugadores y categorias del API
     public void downloadAll() {
         downloadNews();
         downloadPlayers();
         downloadCategories();
     }
 
+    //Descarga las noticias
     public void downloadNews() {
         setLoading(true);
         Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'").registerTypeAdapter(New.class, new NewsDeserializer()).create();
@@ -163,6 +173,7 @@ public class APIRequest {
         });
     }
 
+    //Descarga los jugadores
     private void downloadPlayers() {
         setLoading(true);
         Gson gson = new GsonBuilder().registerTypeAdapter(Player.class, new PlayerDeserializer()).create();
@@ -187,6 +198,7 @@ public class APIRequest {
         });
     }
 
+    //Descarga las categorias
     private void downloadCategories() {
         setLoading(true);
         Gson gson = new GsonBuilder().registerTypeAdapter(Category.class, new CategoryDeserializer()).create();
@@ -212,6 +224,7 @@ public class APIRequest {
         });
     }
 
+    //Obtiene los datos del usuario logeado
     private void getUserData() {
         setLoading(true);
         Gson gson = new GsonBuilder().registerTypeAdapter(User.class, new UserDeserializer()).create();
@@ -240,6 +253,7 @@ public class APIRequest {
         });
     }
 
+    //Guarda la notcia indicada como favorito
     public void saveFavorite(final String newId) {
         createAPIClient(new Gson());
         Call<Void> saveFavorite = gameNewsAPI.saveFavorite(user.getId(), newId);
@@ -258,6 +272,7 @@ public class APIRequest {
         });
     }
 
+    //Elimina la noticia indicada de favoritos
     public void deleteFavorite(final String newId) {
         createAPIClient(new Gson());
         Call<Void> deleteFavorite = gameNewsAPI.deleteFavorite(user.getId(), newId);
@@ -276,7 +291,8 @@ public class APIRequest {
         });
     }
 
-    private void syncFavorites(){
+    //Actualiza los favoritos online con los que se cambiaron en modo offline
+    private void syncFavorites() {
         List<New> news = newViewModel.getNews().getValue();
         if (news != null) {
             for (New n : news) {
@@ -289,8 +305,9 @@ public class APIRequest {
         }
     }
 
-    public void changePassword(String oldPassword, String newPassword){
-        if (!oldPassword.matches(user.getPassword())){
+    //Cambia la contraseña del usuario
+    public void changePassword(String oldPassword, String newPassword) {
+        if (!oldPassword.matches(user.getPassword())) {
             ActivityManager.showToast(context, context.getString(R.string.error_wrong_password));
             return;
         }
@@ -300,9 +317,9 @@ public class APIRequest {
         changePassword.enqueue(new Callback<Void>() {
             @Override
             public void onResponse(Call<Void> call, Response<Void> response) {
-                if (response.code() == 200){
+                if (response.code() == 200) {
                     ActivityManager.showToast(context, context.getString(R.string.message_password_changed));
-                }else{
+                } else {
                     ActivityManager.showToast(context, context.getString(R.string.error_default));
                 }
                 setLoading(false);
@@ -319,6 +336,7 @@ public class APIRequest {
         return loading;
     }
 
+    //Si esta cargando muestra el ProgressBar
     public void setLoading(boolean loading) {
         if (loadingLayout != null) {
             if (loading) {
@@ -342,16 +360,19 @@ public class APIRequest {
         return message;
     }
 
+    //Muestra el mensaje en un Toast
     public void setMessage(String message) {
         ActivityManager.showToast(context, message);
         this.message = message;
     }
 
+    //Muestra el mensaje de error de coneccion
     public void connectionError() {
         setMessage(context.getString(R.string.error_connection));
         setLoading(false);
     }
 
+    //Si el token esta vencido regresa al login
     public void sessionExpired() {
         setMessage(context.getString(R.string.error_session_expired));
         logout();
@@ -359,7 +380,7 @@ public class APIRequest {
         ActivityManager.closeActivity(context);
     }
 
-    public String getUsername(){
+    public String getUsername() {
         return sharedPreferences.getString(USER, null);
     }
 }

@@ -13,12 +13,12 @@ import com.example.pdmparcial2.api.APIRequest;
 import com.example.pdmparcial2.database.viewmodels.NewViewModel;
 import com.example.pdmparcial2.utils.ActivityManager;
 
-public class LoginActivity extends AppCompatActivity{
+public class LoginActivity extends AppCompatActivity {
 
     private APIRequest apiRequest;
 
     @Override
-    public void onCreate(Bundle savedInstanceState){
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
@@ -35,9 +35,11 @@ public class LoginActivity extends AppCompatActivity{
             public void onClick(View view) {
                 String username = usernameEditText.getText().toString();
                 String password = passwordEditText.getText().toString();
-                if (username.matches("") || password.matches("")){
+
+                //Verifica si los campos estan vacios
+                if (username.matches("") || password.matches("")) {
                     ActivityManager.showToast(getApplicationContext(), getString(R.string.error_empty_fields));
-                }else{
+                } else {
                     apiRequest.login(username, password);
                     new WaitAsyncTask().execute();
                 }
@@ -45,7 +47,8 @@ public class LoginActivity extends AppCompatActivity{
         });
     }
 
-    private class WaitAsyncTask extends AsyncTask<Void, Void, Void>{
+    //Espera hasta que el API termine el proceso de login
+    private class WaitAsyncTask extends AsyncTask<Void, Void, Void> {
 
         @Override
         protected Void doInBackground(Void... voids) {
@@ -56,12 +59,13 @@ public class LoginActivity extends AppCompatActivity{
         }
 
         @Override
-        protected void onPostExecute(Void voids){
+        protected void onPostExecute(Void voids) {
             closeActivity();
         }
     }
 
-    public void closeActivity(){
+    //Cierra la actividad
+    public void closeActivity() {
         finish();
     }
 }

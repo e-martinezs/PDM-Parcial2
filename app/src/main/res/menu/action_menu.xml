@@ -3,15 +3,14 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
         android:id="@+id/refreshButton"
-        android:title="@string/action_refresh"
         android:icon="@drawable/ic_refresh"
+        android:title="@string/action_refresh"
         app:showAsAction="ifRoom" />
 
     <item
         android:id="@+id/searchView"
-        android:title="@string/action_search"
         android:icon="@android:drawable/ic_menu_search"
-        app:showAsAction="always"
-        app:actionViewClass="android.widget.SearchView">
-    </item>
+        android:title="@string/action_search"
+        app:actionViewClass="android.widget.SearchView"
+        app:showAsAction="always" />
 </menu>

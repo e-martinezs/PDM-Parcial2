@@ -12,7 +12,7 @@ import com.example.pdmparcial2.model.Player;
 
 import java.util.List;
 
-public class PlayerViewModel extends AndroidViewModel{
+public class PlayerViewModel extends AndroidViewModel {
 
     private PlayerRepository repository;
     private LiveData<List<Player>> players;
@@ -31,11 +31,11 @@ public class PlayerViewModel extends AndroidViewModel{
         return players;
     }
 
-    public void insertPlayers(List<Player> players){
+    public void insertPlayers(List<Player> players) {
         repository.insertPlayers(players);
     }
 
-    public void setCategory(String newCategory){
+    public void setCategory(String newCategory) {
         category.setValue(newCategory);
     }
 
@@ -43,7 +43,7 @@ public class PlayerViewModel extends AndroidViewModel{
         return category;
     }
 
-    public void setSearch(String newSearch){
+    public void setSearch(String newSearch) {
         search.setValue(newSearch);
     }
 

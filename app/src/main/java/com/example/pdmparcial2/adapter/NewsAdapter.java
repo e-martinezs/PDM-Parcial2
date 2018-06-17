@@ -17,9 +17,8 @@ import android.widget.TextView;
 import com.example.pdmparcial2.R;
 import com.example.pdmparcial2.activities.NewDetail;
 import com.example.pdmparcial2.api.APIRequest;
-import com.example.pdmparcial2.database.viewmodels.NewViewModel;
 import com.example.pdmparcial2.model.New;
-import com.squareup.picasso.Picasso;
+import com.example.pdmparcial2.utils.ImageLoader;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,6 +35,7 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.NewsViewHolder
         this.apiRequest = apiRequest;
     }
 
+    //Actualiza la lista de noticias
     public void setNews(List<New> news) {
         this.news = news;
         notifyDataSetChanged();
@@ -54,25 +54,19 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.NewsViewHolder
         final New mNew = news.get(position);
         holder.newsTitleTextView.setText(mNew.getTitle());
         holder.newsDescriptionTetView.setText(mNew.getDescription());
-
-        try {
-            if (!mNew.getCoverImage().isEmpty()) {
-                Picasso.get().load(mNew.getCoverImage()).error(R.drawable.ic_image).into(holder.newsImageView);
-            } else {
-                Picasso.get().load(R.drawable.ic_image).error(R.drawable.ic_image).into(holder.newsImageView);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
         final CheckBox buttonFavorite = holder.buttonFavorite;
 
+        //Carga la imagen usando Picasso
+        ImageLoader.LoadImage(mNew.getCoverImage(), holder.newsImageView);
+
+        //Verifica si la noticia esta en favoritos
         if (mNew.isFavorite()) {
             buttonFavorite.setChecked(true);
         } else {
             buttonFavorite.setChecked(false);
         }
 
+        //Agrega o quita la noticia de favoritos al presionar el boton
         buttonFavorite.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -86,6 +80,7 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.NewsViewHolder
             }
         });
 
+        //Abre la actividad detalle de la noticia
         holder.cardView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -94,7 +89,7 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.NewsViewHolder
                 bundle.putSerializable(NewDetail.NEW, mNew);
                 intent.putExtras(bundle);
 
-                ((Activity)context).startActivityForResult(intent, 1);
+                ((Activity) context).startActivityForResult(intent, 1);
             }
         });
     }

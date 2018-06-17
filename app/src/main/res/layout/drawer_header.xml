@@ -3,14 +3,14 @@
     android:layout_width="match_parent"
     android:layout_height="@dimen/drawerHeaderHeight"
     android:background="@color/colorPrimaryDark"
-    android:padding="@dimen/drawerHeaderPadding"
-    android:theme="@style/ThemeOverlay.AppCompat.Dark"
+    android:gravity="bottom"
     android:orientation="vertical"
-    android:gravity="bottom">
+    android:padding="@dimen/drawerHeaderPadding"
+    android:theme="@style/ThemeOverlay.AppCompat.Dark">
 
     <TextView
         android:id="@+id/headerUsernameTextView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textAppearance="@style/TextAppearance.AppCompat.Large"/>
+        android:textAppearance="@style/TextAppearance.AppCompat.Large" />
 </LinearLayout>

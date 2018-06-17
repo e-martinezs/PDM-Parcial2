@@ -33,16 +33,16 @@ public class ViewPagerAdapter extends FragmentPagerAdapter {
     }
 
     @Override
-    public CharSequence getPageTitle(int position){
+    public CharSequence getPageTitle(int position) {
         return tabTitles.get(position);
     }
 
-    public void setCount(int count){
+    public void setCount(int count) {
         COUNT = count;
         this.notifyDataSetChanged();
     }
 
-    public void addFragment(Fragment fragment, String tabTitle){
+    public void addFragment(Fragment fragment, String tabTitle) {
         fragments.add(fragment);
         tabTitles.add(tabTitle);
     }

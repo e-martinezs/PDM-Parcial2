@@ -10,7 +10,7 @@ import com.example.pdmparcial2.model.Category;
 
 import java.util.List;
 
-public class CategoryViewModel extends AndroidViewModel{
+public class CategoryViewModel extends AndroidViewModel {
 
     private CategoryRepository repository;
     private LiveData<List<Category>> categories;
@@ -25,7 +25,7 @@ public class CategoryViewModel extends AndroidViewModel{
         return categories;
     }
 
-    public void insertCategories(List<Category> categories){
+    public void insertCategories(List<Category> categories) {
         repository.insertCategories(categories);
     }
 }

@@ -23,7 +23,6 @@ import com.example.pdmparcial2.database.viewmodels.NewViewModel;
 import com.example.pdmparcial2.model.New;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 public class NewsListFragment extends Fragment {
@@ -48,6 +47,7 @@ public class NewsListFragment extends Fragment {
         RecyclerView recyclerView = view.findViewById(R.id.newsListRecyclerView);
         GridLayoutManager gridLayoutManager = new GridLayoutManager(container.getContext(), 4);
 
+        //Configura el grid layout para tener un cuadro grande y luego dos pequeños
         gridLayoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
 
             @Override
@@ -65,6 +65,7 @@ public class NewsListFragment extends Fragment {
         recyclerView.setAdapter(newsAdapter);
         recyclerView.setHasFixedSize(true);
 
+        //Actualiza la lista de noticias y los filtros con observer
         newViewModel = ViewModelProviders.of(this).get(NewViewModel.class);
         newViewModel.getNews().observe(this, new Observer<List<New>>() {
             @Override
@@ -89,6 +90,7 @@ public class NewsListFragment extends Fragment {
         return view;
     }
 
+    //Configura el SearchView
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         final MenuItem item = menu.findItem(R.id.searchView);
@@ -126,7 +128,10 @@ public class NewsListFragment extends Fragment {
         this.apiRequest = apiRequest;
     }
 
+    //Actualiza la lista de noticias segun categoria y query de busqueda
     public void setNewsList(List<New> news, String filter) {
+
+        //Filtro de categoria y favoritos
         List<New> filteredNews = new ArrayList<>();
         if (!filter.matches(MainActivity.ALL)) {
             if (filter.matches(MainActivity.FAVORITES)) {
@@ -146,9 +151,10 @@ public class NewsListFragment extends Fragment {
             filteredNews = news;
         }
 
+        //Filtro de busqueda
         List<New> searchNews = new ArrayList<>();
-        for (New n:filteredNews){
-            if (n.getTitle().contains(searchQuery) || n.getDescription().contains(searchQuery)){
+        for (New n : filteredNews) {
+            if (n.getTitle().contains(searchQuery) || n.getDescription().contains(searchQuery)) {
                 searchNews.add(n);
             }
         }

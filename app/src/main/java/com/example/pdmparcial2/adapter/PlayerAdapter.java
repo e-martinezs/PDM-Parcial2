@@ -14,25 +14,24 @@ import android.widget.TextView;
 
 import com.example.pdmparcial2.R;
 import com.example.pdmparcial2.activities.PlayerDetail;
-import com.example.pdmparcial2.model.New;
 import com.example.pdmparcial2.model.Player;
-import com.squareup.picasso.Callback;
-import com.squareup.picasso.Picasso;
+import com.example.pdmparcial2.utils.ImageLoader;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class PlayerAdapter extends RecyclerView.Adapter<PlayerAdapter.PlayerViewHolder>{
+public class PlayerAdapter extends RecyclerView.Adapter<PlayerAdapter.PlayerViewHolder> {
 
     private List<Player> players;
     private Context context;
 
-    public PlayerAdapter(Context context){
+    public PlayerAdapter(Context context) {
         this.context = context;
         players = new ArrayList<>();
     }
 
-    public void setPlayers(List<Player> players){
+    //Actualiza la lista de jugadores
+    public void setPlayers(List<Player> players) {
         this.players = players;
         notifyDataSetChanged();
     }
@@ -50,17 +49,11 @@ public class PlayerAdapter extends RecyclerView.Adapter<PlayerAdapter.PlayerView
         final Player player = players.get(position);
         holder.playerNameTextView.setText(player.getName());
 
-        try{
-            if (!player.getAvatar().isEmpty()) {
-                Picasso.get().load(player.getAvatar()).error(R.drawable.ic_image).into(holder.playerImageView);
-            }else{
-                Picasso.get().load(R.drawable.ic_image).error(R.drawable.ic_image).into(holder.playerImageView);
-            }
-        }catch (Exception e){
-            e.printStackTrace();
-        }
+        //Carga la imagen usando Picasso
+        ImageLoader.LoadImage(player.getAvatar(), holder.playerImageView);
 
-        holder.cardView.setOnClickListener(new View.OnClickListener(){
+        //Abre la actividad detalle del jugador
+        holder.cardView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(context, PlayerDetail.class);
@@ -77,13 +70,13 @@ public class PlayerAdapter extends RecyclerView.Adapter<PlayerAdapter.PlayerView
         return players.size();
     }
 
-    public class PlayerViewHolder extends RecyclerView.ViewHolder{
+    public class PlayerViewHolder extends RecyclerView.ViewHolder {
 
         private CardView cardView;
         private ImageView playerImageView;
         private TextView playerNameTextView;
 
-        public PlayerViewHolder(View view){
+        public PlayerViewHolder(View view) {
             super(view);
             cardView = view.findViewById(R.id.cardview_player);
             playerImageView = view.findViewById(R.id.playerImageView);

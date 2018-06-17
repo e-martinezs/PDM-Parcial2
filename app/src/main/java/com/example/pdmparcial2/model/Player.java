@@ -8,7 +8,7 @@ import android.support.annotation.NonNull;
 import java.io.Serializable;
 
 @Entity(tableName = "player_table")
-public class Player implements Serializable{
+public class Player implements Serializable {
 
     @PrimaryKey
     @NonNull
@@ -27,7 +27,7 @@ public class Player implements Serializable{
     @ColumnInfo(name = "game")
     private String game;
 
-    public Player(){
+    public Player() {
 
     }
 

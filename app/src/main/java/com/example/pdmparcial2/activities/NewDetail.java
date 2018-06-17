@@ -13,7 +13,7 @@ import com.example.pdmparcial2.R;
 import com.example.pdmparcial2.api.APIRequest;
 import com.example.pdmparcial2.database.viewmodels.NewViewModel;
 import com.example.pdmparcial2.model.New;
-import com.squareup.picasso.Picasso;
+import com.example.pdmparcial2.utils.ImageLoader;
 
 public class NewDetail extends AppCompatActivity {
 
@@ -31,6 +31,7 @@ public class NewDetail extends AppCompatActivity {
         TextView dateTextView = findViewById(R.id.detail_newDateTextView);
         final CheckBox favoriteButton = findViewById(R.id.detail_buttonFavorite);
 
+        //Obtiene la noticia que se mostrara
         Intent intent = this.getIntent();
         Bundle bundle = intent.getExtras();
         final New mNew = (New) bundle.getSerializable(NEW);
@@ -40,22 +41,17 @@ public class NewDetail extends AppCompatActivity {
         bodyTextView.setText(mNew.getBody());
         dateTextView.setText(mNew.getCreate_date().subSequence(0, 10));
 
-        try {
-            if (!mNew.getCoverImage().isEmpty()) {
-                Picasso.get().load(mNew.getCoverImage()).error(R.drawable.ic_image).into(newImageView);
-            } else {
-                Picasso.get().load(R.drawable.ic_image).error(R.drawable.ic_image).into(newImageView);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        //Carga la imagen con Picasso
+        ImageLoader.LoadImage(mNew.getCoverImage(), newImageView);
 
+        //Verifica si la noticia esta en favoritos
         if (mNew.isFavorite()) {
             favoriteButton.setChecked(true);
         } else {
             favoriteButton.setChecked(false);
         }
 
+        //Agrega o elimina la noticia de favoritos al presionar el boton
         final NewViewModel newViewModel = ViewModelProviders.of(this).get(NewViewModel.class);
         final APIRequest apiRequest = new APIRequest(this, null, newViewModel, null, null);
         favoriteButton.setOnClickListener(new View.OnClickListener() {

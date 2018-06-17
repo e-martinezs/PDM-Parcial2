@@ -12,7 +12,7 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
-public class UserDeserializer implements JsonDeserializer<User>{
+public class UserDeserializer implements JsonDeserializer<User> {
 
     @Override
     public User deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
@@ -25,7 +25,7 @@ public class UserDeserializer implements JsonDeserializer<User>{
 
         List<String> news = new ArrayList<>();
         JsonArray array = jsonObject.getAsJsonArray("favoriteNews");
-        for (int i=0; i<array.size(); i++){
+        for (int i = 0; i < array.size(); i++) {
             news.add(array.get(i).getAsString());
         }
         user.setFavoriteNews(news);

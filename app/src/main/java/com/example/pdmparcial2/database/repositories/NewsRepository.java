@@ -30,18 +30,19 @@ public class NewsRepository {
         new insertNewsAsyncTask(newDao, user).execute(news);
     }
 
-    public void deleteNews(){
+    public void deleteNews() {
         new deleteNewsAsyncTask(newDao).execute();
     }
 
-    public void setFavorite(String newId, boolean favorite){
+    public void setFavorite(String newId, boolean favorite) {
         new setNewFavoriteAsyncTask(newDao, newId, favorite).execute();
     }
 
-    private static class deleteNewsAsyncTask extends AsyncTask<Void, Void, Void>{
+    //Elimina las noticias
+    private static class deleteNewsAsyncTask extends AsyncTask<Void, Void, Void> {
         private NewDao newDao;
 
-        public deleteNewsAsyncTask(NewDao newDao){
+        public deleteNewsAsyncTask(NewDao newDao) {
             this.newDao = newDao;
         }
 
@@ -52,6 +53,7 @@ public class NewsRepository {
         }
     }
 
+    //Elimina las noticias e ingresa las nuevas
     private static class insertNewsAsyncTask extends AsyncTask<List<New>, Void, Void> {
         private NewDao newDao;
         private User user;
@@ -64,6 +66,8 @@ public class NewsRepository {
         @Override
         protected Void doInBackground(List<New>... news) {
             newDao.deleteNews();
+
+            //Verifica si las noticias estan en favoritos
             for (New n : news[0]) {
                 for (String id : user.getFavoriteNews()) {
                     if (n.getId().matches(id)) {
@@ -79,6 +83,7 @@ public class NewsRepository {
         }
     }
 
+    //Agrego o quita la noticia de favoritos
     private static class setNewFavoriteAsyncTask extends AsyncTask<Void, Void, Void> {
         private NewDao newDao;
         private String id;
