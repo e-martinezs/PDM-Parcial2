@@ -33,4 +33,6 @@
     <string name="error_wrong_credentials">Usuario o contraseña incorrecta</string>
     <string name="error_empty_fields">Los campos deben estar llenos</string>
     <string name="error_password_notmatch">La nueva contraseña no es igual</string>
+    <string name="tab_news">Noticias</string>
+    <string name="tab_players">Jugadores</string>
 </resources>

@@ -16,7 +16,7 @@ import java.util.List;
 public class NewViewModel extends AndroidViewModel {
 
     private NewsRepository repository;
-    private LiveData<List<New>> news;
+    private static LiveData<List<New>> news;
     private static MutableLiveData<String> category = new MutableLiveData<>();
     private static MutableLiveData<String> search = new MutableLiveData<>();
 
@@ -24,8 +24,6 @@ public class NewViewModel extends AndroidViewModel {
         super(application);
         repository = new NewsRepository(application);
         news = repository.getNews();
-        setCategory(MainActivity.ALL);
-        setSearch("");
     }
 
     public LiveData<List<New>> getNews() {
@@ -39,7 +37,7 @@ public class NewViewModel extends AndroidViewModel {
     public void insertNews(List<New> news, User user) {
         repository.insertNews(news, user);
     }
-
+w
     public void saveFavorite(String newId) {
         repository.setFavorite(newId, true);
     }

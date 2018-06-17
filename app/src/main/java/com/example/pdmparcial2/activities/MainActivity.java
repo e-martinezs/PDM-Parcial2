@@ -127,8 +127,8 @@ public class MainActivity extends AppCompatActivity {
         ViewPager viewPager = findViewById(R.id.viewPager);
         final ViewPagerAdapter viewPagerAdapter = new ViewPagerAdapter(fragmentManager);
         viewPager.setAdapter(viewPagerAdapter);
-        viewPagerAdapter.addFragment(newsListFragment, "News");
-        viewPagerAdapter.addFragment(playerListFragment, "Top Players");
+        viewPagerAdapter.addFragment(newsListFragment, getString(R.string.tab_news));
+        viewPagerAdapter.addFragment(playerListFragment, getString(R.string.tab_players));
         viewPagerAdapter.setCount(1);
         tabLayout.setupWithViewPager(viewPager);
 

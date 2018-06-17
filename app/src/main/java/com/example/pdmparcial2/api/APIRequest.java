@@ -137,7 +137,6 @@ public class APIRequest {
 
     //Obtiene los datos para refrescar el app
     public void refresh() {
-        syncFavorites();
         getUserData();
     }
 
@@ -239,6 +238,7 @@ public class APIRequest {
                     user.setUsername(response.body().getUsername());
                     user.setPassword(response.body().getPassword());
                     user.setFavoriteNews(response.body().getFavoriteNews());
+                    syncFavorites();
                     downloadAll();
                 } else if (response.code() == 401) {
                     sessionExpired();
@@ -298,8 +298,10 @@ public class APIRequest {
             for (New n : news) {
                 if (n.isFavorite()) {
                     saveFavorite(n.getId());
+                    user.getFavoriteNews().add(n.getId());
                 } else {
                     deleteFavorite(n.getId());
+                    user.getFavoriteNews().remove(n.getId());
                 }
             }
         }

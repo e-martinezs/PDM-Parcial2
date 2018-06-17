@@ -32,4 +32,6 @@
     <string name="error_wrong_credentials">Wrong username or password</string>
     <string name="error_empty_fields">Fields must not be empty</string>
     <string name="error_password_notmatch">New password does not match</string>
+    <string name="tab_news">News</string>
+    <string name="tab_players">Top Players</string>
 </resources>
